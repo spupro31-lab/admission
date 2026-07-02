@@ -5,6 +5,24 @@ $current_page = basename($_SERVER['PHP_SELF']);
 $role = current_role() ?: '';
 $user_name = $_SESSION['name'] ?? 'Guest';
 
+$student_is_submitted = false;
+if ($role === 'student' && isset($_SESSION['user_id'])) {
+    if (!isset($pdo)) {
+        require_once __DIR__ . '/db_connect.php';
+    }
+    try {
+        $stmt = $pdo->prepare("SELECT is_submitted FROM students WHERE user_id = :user_id");
+        $stmt->execute(['user_id' => $_SESSION['user_id']]);
+        $sub_status = $stmt->fetchColumn();
+        if ($sub_status !== false && (int)$sub_status === 1) {
+            $student_is_submitted = true;
+        }
+    } catch (PDOException $e) {
+        // Silent fallback in case of DB issues
+    }
+}
+
+
 $nav_items = [
     'admin' => [
         ['href' => 'admin/dashboard.php', 'icon' => 'fa-gauge', 'label' => 'Dashboard', 'pages' => ['dashboard.php']],
@@ -27,9 +45,6 @@ $nav_items = [
 ];
 
 $items = $nav_items[$role] ?? [];
-if ($role !== '') {
-    $items[] = ['href' => 'courses.php', 'icon' => 'fa-book-open', 'label' => 'Academic Courses', 'pages' => ['courses.php']];
-}
 ?>
 <nav id="sidebar">
     <div class="sidebar-header">
@@ -38,12 +53,35 @@ if ($role !== '') {
     </div>
 
     <ul class="list-unstyled components">
-        <?php foreach ($items as $item): ?>
-            <li class="<?php echo in_array($current_page, $item['pages'], true) ? 'active' : ''; ?>">
-                <a href="<?php echo e(app_url($item['href'])); ?>">
-                    <i class="fa-solid <?php echo e($item['icon']); ?>"></i>
-                    <?php echo e($item['label']); ?>
-                </a>
+        <?php foreach ($items as $item): 
+            $is_disabled = false;
+            if ($role === 'student' && $student_is_submitted) {
+                if (in_array($item['href'], ['student/apply.php', 'student/upload.php', 'student/payment.php'], true)) {
+                    $is_disabled = true;
+                }
+            }
+        ?>
+            <li class="<?php 
+                $li_classes = [];
+                if (in_array($current_page, $item['pages'], true)) {
+                    $li_classes[] = 'active';
+                }
+                if ($is_disabled) {
+                    $li_classes[] = 'disabled';
+                }
+                echo implode(' ', $li_classes);
+            ?>">
+                <?php if ($is_disabled): ?>
+                    <a href="javascript:void(0);" onclick="event.preventDefault();" class="disabled-nav-link" title="Application already submitted">
+                        <i class="fa-solid <?php echo e($item['icon']); ?>"></i>
+                        <?php echo e($item['label']); ?>
+                    </a>
+                <?php else: ?>
+                    <a href="<?php echo e(app_url($item['href'])); ?>">
+                        <i class="fa-solid <?php echo e($item['icon']); ?>"></i>
+                        <?php echo e($item['label']); ?>
+                    </a>
+                <?php endif; ?>
             </li>
         <?php endforeach; ?>
 

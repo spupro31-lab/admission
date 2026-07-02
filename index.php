@@ -8,10 +8,10 @@ include 'includes/header.php';
 ?>
 
 <!-- Hero Banner Section -->
-<div class="hero-section-home py-5 position-relative overflow-hidden text-white mb-5" style="background: linear-gradient(135deg, #1e3a8a 0%, #0f172a 100%); min-height: 520px; display: flex; align-items: center;">
+<div class="hero-section-home text-white mb-5">
     <!-- Decorative Ambient light circles -->
-    <div class="position-absolute" style="width: 350px; height: 350px; background: rgba(59, 130, 246, 0.15); border-radius: 50%; top: -100px; right: -50px; filter: blur(60px);"></div>
-    <div class="position-absolute" style="width: 250px; height: 250px; background: rgba(13, 148, 136, 0.12); border-radius: 50%; bottom: -50px; left: -50px; filter: blur(50px);"></div>
+    <div class="position-absolute" style="width: 350px; height: 350px; background: rgba(255, 255, 255, 0.12); border-radius: 50%; top: -100px; right: -50px; filter: blur(60px);"></div>
+    <div class="position-absolute" style="width: 250px; height: 250px; background: rgba(255, 255, 255, 0.08); border-radius: 50%; bottom: -50px; left: -50px; filter: blur(50px);"></div>
     
     <div class="container position-relative z-1 my-3">
         <div class="row align-items-center g-5">

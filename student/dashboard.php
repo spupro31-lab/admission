@@ -256,6 +256,7 @@ include '../includes/header.php';
                                 </form>
                                 <a href="apply.php" class="btn btn-secondary"><i class="fa-solid fa-pen me-2"></i>Edit Form</a>
                                 <a href="upload.php" class="btn btn-secondary"><i class="fa-solid fa-file-image me-2"></i>Manage Uploads</a>
+                                <a href="payment_receipt.php" target="_blank" class="btn btn-outline-success"><i class="fa-solid fa-file-invoice-dollar me-2"></i>Download Payment Receipt</a>
                             </div>
                         </div>
                     <?php else: ?>
@@ -293,6 +294,9 @@ include '../includes/header.php';
                                 <div class="status-body-premium">
                                     <p>Your application (Admission ID: <strong><?php echo e($student['admission_no']); ?></strong>) was submitted on <strong><?php echo date('d-M-Y H:i', strtotime($student['created_at'])); ?></strong>. It is currently under review by our admission staff. We will notify you here once verified.</p>
                                 </div>
+                                <div class="status-action-row-premium">
+                                    <a href="payment_receipt.php" target="_blank" class="btn btn-success"><i class="fa-solid fa-file-invoice-dollar me-2"></i>Download Payment Receipt</a>
+                                </div>
                             </div>
                         <?php elseif ($student['status'] === 'Approved'): ?>
                             <div class="status-card-premium status-card-approved">
@@ -329,6 +333,7 @@ include '../includes/header.php';
                                 </div>
                                 <div class="status-action-row-premium">
                                     <a href="receipt.php" target="_blank" class="btn btn-primary"><i class="fa-solid fa-file-pdf me-2"></i>Download Admission Receipt</a>
+                                    <a href="payment_receipt.php" target="_blank" class="btn btn-success"><i class="fa-solid fa-file-invoice-dollar me-2"></i>Download Payment Receipt</a>
                                 </div>
                             </div>
                         <?php elseif ($student['status'] === 'Rejected'): ?>
@@ -376,6 +381,7 @@ include '../includes/header.php';
                                 </div>
                                 <div class="status-action-row-premium">
                                     <a href="apply.php" class="btn btn-primary"><i class="fa-solid fa-pen-to-square me-2"></i>Edit Form & Re-Submit</a>
+                                    <a href="payment_receipt.php" target="_blank" class="btn btn-outline-success"><i class="fa-solid fa-file-invoice-dollar me-2"></i>Download Payment Receipt</a>
                                 </div>
                             </div>
                         <?php endif; ?>
