@@ -18,7 +18,7 @@ if ($role === 'student' && isset($_SESSION['user_id'])) {
             $student_is_submitted = true;
         }
     } catch (PDOException $e) {
-        // Silent fallback in case of DB issues
+        
     }
 }
 

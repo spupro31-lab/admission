@@ -2,7 +2,7 @@
 require_once '../includes/db_connect.php';
 require_once '../includes/auth.php';
 
-// Verify admin access
+
 check_access('admin');
 
 if (!isset($_GET['id']) || empty($_GET['id'])) {
@@ -16,7 +16,7 @@ $documents = null;
 $history = [];
 
 try {
-    // 1. Fetch student and course details
+    
     $stmt = $pdo->prepare("
         SELECT s.*, c.course_name, c.department, c.semester 
         FROM students s 
@@ -31,12 +31,12 @@ try {
         exit;
     }
     
-    // 2. Fetch documents
+    
     $doc_stmt = $pdo->prepare("SELECT * FROM documents WHERE student_id = :student_id");
     $doc_stmt->execute(['student_id' => $student_id]);
     $documents = $doc_stmt->fetch();
     
-    // 3. Fetch status history timeline
+    
     $hist_stmt = $pdo->prepare("SELECT * FROM status_history WHERE student_id = :student_id ORDER BY history_id DESC");
     $hist_stmt->execute(['student_id' => $student_id]);
     $history = $hist_stmt->fetchAll();
@@ -50,16 +50,16 @@ include '../includes/header.php';
 ?>
 
 <div class="wrapper">
-    <!-- Sidebar -->
+    
     <?php include '../includes/sidebar.php'; ?>
 
-    <!-- Page Content -->
+    
     <div id="content">
         <?php render_topbar('Student Profile Viewer', '<a href="manage_students.php" class="btn btn-sm btn-outline-secondary"><i class="fa-solid fa-arrow-left me-1"></i>Back to Database</a>'); ?>
 
         <div class="container-fluid">
             <div class="row">
-                <!-- Profile details -->
+                
                 <div class="col-lg-7">
                     <div class="card">
                         <div class="card-header">
@@ -85,7 +85,7 @@ include '../includes/header.php';
                                 </div>
                             </div>
 
-                            <!-- Personal Information -->
+                            
                             <h6 class="fw-bold text-primary border-bottom pb-2 mb-3">1. Personal Information</h6>
                             <div class="row g-2 mb-4">
                                 <div class="col-md-12"><strong>Student Full Name:</strong> <?php echo e($student['full_name']); ?></div>
@@ -100,7 +100,7 @@ include '../includes/header.php';
                                 <div class="col-md-12"><strong>Full Address:</strong> <?php echo e($student['address']) . ", " . e($student['city']) . ", " . e($student['state']); ?></div>
                             </div>
 
-                            <!-- Academic Profile -->
+                            
                             <h6 class="fw-bold text-primary border-bottom pb-2 mb-3">2. Academic Qualifications</h6>
                             <div class="row g-2 mb-4">
                                 <div class="col-md-6"><strong>10th Percentage:</strong> <?php echo e($student['tenth_percentage']); ?>%</div>
@@ -109,7 +109,7 @@ include '../includes/header.php';
                                 <div class="col-md-6"><strong>Passing Year:</strong> <?php echo e($student['passing_year']); ?></div>
                             </div>
 
-                            <!-- Preferred Program -->
+                            
                             <h6 class="fw-bold text-primary border-bottom pb-2 mb-3">3. Preferred Course Detail</h6>
                             <div class="row g-2 mb-4">
                                 <div class="col-md-12"><strong>Program:</strong> <?php echo e($student['course_name']); ?></div>
@@ -117,7 +117,7 @@ include '../includes/header.php';
                                 <div class="col-md-6"><strong>Semester:</strong> <?php echo e($student['semester']); ?></div>
                             </div>
 
-                            <!-- Processing Fee Details -->
+                            
                             <h6 class="fw-bold text-primary border-bottom pb-2 mb-3">4. Processing Fee Payment Detail</h6>
                             <div class="row g-2">
                                 <div class="col-md-6">
@@ -137,9 +137,9 @@ include '../includes/header.php';
                     </div>
                 </div>
 
-                <!-- Documents and Status History -->
+                
                 <div class="col-lg-5">
-                    <!-- Documents Preview -->
+                    
                     <div class="card mb-4">
                         <div class="card-header">
                             <i class="fa-solid fa-folder-closed me-2 text-primary"></i>Uploaded Certificates File
@@ -171,7 +171,7 @@ include '../includes/header.php';
                         </div>
                     </div>
 
-                    <!-- Status Log timeline -->
+                    
                     <div class="card">
                         <div class="card-header">
                             <i class="fa-solid fa-timeline me-2 text-primary"></i>Application Review Timeline

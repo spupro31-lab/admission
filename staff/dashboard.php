@@ -2,7 +2,7 @@
 require_once '../includes/db_connect.php';
 require_once '../includes/auth.php';
 
-// Verify that the user is logged in as staff
+
 check_access('staff');
 
 $search = isset($_GET['search']) ? trim($_GET['search']) : '';
@@ -11,7 +11,7 @@ $course_filter = isset($_GET['course_filter']) ? trim($_GET['course_filter']) : 
 $sort_by = isset($_GET['sort_by']) ? trim($_GET['sort_by']) : 'newest';
 
 try {
-    // 1. Fetch dashboard statistics for staff
+    
     $stats = [
         'total' => $pdo->query("SELECT COUNT(*) FROM students WHERE is_submitted = 1")->fetchColumn(),
         'pending' => $pdo->query("SELECT COUNT(*) FROM students WHERE is_submitted = 1 AND status = 'Pending'")->fetchColumn(),
@@ -19,10 +19,10 @@ try {
         'rejected' => $pdo->query("SELECT COUNT(*) FROM students WHERE is_submitted = 1 AND status = 'Rejected'")->fetchColumn()
     ];
 
-    // Fetch courses list
+    
     $courses_list = $pdo->query("SELECT course_id, course_name FROM courses ORDER BY course_name ASC")->fetchAll();
 
-    // 2. Build dynamic search query for applications
+    
     $query = "
         SELECT s.*, c.course_name 
         FROM students s 
@@ -50,8 +50,8 @@ try {
         $params['course_filter'] = $course_filter;
     }
 
-    // Sort order mapping
-    $order_clause = " ORDER BY s.student_id DESC"; // default newest
+    
+    $order_clause = " ORDER BY s.student_id DESC"; 
     if ($sort_by === 'oldest') {
         $order_clause = " ORDER BY s.student_id ASC";
     } elseif ($sort_by === 'pct_high') {
@@ -77,17 +77,17 @@ include '../includes/header.php';
 ?>
 
 <div class="wrapper">
-    <!-- Sidebar -->
+    
     <?php include '../includes/sidebar.php'; ?>
 
-    <!-- Page Content -->
+    
     <div id="content">
         <?php render_topbar('Staff Control Panel', '<span class="text-muted small"><i class="fa-solid fa-user-gear me-1"></i>' . e($_SESSION['name']) . ' (Staff)</span>'); ?>
 
         <div class="container-fluid">
-            <!-- Stat Cards Row -->
+            
             <div class="row g-4 mb-4">
-                <!-- Total Applications -->
+                
                 <div class="col-md-3">
                     <div class="card bg-white p-3 stat-card courses">
                         <div class="d-flex justify-content-between align-items-center">
@@ -99,7 +99,7 @@ include '../includes/header.php';
                         </div>
                     </div>
                 </div>
-                <!-- Pending -->
+                
                 <div class="col-md-3">
                     <div class="card bg-white p-3 stat-card pending">
                         <div class="d-flex justify-content-between align-items-center">
@@ -111,7 +111,7 @@ include '../includes/header.php';
                         </div>
                     </div>
                 </div>
-                <!-- Approved -->
+                
                 <div class="col-md-3">
                     <div class="card bg-white p-3 stat-card approved">
                         <div class="d-flex justify-content-between align-items-center">
@@ -123,7 +123,7 @@ include '../includes/header.php';
                         </div>
                     </div>
                 </div>
-                <!-- Rejected -->
+                
                 <div class="col-md-3">
                     <div class="card bg-white p-3 stat-card rejected">
                         <div class="d-flex justify-content-between align-items-center">
@@ -137,7 +137,7 @@ include '../includes/header.php';
                 </div>
             </div>
 
-            <!-- Search and Filtering Filter Bar -->
+            
             <div class="card mb-4 shadow-sm border-0">
                 <div class="card-body">
                     <form action="dashboard.php" method="GET" class="row g-3 align-items-end">
@@ -186,7 +186,7 @@ include '../includes/header.php';
                 </div>
             </div>
 
-            <!-- Student Applications List Table -->
+            
             <div class="card">
                 <div class="card-header">
                     <i class="fa-solid fa-table-list me-2"></i>Submitted Applications

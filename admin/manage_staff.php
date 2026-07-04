@@ -2,17 +2,17 @@
 require_once '../includes/db_connect.php';
 require_once '../includes/auth.php';
 
-// Verify admin access
+
 check_access('admin');
 
 $error_msg = "";
 $success_msg = "";
 
-// --------------------------------------------------------------------
-// PROCESS ACTIONS (ADD, EDIT, DELETE)
-// --------------------------------------------------------------------
 
-// 1. Delete Staff
+
+
+
+
 if (isset($_GET['delete_id']) && !empty($_GET['delete_id'])) {
     $delete_id = intval($_GET['delete_id']);
     try {
@@ -24,7 +24,7 @@ if (isset($_GET['delete_id']) && !empty($_GET['delete_id'])) {
     }
 }
 
-// 2. Add or Edit Staff
+
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action'])) {
     $action = $_POST['action'];
     $name = trim($_POST['name']);
@@ -41,14 +41,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action'])) {
                 $error_msg = "Password is required and must be at least 6 characters long.";
             } else {
                 try {
-                    // Check if email already registered in staff table
+                    
                     $chk = $pdo->prepare("SELECT staff_id FROM admission_staff WHERE email = :email");
                     $chk->execute(['email' => $email]);
                     
                     if ($chk->rowCount() > 0) {
                         $error_msg = "This email is already registered to a staff account.";
                     } else {
-                        // Secure password hashing
+                        
                         $hashed_password = password_hash($password, PASSWORD_DEFAULT);
                         
                         $stmt = $pdo->prepare("INSERT INTO admission_staff (name, email, password) VALUES (:name, :email, :password)");
@@ -66,7 +66,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action'])) {
         } elseif ($action === 'edit') {
             $staff_id = intval($_POST['staff_id']);
             try {
-                // Check if email is already taken by another staff
+                
                 $chk = $pdo->prepare("SELECT staff_id FROM admission_staff WHERE email = :email AND staff_id != :id");
                 $chk->execute(['email' => $email, 'id' => $staff_id]);
                 
@@ -74,7 +74,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action'])) {
                     $error_msg = "This email is already registered to another staff account.";
                 } else {
                     if (!empty($password)) {
-                        // If password is changed, update with encryption
+                        
                         if (strlen($password) < 6) {
                             $error_msg = "Password must be at least 6 characters long.";
                         } else {
@@ -89,7 +89,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action'])) {
                             $success_msg = "Staff details and password updated successfully.";
                         }
                     } else {
-                        // Password not changed, update other fields
+                        
                         $stmt = $pdo->prepare("UPDATE admission_staff SET name = :name, email = :email WHERE staff_id = :id");
                         $stmt->execute([
                             'name' => $name,
@@ -106,7 +106,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action'])) {
     }
 }
 
-// Fetch all staff accounts
+
 try {
     $stmt = $pdo->query("SELECT * FROM admission_staff ORDER BY staff_id DESC");
     $staff_members = $stmt->fetchAll();
@@ -119,15 +119,15 @@ include '../includes/header.php';
 ?>
 
 <div class="wrapper">
-    <!-- Sidebar -->
+    
     <?php include '../includes/sidebar.php'; ?>
 
-    <!-- Page Content -->
+    
     <div id="content">
         <?php render_topbar('Staff Management Portal', '<button type="button" class="btn btn-sm btn-primary" data-bs-toggle="modal" data-bs-target="#addStaffModal"><i class="fa-solid fa-plus me-1"></i>Create Staff Account</button>'); ?>
 
         <div class="container-fluid">
-            <!-- Notifications -->
+            
             <?php if (!empty($success_msg)): ?>
                 <div class="alert alert-success" role="alert">
                     <i class="fa-solid fa-circle-check me-2"></i><?php echo $success_msg; ?>
@@ -139,7 +139,7 @@ include '../includes/header.php';
                 </div>
             <?php endif; ?>
 
-            <!-- Staff Accounts Table -->
+            
             <div class="card">
                 <div class="card-header">
                     <i class="fa-solid fa-user-tie me-2"></i>Admission Staff Accounts
@@ -167,11 +167,11 @@ include '../includes/header.php';
                                             <td class="fw-bold text-primary"><?php echo e($s['name']); ?></td>
                                             <td><?php echo e($s['email']); ?></td>
                                             <td class="text-center">
-                                                <!-- Edit button triggers Populate JS -->
+                                                
                                                 <button class="btn btn-sm btn-outline-secondary me-2" onclick="editStaff(<?php echo e(json_encode($s)); ?>)">
                                                     <i class="fa-solid fa-user-pen"></i> Edit
                                                 </button>
-                                                <!-- Delete button -->
+                                                
                                                 <a href="manage_staff.php?delete_id=<?php echo $s['staff_id']; ?>" class="btn btn-sm btn-outline-danger" onclick="return confirm('Are you sure you want to delete this staff account?');">
                                                     <i class="fa-solid fa-user-minus"></i> Delete
                                                 </a>
@@ -188,11 +188,9 @@ include '../includes/header.php';
     </div>
 </div>
 
-<!-- ====================================================================
-     MODALS SECTION
-     ==================================================================== -->
 
-<!-- Add Staff Modal -->
+
+
 <div class="modal fade" id="addStaffModal" tabindex="-1" aria-labelledby="addStaffModalLabel" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
@@ -225,7 +223,7 @@ include '../includes/header.php';
     </div>
 </div>
 
-<!-- Edit Staff Modal -->
+
 <div class="modal fade" id="editStaffModal" tabindex="-1" aria-labelledby="editStaffModalLabel" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
@@ -259,7 +257,7 @@ include '../includes/header.php';
     </div>
 </div>
 
-<!-- Populate values in edit form modal dynamically -->
+
 <script>
 function editStaff(staff) {
     document.getElementById('edit_staff_id').value = staff.staff_id;

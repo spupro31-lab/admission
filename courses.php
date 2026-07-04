@@ -2,16 +2,16 @@
 require_once 'includes/db_connect.php';
 require_once 'includes/auth.php';
 
-// Fetch all courses from database
+
 try {
     $stmt = $pdo->query("SELECT * FROM courses ORDER BY department, course_name");
     $courses_from_db = $stmt->fetchAll();
 } catch (PDOException $e) {
-    // If query fails, fall back to empty array
+    
     $courses_from_db = [];
 }
 
-// Map for rich curriculum details
+
 $course_details_map = [
     'B.Sc. Computer Science' => [
         'icon' => 'fa-laptop-code text-primary',
@@ -106,7 +106,7 @@ $page_title = "Academic Programs & Courses";
 include 'includes/header.php';
 ?>
 
-<!-- Hero Section -->
+
 <div class="courses-hero-section text-center">
     <div class="container">
         <span class="badge bg-light text-primary border px-3 py-2 mb-3 fw-bold text-uppercase tracking-wider">State College of Technology</span>
@@ -117,7 +117,7 @@ include 'includes/header.php';
     </div>
 </div>
 
-<!-- Courses Details Container -->
+
 <div class="container my-5">
     <?php if (empty($courses_from_db)): ?>
         <div class="alert alert-info text-center shadow-sm py-4">
@@ -152,7 +152,7 @@ include 'includes/header.php';
                         
                         <div class="card-body p-4 bg-light bg-opacity-50 border-top">
                             <div class="row g-4">
-                                <!-- Column 1: Core Details -->
+                                
                                 <div class="col-md-4">
                                     <div class="p-3 bg-white rounded shadow-sm h-100">
                                         <h5 class="fw-bold text-primary mb-3"><i class="fa-solid fa-list-check me-2"></i>Program Info</h5>
@@ -178,7 +178,7 @@ include 'includes/header.php';
                                     </div>
                                 </div>
                                 
-                                <!-- Column 2: How Students Study -->
+                                
                                 <div class="col-md-4">
                                     <div class="p-3 bg-white rounded shadow-sm h-100">
                                         <h5 class="fw-bold text-success mb-3"><i class="fa-solid fa-user-graduate me-2"></i>How Students Study</h5>
@@ -188,7 +188,7 @@ include 'includes/header.php';
                                     </div>
                                 </div>
                                 
-                                <!-- Column 3: How Faculty Teach -->
+                                
                                 <div class="col-md-4">
                                     <div class="p-3 bg-white rounded shadow-sm h-100">
                                         <h5 class="fw-bold text-warning mb-3"><i class="fa-solid fa-user-tie me-2"></i>How Faculty Teach</h5>
@@ -205,7 +205,7 @@ include 'includes/header.php';
         </div>
     <?php endif; ?>
 
-    <!-- Action Section -->
+    
     <div class="text-center mt-5 p-5 bg-white rounded shadow-sm">
         <h3 class="fw-bold text-dark mb-2">Ready to embark on your educational journey?</h3>
         <p class="text-muted mb-4 mx-auto" style="max-width: 600px;">Create your student account in minutes, fill out your academic marks, upload your documents, and track your admission status online.</p>

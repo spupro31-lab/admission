@@ -2,17 +2,17 @@
 require_once '../includes/db_connect.php';
 require_once '../includes/auth.php';
 
-// Verify admin access
+
 check_access('admin');
 
 $error_msg = "";
 $success_msg = "";
 
-// --------------------------------------------------------------------
-// PROCESS ACTIONS (ADD, EDIT, DELETE)
-// --------------------------------------------------------------------
 
-// 1. Delete Course
+
+
+
+
 if (isset($_GET['delete_id']) && !empty($_GET['delete_id'])) {
     $delete_id = intval($_GET['delete_id']);
     try {
@@ -24,7 +24,7 @@ if (isset($_GET['delete_id']) && !empty($_GET['delete_id'])) {
     }
 }
 
-// 2. Add or Edit Course
+
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action'])) {
     $action = $_POST['action'];
     $course_name = trim($_POST['course_name']);
@@ -67,7 +67,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action'])) {
     }
 }
 
-// Fetch all courses
+
 try {
     $stmt = $pdo->query("SELECT * FROM courses ORDER BY course_id DESC");
     $courses = $stmt->fetchAll();
@@ -80,15 +80,15 @@ include '../includes/header.php';
 ?>
 
 <div class="wrapper">
-    <!-- Sidebar -->
+    
     <?php include '../includes/sidebar.php'; ?>
 
-    <!-- Page Content -->
+    
     <div id="content">
         <?php render_topbar('Course Management Portal', '<button type="button" class="btn btn-sm btn-primary" data-bs-toggle="modal" data-bs-target="#addCourseModal"><i class="fa-solid fa-plus me-1"></i>Add New Course</button>'); ?>
 
         <div class="container-fluid">
-            <!-- Notifications -->
+            
             <?php if (!empty($success_msg)): ?>
                 <div class="alert alert-success" role="alert">
                     <i class="fa-solid fa-circle-check me-2"></i><?php echo $success_msg; ?>
@@ -100,7 +100,7 @@ include '../includes/header.php';
                 </div>
             <?php endif; ?>
 
-            <!-- Course Catalog Table -->
+            
             <div class="card">
                 <div class="card-header">
                     <i class="fa-solid fa-book-bookmark me-2"></i>Available Courses List
@@ -132,11 +132,11 @@ include '../includes/header.php';
                                             <td><?php echo e($c['semester']); ?></td>
                                             <td><?php echo e($c['total_seats']); ?></td>
                                             <td class="text-center">
-                                                <!-- Edit Button triggers modal populate JS -->
+                                                
                                                 <button class="btn btn-sm btn-outline-secondary me-2" onclick="editCourse(<?php echo e(json_encode($c)); ?>)">
                                                     <i class="fa-solid fa-pen-to-square"></i> Edit
                                                 </button>
-                                                <!-- Delete Button -->
+                                                
                                                 <a href="manage_courses.php?delete_id=<?php echo $c['course_id']; ?>" class="btn btn-sm btn-outline-danger" onclick="return confirm('Are you sure you want to delete this course? This action is irreversible.');">
                                                     <i class="fa-solid fa-trash-can"></i> Delete
                                                 </a>
@@ -153,11 +153,9 @@ include '../includes/header.php';
     </div>
 </div>
 
-<!-- ====================================================================
-     MODALS SECTION
-     ==================================================================== -->
 
-<!-- Add Course Modal -->
+
+
 <div class="modal fade" id="addCourseModal" tabindex="-1" aria-labelledby="addCourseModalLabel" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
@@ -194,7 +192,7 @@ include '../includes/header.php';
     </div>
 </div>
 
-<!-- Edit Course Modal -->
+
 <div class="modal fade" id="editCourseModal" tabindex="-1" aria-labelledby="editCourseModalLabel" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
@@ -232,7 +230,7 @@ include '../includes/header.php';
     </div>
 </div>
 
-<!-- Populate values in edit form modal dynamically -->
+
 <script>
 function editCourse(course) {
     document.getElementById('edit_course_id').value = course.course_id;

@@ -68,20 +68,20 @@ include 'includes/header.php';
 ?>
 
 <div class="wrapper">
-    <!-- Sidebar -->
+    
     <?php include 'includes/sidebar.php'; ?>
 
-    <!-- Page Content -->
+    
     <div id="content">
         <?php render_topbar('User Profile Desk'); ?>
 
         <div class="container-fluid">
-            <!-- Notifications -->
+            
             <?php render_alert($success_msg); ?>
             <?php render_alert($error_msg, 'danger'); ?>
 
             <div class="row">
-                <!-- Profile Editor Column -->
+                
                 <div class="col-lg-7">
                     <div class="card">
                         <div class="card-header">
@@ -89,26 +89,26 @@ include 'includes/header.php';
                         </div>
                         <div class="card-body">
                             <form action="profile.php" method="POST">
-                                <!-- Email (Disabled Username) -->
+                                
                                 <div class="mb-3">
                                     <label class="form-label">Email Address (Registered Login)</label>
                                     <input type="email" class="form-control bg-light" value="<?php echo e($user_email); ?>" readonly disabled>
                                     <div class="form-text small text-muted">Email address acts as login username and cannot be altered.</div>
                                 </div>
 
-                                <!-- Display Name -->
+                                
                                 <div class="mb-3">
                                     <label for="name" class="form-label">Display Name</label>
                                     <input type="text" class="form-control" id="name" name="name" value="<?php echo e($user_name); ?>" required>
                                 </div>
 
-                                <!-- Current Password verification -->
+                                
                                 <div class="mb-4 pt-3 border-top">
                                     <label for="current_password" class="form-label text-danger">Current Password <span class="text-danger">*</span></label>
                                     <input type="password" class="form-control" id="current_password" name="current_password" placeholder="Confirm current password to save changes" required>
                                 </div>
 
-                                <!-- New Password Fields -->
+                                
                                 <h6 class="fw-bold text-primary border-bottom pb-2 mb-3">Change Account Password (Optional)</h6>
                                 <div class="row g-3 mb-4">
                                     <div class="col-md-6">
@@ -129,7 +129,7 @@ include 'includes/header.php';
                     </div>
                 </div>
 
-                <!-- Info summary column -->
+                
                 <div class="col-lg-5">
                     <div class="card bg-white">
                         <div class="card-header bg-light">

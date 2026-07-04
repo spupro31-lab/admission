@@ -2,7 +2,7 @@
 require_once '../includes/db_connect.php';
 require_once '../includes/auth.php';
 
-// Verify admin access
+
 check_access('admin');
 
 $error_msg = "";
@@ -15,17 +15,17 @@ $payment_filter = isset($_GET['payment_filter']) ? trim($_GET['payment_filter'])
 $sort_by = isset($_GET['sort_by']) ? trim($_GET['sort_by']) : 'newest';
 $edit_id = isset($_GET['edit_id']) ? intval($_GET['edit_id']) : 0;
 
-// --------------------------------------------------------------------
-// PROCESS ACTIONS (DELETE & EDIT UPDATE)
-// --------------------------------------------------------------------
 
-// 1. Delete Student (Unlinks document files, then deletes user row)
+
+
+
+
 if (isset($_GET['delete_id']) && !empty($_GET['delete_id'])) {
     $delete_id = intval($_GET['delete_id']);
     try {
         $pdo->beginTransaction();
         
-        // Fetch student user_id and document paths
+        
         $stmt = $pdo->prepare("
             SELECT s.user_id, s.student_id, d.photo, d.marksheet10, d.marksheet12, d.leaving_certificate, d.aadhaar 
             FROM students s 
@@ -38,7 +38,7 @@ if (isset($_GET['delete_id']) && !empty($_GET['delete_id'])) {
         if ($data) {
             $user_id_to_del = $data['user_id'];
             
-            // Delete actual files from directories
+            
             $file_fields = ['photo', 'marksheet10', 'marksheet12', 'leaving_certificate', 'aadhaar'];
             foreach ($file_fields as $field) {
                 if (!empty($data[$field])) {
@@ -49,7 +49,7 @@ if (isset($_GET['delete_id']) && !empty($_GET['delete_id'])) {
                 }
             }
             
-            // Delete user row (cascades to delete students, documents, status_history)
+            
             $del_user = $pdo->prepare("DELETE FROM users WHERE user_id = :uid");
             $del_user->execute(['uid' => $user_id_to_del]);
             
@@ -65,7 +65,7 @@ if (isset($_GET['delete_id']) && !empty($_GET['delete_id'])) {
     }
 }
 
-// 2. Edit Student Details (Update details in students table)
+
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['action'] === 'update_student') {
     $student_id = intval($_POST['student_id']);
     $full_name = trim($_POST['full_name']);
@@ -92,7 +92,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
         $error_msg = "All fields are required.";
     } else {
         try {
-            // Check for duplicate mobile
+            
             $chk = $pdo->prepare("SELECT student_id FROM students WHERE mobile = :mobile AND student_id != :id");
             $chk->execute(['mobile' => $mobile, 'id' => $student_id]);
             
@@ -101,7 +101,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
             } else {
                 $pdo->beginTransaction();
 
-                // Get current status to check if it has changed
+                
                 $status_stmt = $pdo->prepare("SELECT status FROM students WHERE student_id = :id");
                 $status_stmt->execute(['id' => $student_id]);
                 $old_status = $status_stmt->fetchColumn();
@@ -137,7 +137,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
                     'student_id' => $student_id
                 ]);
 
-                // Log status changes in history
+                
                 if ($old_status !== $status) {
                     $hist_stmt = $pdo->prepare("INSERT INTO status_history (student_id, status, remarks) VALUES (:student_id, :status, :remarks)");
                     $hist_stmt->execute([
@@ -149,7 +149,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
 
                 $pdo->commit();
                 $success_msg = "Student details updated successfully.";
-                $edit_id = 0; // Close editing screen
+                $edit_id = 0; 
             }
         } catch (PDOException $e) {
             $pdo->rollBack();
@@ -158,14 +158,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
     }
 }
 
-// --------------------------------------------------------------------
-// FETCH RECORDS
-// --------------------------------------------------------------------
 
-// Fetch courses list for form dropdowns
+
+
+
+
 $courses = $pdo->query("SELECT * FROM courses ORDER BY course_name ASC")->fetchAll();
 
-// Fetch student detail for editing if edit_id is set
+
 $edit_student = null;
 if ($edit_id > 0) {
     $edit_stmt = $pdo->prepare("SELECT * FROM students WHERE student_id = :id");
@@ -173,7 +173,7 @@ if ($edit_id > 0) {
     $edit_student = $edit_stmt->fetch();
 }
 
-// Fetch all students based on filters and search term
+
 try {
     $list_sql = "
         SELECT s.*, c.course_name 
@@ -207,8 +207,8 @@ try {
         $list_params['payment_filter'] = $payment_filter;
     }
     
-    // Sort order mapping
-    $order_clause = " ORDER BY s.student_id DESC"; // default newest
+    
+    $order_clause = " ORDER BY s.student_id DESC"; 
     if ($sort_by === 'oldest') {
         $order_clause = " ORDER BY s.student_id ASC";
     } elseif ($sort_by === 'pct_high') {
@@ -233,15 +233,15 @@ include '../includes/header.php';
 ?>
 
 <div class="wrapper">
-    <!-- Sidebar -->
+    
     <?php include '../includes/sidebar.php'; ?>
 
-    <!-- Page Content -->
+    
     <div id="content">
         <?php render_topbar('Student Accounts Desk', '<a href="add_student.php" class="btn btn-sm btn-primary"><i class="fa-solid fa-user-plus me-1"></i>Add Student</a>'); ?>
 
         <div class="container-fluid">
-            <!-- Notifications -->
+            
             <?php if (!empty($success_msg)): ?>
                 <div class="alert alert-success" role="alert">
                     <i class="fa-solid fa-circle-check me-2"></i><?php echo $success_msg; ?>
@@ -253,9 +253,9 @@ include '../includes/header.php';
                 </div>
             <?php endif; ?>
 
-            <!-- The inline edit form has been relocated to edit_student.php -->
+            
 
-            <!-- Search Filter Card -->
+            
             <div class="card mb-4 shadow-sm border-0">
                 <div class="card-body">
                     <form action="manage_students.php" method="GET" class="row g-3 align-items-end">
@@ -309,7 +309,7 @@ include '../includes/header.php';
                 </div>
             </div>
 
-            <!-- Student Database Records Table -->
+            
             <div class="card">
                 <div class="card-header">
                     <i class="fa-solid fa-users me-2"></i>Students Database Records
@@ -357,15 +357,15 @@ include '../includes/header.php';
                                                 <?php endif; ?>
                                             </td>
                                             <td class="text-center">
-                                                <!-- View button -->
+                                                
                                                 <a href="view_students.php?id=<?php echo $s['student_id']; ?>" class="btn btn-sm btn-outline-primary me-1" title="View Profile">
                                                     <i class="fa-solid fa-eye"></i>
                                                 </a>
-                                                <!-- Edit button -->
+                                                
                                                 <a href="edit_student.php?id=<?php echo $s['student_id']; ?>" class="btn btn-sm btn-outline-secondary me-1" title="Edit Profile">
                                                     <i class="fa-solid fa-user-pen"></i>
                                                 </a>
-                                                <!-- Delete button -->
+                                                
                                                 <a href="manage_students.php?delete_id=<?php echo $s['student_id']; ?>&search=<?php echo urlencode($search); ?>" class="btn btn-sm btn-outline-danger" onclick="return confirm('DANGER: Deleting this student will wipe out their credentials, documents, and logs. Proceed?');">
                                                     <i class="fa-solid fa-user-minus"></i>
                                                 </a>

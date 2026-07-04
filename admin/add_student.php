@@ -2,22 +2,22 @@
 require_once '../includes/db_connect.php';
 require_once '../includes/auth.php';
 
-// Verify admin access
+
 check_access('admin');
 
 $error_msg = "";
 $success_msg = "";
 
-// Fetch active courses list
+
 $courses = $pdo->query("SELECT * FROM courses ORDER BY course_name ASC")->fetchAll();
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    // Account details
+    
     $name = trim($_POST['name']);
     $email = trim($_POST['email']);
     $password = $_POST['password'];
     
-    // Admission Form details
+    
     $full_name = trim($_POST['full_name']);
     $father_name = trim($_POST['father_name']);
     $mother_name = trim($_POST['mother_name']);
@@ -37,18 +37,18 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     
     $course_id = intval($_POST['course_id']);
 
-    // Validation
+    
     if (empty($name) || empty($email) || empty($password) || empty($full_name) || empty($father_name) || empty($mother_name) || empty($mobile) || empty($address) || empty($school_name) || empty($course_id)) {
         $error_msg = "Please fill in all mandatory account and admission fields.";
     } elseif ($twelfth_percentage < 35) {
         $error_msg = "Eligibility Alert: Applicant must have at least 35% in 12th standard.";
     } else {
         try {
-            // Check if email already exists in users
+            
             $chk_email = $pdo->prepare("SELECT user_id FROM users WHERE email = :email");
             $chk_email->execute(['email' => $email]);
             
-            // Check if mobile already exists in students
+            
             $chk_mobile = $pdo->prepare("SELECT student_id FROM students WHERE mobile = :mobile");
             $chk_mobile->execute(['mobile' => $mobile]);
             
@@ -59,7 +59,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             } else {
                 $pdo->beginTransaction();
                 
-                // 1. Create User account
+                
                 $hashed_password = password_hash($password, PASSWORD_DEFAULT);
                 $ins_user = $pdo->prepare("INSERT INTO users (name, email, password, role) VALUES (:name, :email, :password, 'student')");
                 $ins_user->execute([
@@ -69,7 +69,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 ]);
                 $new_user_id = $pdo->lastInsertId();
                 
-                // 2. Generate Admission Number
+                
                 $year = date('Y');
                 $prefix = "ADM" . $year;
                 
@@ -85,7 +85,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 }
                 $admission_no = sprintf("ADM%s%03d", $year, $seq_num);
                 
-                // 3. Insert Student details
+                
                 $ins_student = $pdo->prepare("
                     INSERT INTO students (
                         user_id, admission_no, full_name, father_name, mother_name, gender, dob, category, mobile, email,
@@ -121,18 +121,18 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 ]);
                 $new_student_id = $pdo->lastInsertId();
                 
-                // 4. Initialize empty documents record for the student
+                
                 $ins_docs = $pdo->prepare("INSERT INTO documents (student_id) VALUES (:student_id)");
                 $ins_docs->execute(['student_id' => $new_student_id]);
                 
-                // 5. Add initial history log
+                
                 $ins_hist = $pdo->prepare("INSERT INTO status_history (student_id, status, remarks) VALUES (:student_id, 'Pending', 'Profile registered by Administrator.')");
                 $ins_hist->execute(['student_id' => $new_student_id]);
                 
                 $pdo->commit();
                 $success_msg = "Student registered successfully. Admission No: " . $admission_no;
                 
-                // Redirect
+                
                 header("Location: manage_students.php?msg=added");
                 exit;
             }
@@ -148,15 +148,15 @@ include '../includes/header.php';
 ?>
 
 <div class="wrapper">
-    <!-- Sidebar -->
+    
     <?php include '../includes/sidebar.php'; ?>
 
-    <!-- Page Content -->
+    
     <div id="content">
         <?php render_topbar('Create Student Application', '<a href="manage_students.php" class="btn btn-sm btn-outline-secondary"><i class="fa-solid fa-arrow-left me-1"></i>Back to List</a>'); ?>
 
         <div class="container-fluid">
-            <!-- Alert notifications -->
+            
             <?php if (!empty($error_msg)): ?>
                 <div class="alert alert-danger" role="alert">
                     <i class="fa-solid fa-triangle-exclamation me-2"></i><?php echo e($error_msg); ?>
@@ -170,7 +170,7 @@ include '../includes/header.php';
                 <div class="card-body">
                     <form action="add_student.php" method="POST">
                         
-                        <!-- 1. Account Credentials -->
+                        
                         <h5 class="fw-bold text-primary border-bottom pb-2 mb-3"><i class="fa-solid fa-key me-2"></i>1. Login Account Credentials</h5>
                         <div class="row g-3 mb-4">
                             <div class="col-md-4">
@@ -187,7 +187,7 @@ include '../includes/header.php';
                             </div>
                         </div>
 
-                        <!-- 2. Personal Info -->
+                        
                         <h5 class="fw-bold text-primary border-bottom pb-2 mb-3"><i class="fa-solid fa-address-card me-2"></i>2. Personal Details</h5>
                         <div class="row g-3 mb-4">
                             <div class="col-md-4">
@@ -248,7 +248,7 @@ include '../includes/header.php';
                             </div>
                         </div>
 
-                        <!-- 3. Academic Details -->
+                        
                         <h5 class="fw-bold text-primary border-bottom pb-2 mb-3"><i class="fa-solid fa-graduation-cap me-2"></i>3. Academic Scores</h5>
                         <div class="row g-3 mb-4">
                             <div class="col-md-3">
@@ -270,7 +270,7 @@ include '../includes/header.php';
                             </div>
                         </div>
 
-                        <!-- 4. Course Preference -->
+                        
                         <h5 class="fw-bold text-primary border-bottom pb-2 mb-3"><i class="fa-solid fa-book-bookmark me-2"></i>4. Degree Selection</h5>
                         <div class="row g-3 mb-5">
                             <div class="col-md-12">

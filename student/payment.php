@@ -2,7 +2,7 @@
 require_once '../includes/db_connect.php';
 require_once '../includes/auth.php';
 
-// Verify student access
+
 check_access('student');
 
 $user_id = $_SESSION['user_id'];
@@ -10,7 +10,7 @@ $error_msg = "";
 $success_msg = "";
 
 try {
-    // 1. Fetch student details and documents upload status
+    
     $stmt = $pdo->prepare("SELECT s.*, d.photo, d.marksheet10, d.marksheet12, d.leaving_certificate, d.aadhaar 
                            FROM students s 
                            LEFT JOIN documents d ON s.student_id = d.student_id 
@@ -19,19 +19,19 @@ try {
     $student = $stmt->fetch();
     
     if (!$student) {
-        // Details form not filled yet
+        
         header("Location: apply.php");
         exit;
     }
     
-    // Check if documents are uploaded
+    
     $has_docs = ($student['photo'] && $student['marksheet10'] && $student['marksheet12'] && $student['leaving_certificate'] && $student['aadhaar']);
     if (!$has_docs) {
         header("Location: upload.php");
         exit;
     }
     
-    // If already submitted, lock access
+    
     if ($student['is_submitted'] == 1) {
         header("Location: dashboard.php");
         exit;
@@ -41,7 +41,7 @@ try {
     die("Database Error: " . $e->getMessage());
 }
 
-// 2. Process payment transaction submission
+
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $transaction_id = trim($_POST['transaction_id']);
     
@@ -51,7 +51,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $error_msg = "Transaction Reference ID must be at least 8 characters long.";
     } else {
         try {
-            // Update payment details in students table
+            
             $update_stmt = $pdo->prepare("UPDATE students SET payment_status = 'Paid', transaction_id = :transaction_id WHERE student_id = :student_id");
             $update_stmt->execute([
                 'transaction_id' => $transaction_id,
@@ -71,15 +71,15 @@ include '../includes/header.php';
 ?>
 
 <div class="wrapper">
-    <!-- Sidebar -->
+    
     <?php include '../includes/sidebar.php'; ?>
 
-    <!-- Page Content -->
+    
     <div id="content">
         <?php render_topbar('Student Admission Portal', '<span class="text-muted small"><i class="fa-solid fa-circle-user me-1"></i>' . e($_SESSION['email']) . '</span>'); ?>
 
         <div class="container-fluid">
-            <!-- Stepper Container -->
+            
             <div class="status-card-premium status-card-step">
                 <div class="status-stepper-premium">
                     <div class="status-stepper-step-premium completed">
@@ -102,7 +102,7 @@ include '../includes/header.php';
             </div>
 
             <div class="row">
-                <!-- Payment Instructions -->
+                
                 <div class="col-lg-7">
                     <div class="card">
                         <div class="card-header">
@@ -138,7 +138,7 @@ include '../includes/header.php';
                     </div>
                 </div>
 
-                <!-- Payment Reference Form -->
+                
                 <?php if ($student['payment_status'] !== 'Paid'): ?>
                     <div class="col-lg-5">
                         <div class="card">

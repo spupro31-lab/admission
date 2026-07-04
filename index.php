@@ -7,76 +7,73 @@ $page_title = "State College of Technology - Academic Excellence";
 include 'includes/header.php';
 ?>
 
-<!-- Hero Banner Section -->
-<div class="hero-section-home text-white mb-5">
-    <!-- Decorative Ambient light circles -->
-    <div class="position-absolute" style="width: 350px; height: 350px; background: rgba(255, 255, 255, 0.12); border-radius: 50%; top: -100px; right: -50px; filter: blur(60px);"></div>
-    <div class="position-absolute" style="width: 250px; height: 250px; background: rgba(255, 255, 255, 0.08); border-radius: 50%; bottom: -50px; left: -50px; filter: blur(50px);"></div>
+
+<div class="hero-section-home mb-5">
+    
+    <div class="position-absolute" style="width: 350px; height: 350px; background: rgba(15, 23, 42, 0.05); border-radius: 50%; top: -100px; right: -50px; filter: blur(60px);"></div>
+    <div class="position-absolute" style="width: 250px; height: 250px; background: rgba(15, 23, 42, 0.03); border-radius: 50%; bottom: -50px; left: -50px; filter: blur(50px);"></div>
     
     <div class="container position-relative z-1 my-3">
         <div class="row align-items-center g-5">
-            <!-- Left Text Content -->
+            
             <div class="col-lg-7 text-center text-lg-start">
-                <div class="d-inline-flex align-items-center gap-2 mb-3 px-3 py-1.5 rounded-pill text-warning fw-bold border border-warning border-opacity-25" style="background: rgba(245, 158, 11, 0.1); font-size: 0.85rem;">
-                    <i class="fa-solid fa-bullhorn text-warning"></i> Admissions Open for Academic Year 2026-27
-                </div>
-                <h1 class="display-4 fw-extrabold mb-3 text-white" style="line-height: 1.15; font-family: 'Poppins', sans-serif;">
-                    Unlock Your Academic Potential & <span class="text-info">Innovate for Tomorrow</span>
+                <h1 class="display-4 fw-extrabold mb-3 text-dark" style="line-height: 1.15; font-family: 'Poppins', sans-serif;">
+                    Unlock Your Academic Potential & <span class="text-primary">Innovate for Tomorrow</span>
                 </h1>
-                <p class="lead mb-4 text-white-50" style="font-size: 1.1rem; max-width: 620px; margin: 0 auto 1.5rem;">
+                <p class="lead mb-4">
                     Welcome to the State College of Technology. Experience a fully digital, streamlined admission process. Apply for courses, upload your credentials, and track your application status in real time.
                 </p>
                 <div class="d-flex gap-3 justify-content-center justify-content-lg-start flex-wrap mt-2">
-                    <a href="portal.php" class="btn btn-info btn-lg px-4 py-3 fw-bold text-white shadow-sm d-flex align-items-center gap-2">
+                    <a href="portal.php" class="btn btn-primary btn-lg px-4 py-3 fw-bold text-white shadow-sm d-flex align-items-center gap-2">
                         <i class="fa-solid fa-right-to-bracket"></i> Admission Portal Access
                     </a>
-                    <a href="courses.php" class="btn btn-outline-light btn-lg px-4 py-3 fw-bold d-flex align-items-center gap-2">
+                    <a href="courses.php" class="btn btn-outline-primary btn-lg px-4 py-3 fw-bold d-flex align-items-center gap-2">
                         <i class="fa-solid fa-book-open"></i> Explore Courses
                     </a>
                 </div>
             </div>
-            <!-- Right graphic box -->
+            
             <div class="col-lg-5 d-none d-lg-block">
-                <div class="bg-white bg-opacity-10 border border-white border-opacity-10 rounded-4 p-4 shadow-lg backdrop-blur" style="backdrop-filter: blur(10px);">
-                    <div class="d-flex align-items-center justify-content-between mb-4 border-bottom border-white border-opacity-10 pb-3">
+                <div class="bg-white border border-secondary border-opacity-10 rounded-4 p-4 shadow-sm">
+                    <div class="d-flex align-items-center justify-content-between mb-4 border-bottom border-secondary border-opacity-25 pb-3">
                         <div class="d-flex align-items-center gap-2 text-start">
-                            <div class="bg-info rounded-circle d-flex align-items-center justify-content-center text-white" style="width: 40px; height: 40px;">
+                            <div class="bg-primary rounded-circle d-flex align-items-center justify-content-center text-white" style="width: 40px; height: 40px;">
                                 <i class="fa-solid fa-graduation-cap"></i>
                             </div>
                             <div>
-                                <h6 class="mb-0 text-white">SCT Admission Desk</h6>
-                                <small class="text-white-50 text-xs">Verification System Status</small>
+                                <h6 class="mb-0 text-dark">SCT Admission Desk</h6>
+                                <small class="text-muted text-xs">Verification System Status</small>
                             </div>
                         </div>
                         <span class="badge bg-success px-2.5 py-1">Online</span>
                     </div>
                     
-                    <div class="text-start text-white-50 small">
+                    <div class="text-start text-muted small">
                         <div class="d-flex gap-3 mb-3 align-items-start">
-                            <span class="badge bg-info text-white mt-1">1</span>
+                            <span class="badge bg-primary text-white mt-1">1</span>
                             <div>
-                                <strong class="text-white d-block">Quick Register</strong>
+                                <strong class="text-dark d-block">Quick Register</strong>
                                 <span>Create accounts with name, email and password.</span>
                             </div>
                         </div>
                         <div class="d-flex gap-3 mb-3 align-items-start">
-                            <span class="badge bg-info text-white mt-1">2</span>
+                            <span class="badge bg-primary text-white mt-1">2</span>
                             <div>
-                                <strong class="text-white d-block">Academic Profile</strong>
+                                <strong class="text-dark d-block">Academic Profile</strong>
                                 <span>Enter 10th/12th scores and choose preferences.</span>
                             </div>
                         </div>
                         <div class="d-flex gap-3 mb-3 align-items-start">
-                            <span class="badge bg-info text-white mt-1">3</span>
+                            <span class="badge bg-primary text-white mt-1">3</span>
                             <div>
-                                <strong class="text-white d-block">Secure Upload</strong>
+                                <strong class="text-dark d-block">Secure Upload</strong>
                                 <span>Add marksheet transcripts, photos, and ID.</span>
                             </div>
                         </div>
                         <div class="d-flex gap-3 align-items-start">
-                            <span class="badge bg-info text-white mt-1">4</span>
+                            <span class="badge bg-primary text-white mt-1">4</span>
                             <div>
-                                <strong class="text-white d-block">Verification Log</strong>
+                                <strong class="text-dark d-block">Verification Log</strong>
                                 <span>Review staff approval and download admission letter.</span>
                             </div>
                         </div>
@@ -87,7 +84,7 @@ include 'includes/header.php';
     </div>
 </div>
 
-<!-- Stats Counter Grid Section -->
+
 <div class="container my-5">
     <div class="row g-4 text-center">
         <div class="col-6 col-lg-3">
@@ -121,7 +118,7 @@ include 'includes/header.php';
     </div>
 </div>
 
-<!-- Academic Offerings Preview -->
+
 <div class="container my-5 py-3">
     <div class="text-center mb-5">
         <span class="badge bg-light text-primary border px-3 py-2 mb-2 fw-bold text-uppercase">Programs</span>
@@ -132,7 +129,7 @@ include 'includes/header.php';
     </div>
     
     <div class="row g-4 justify-content-center">
-        <!-- CS Program Card -->
+        
         <div class="col-md-4">
             <div class="card border-0 shadow-sm h-100 p-4 bg-white rounded-3 d-flex flex-column justify-content-between">
                 <div>
@@ -150,7 +147,7 @@ include 'includes/header.php';
             </div>
         </div>
         
-        <!-- Commerce Card -->
+        
         <div class="col-md-4">
             <div class="card border-0 shadow-sm h-100 p-4 bg-white rounded-3 d-flex flex-column justify-content-between">
                 <div>
@@ -168,7 +165,7 @@ include 'includes/header.php';
             </div>
         </div>
         
-        <!-- Literature Card -->
+        
         <div class="col-md-4">
             <div class="card border-0 shadow-sm h-100 p-4 bg-white rounded-3 d-flex flex-column justify-content-between">
                 <div>
@@ -194,7 +191,7 @@ include 'includes/header.php';
     </div>
 </div>
 
-<!-- Admission Steps Journey Section -->
+
 <div class="container my-5" id="steps">
     <div class="timeline-section">
         <h2 class="section-title">Application Journey</h2>
@@ -225,7 +222,7 @@ include 'includes/header.php';
     </div>
 </div>
 
-<!-- Campus Infrastructure -->
+
 <div class="campus-facilities-section" id="facilities">
     <div class="container">
         <h2 class="section-title">Campus & Infrastructure</h2>
@@ -271,7 +268,7 @@ include 'includes/header.php';
     </div>
 </div>
 
-<!-- Student Testimonials Section -->
+
 <div class="student-testimonials-section" id="testimonials">
     <div class="container">
         <h2 class="section-title">What Our Alumni Say</h2>
@@ -319,18 +316,18 @@ include 'includes/header.php';
     </div>
 </div>
 
-<!-- Bottom Admissions Call To Action -->
-<div class="bg-light border-top py-5 text-center">
+
+<div class="border-top py-5 text-center bg-transparent">
     <div class="container py-3">
         <h3 class="fw-bold text-dark mb-2">Build Your Technical Career Path Today</h3>
-        <p class="text-muted mb-4 mx-auto" style="max-width: 600px;">
+        <p class="text-secondary mb-4 mx-auto" style="max-width: 600px; color: var(--slate-800) !important; font-weight: 500;">
             Registration is quick and online. Log in, specify your board marks, upload your PDF and picture credentials, and track your admission status instantly.
         </p>
         <div class="d-flex gap-3 justify-content-center flex-wrap">
             <a href="portal.php" class="btn btn-primary btn-lg px-4 py-2.5 fw-bold shadow-sm">
                 <i class="fa-solid fa-user-plus me-1"></i> Register & Apply Online
             </a>
-            <a href="login.php?role=student" class="btn btn-outline-secondary btn-lg px-4 py-2.5 fw-bold">
+            <a href="login.php?role=student" class="btn btn-outline-primary btn-lg px-4 py-2.5 fw-bold">
                 Student Portal Login
             </a>
         </div>

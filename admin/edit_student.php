@@ -2,7 +2,7 @@
 require_once '../includes/db_connect.php';
 require_once '../includes/auth.php';
 
-// Verify admin access
+
 check_access('admin');
 
 $error_msg = "";
@@ -17,10 +17,10 @@ $student_id = intval($_GET['id']);
 $student = null;
 
 try {
-    // Fetch courses list
+    
     $courses = $pdo->query("SELECT * FROM courses ORDER BY course_name ASC")->fetchAll();
 
-    // Fetch student record
+    
     $stmt = $pdo->prepare("SELECT * FROM students WHERE student_id = :id");
     $stmt->execute(['id' => $student_id]);
     $student = $stmt->fetch();
@@ -33,7 +33,7 @@ try {
     die("Database Error: " . $e->getMessage());
 }
 
-// Process update request
+
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['action'] === 'update_student') {
     $full_name = trim($_POST['full_name']);
     $father_name = trim($_POST['father_name']);
@@ -59,7 +59,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
         $error_msg = "All fields are compulsory.";
     } else {
         try {
-            // Check for duplicate mobile
+            
             $chk = $pdo->prepare("SELECT student_id FROM students WHERE mobile = :mobile AND student_id != :id");
             $chk->execute(['mobile' => $mobile, 'id' => $student_id]);
             
@@ -68,7 +68,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
             } else {
                 $pdo->beginTransaction();
 
-                // Get current status
+                
                 $status_stmt = $pdo->prepare("SELECT status FROM students WHERE student_id = :id");
                 $status_stmt->execute(['id' => $student_id]);
                 $old_status = $status_stmt->fetchColumn();
@@ -104,7 +104,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
                     'student_id' => $student_id
                 ]);
 
-                // Log status changes
+                
                 if ($old_status !== $status) {
                     $hist_stmt = $pdo->prepare("INSERT INTO status_history (student_id, status, remarks) VALUES (:student_id, :status, :remarks)");
                     $hist_stmt->execute([
@@ -116,7 +116,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
 
                 $pdo->commit();
                 
-                // Redirect back
+                
                 header("Location: manage_students.php?msg=updated");
                 exit;
             }
@@ -132,15 +132,15 @@ include '../includes/header.php';
 ?>
 
 <div class="wrapper">
-    <!-- Sidebar -->
+    
     <?php include '../includes/sidebar.php'; ?>
 
-    <!-- Page Content -->
+    
     <div id="content">
         <?php render_topbar('Edit Applicant Info', '<a href="manage_students.php" class="btn btn-sm btn-outline-secondary"><i class="fa-solid fa-arrow-left me-1"></i>Back to Database</a>'); ?>
 
         <div class="container-fluid">
-            <!-- Notifications -->
+            
             <?php if (!empty($error_msg)): ?>
                 <div class="alert alert-danger" role="alert">
                     <i class="fa-solid fa-triangle-exclamation me-2"></i><?php echo e($error_msg); ?>

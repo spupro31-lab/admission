@@ -2,11 +2,11 @@
 require_once '../includes/db_connect.php';
 require_once '../includes/auth.php';
 
-// Verify admin role access
+
 check_access('admin');
 
 try {
-    // 1. Fetch core stats counts
+    
     $stats = [
         'total_apps' => $pdo->query("SELECT COUNT(*) FROM students WHERE is_submitted = 1")->fetchColumn(),
         'approved' => $pdo->query("SELECT COUNT(*) FROM students WHERE status = 'Approved'")->fetchColumn(),
@@ -16,7 +16,7 @@ try {
         'staff' => $pdo->query("SELECT COUNT(*) FROM admission_staff")->fetchColumn()
     ];
 
-    // 2. Fetch gender-wise statistics (only for submitted applications)
+    
     $gender_stmt = $pdo->query("SELECT gender, COUNT(*) as count FROM students WHERE is_submitted = 1 GROUP BY gender");
     $gender_data = $gender_stmt->fetchAll();
     
@@ -27,7 +27,7 @@ try {
         $gender_counts[] = (int)$g['count'];
     }
 
-    // 3. Fetch category-wise statistics (only for submitted applications)
+    
     $category_stmt = $pdo->query("SELECT category, COUNT(*) as count FROM students WHERE is_submitted = 1 GROUP BY category");
     $category_data = $category_stmt->fetchAll();
     
@@ -37,7 +37,7 @@ try {
         $category_labels[] = $c['category'];
         $category_counts[] = (int)$c['count'];
     }
-    // 4. Fetch 5 most recent submitted applications
+    
     $recent_apps_stmt = $pdo->query("
         SELECT s.student_id, s.full_name, s.email, s.status, s.created_at, c.course_name 
         FROM students s 
@@ -57,17 +57,17 @@ include '../includes/header.php';
 ?>
 
 <div class="wrapper">
-    <!-- Sidebar -->
+    
     <?php include '../includes/sidebar.php'; ?>
 
-    <!-- Page Content -->
+    
     <div id="content">
         <?php render_topbar('Administrator Command Center', '<span class="badge bg-danger"><i class="fa-solid fa-shield-halved me-1"></i>Secure Admin</span>'); ?>
 
         <div class="container-fluid">
-            <!-- Stat Cards Row -->
+            
             <div class="row g-4 mb-4">
-                <!-- Total Applications -->
+                
                 <div class="col-md-4 col-xl-2">
                     <div class="card bg-white p-3 stat-card courses">
                         <div class="d-flex justify-content-between align-items-center">
@@ -79,7 +79,7 @@ include '../includes/header.php';
                         </div>
                     </div>
                 </div>
-                <!-- Pending -->
+                
                 <div class="col-md-4 col-xl-2">
                     <div class="card bg-white p-3 stat-card pending">
                         <div class="d-flex justify-content-between align-items-center">
@@ -91,7 +91,7 @@ include '../includes/header.php';
                         </div>
                     </div>
                 </div>
-                <!-- Approved -->
+                
                 <div class="col-md-4 col-xl-2">
                     <div class="card bg-white p-3 stat-card approved">
                         <div class="d-flex justify-content-between align-items-center">
@@ -103,7 +103,7 @@ include '../includes/header.php';
                         </div>
                     </div>
                 </div>
-                <!-- Rejected -->
+                
                 <div class="col-md-4 col-xl-2">
                     <div class="card bg-white p-3 stat-card rejected">
                         <div class="d-flex justify-content-between align-items-center">
@@ -115,7 +115,7 @@ include '../includes/header.php';
                         </div>
                     </div>
                 </div>
-                <!-- Courses -->
+                
                 <div class="col-md-4 col-xl-2">
                     <div class="card bg-white p-3 stat-card courses">
                         <div class="d-flex justify-content-between align-items-center">
@@ -127,7 +127,7 @@ include '../includes/header.php';
                         </div>
                     </div>
                 </div>
-                <!-- Staff -->
+                
                 <div class="col-md-4 col-xl-2">
                     <div class="card bg-white p-3 stat-card approved">
                         <div class="d-flex justify-content-between align-items-center">
@@ -141,9 +141,9 @@ include '../includes/header.php';
                 </div>
             </div>
 
-            <!-- Charts Row -->
+            
             <div class="row">
-                <!-- Gender Stats Chart -->
+                
                 <div class="col-lg-6 mb-4">
                     <div class="card h-100">
                         <div class="card-header">
@@ -159,7 +159,7 @@ include '../includes/header.php';
                     </div>
                 </div>
 
-                <!-- Category Stats Chart -->
+                
                 <div class="col-lg-6 mb-4">
                     <div class="card h-100">
                         <div class="card-header">
@@ -179,7 +179,7 @@ include '../includes/header.php';
     </div>
 </div>
 
-<!-- Load Chart.js library via CDN -->
+
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
 <script>

@@ -2,7 +2,7 @@
 require_once 'includes/db_connect.php';
 require_once 'includes/auth.php';
 
-// Redirect if already logged in
+
 redirect_if_logged_in();
 
 $error_msg = '';
@@ -19,13 +19,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     } else {
         try {
             if ($role === 'staff') {
-                // Fetch staff record from admission_staff table
+                
                 $stmt = $pdo->prepare("SELECT * FROM admission_staff WHERE email = :email");
                 $stmt->execute(['email' => $email]);
                 $user = $stmt->fetch();
                 $id_col = 'staff_id';
             } else {
-                // Fetch student or admin from users table
+                
                 $stmt = $pdo->prepare("SELECT * FROM users WHERE email = :email AND role = :role");
                 $stmt->execute(['email' => $email, 'role' => $role]);
                 $user = $stmt->fetch();
@@ -45,11 +45,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 }
 
 $is_public_page = true;
+$body_class = "login-page-body role-" . $role;
 $page_title = ucfirst($role) . " Login";
 include 'includes/header.php';
 ?>
 
-<div class="container py-5">
+<div class="container login-container py-5">
     <div class="row justify-content-center">
         <div class="col-md-6 col-lg-5">
             <div class="card shadow-sm border-0">
@@ -62,7 +63,7 @@ include 'includes/header.php';
                     <p class="text-muted small mt-2">Please sign in to access your dashboard</p>
                 </div>
                 
-                <!-- Role Tabs Navigation -->
+                
                 <div class="px-4 pt-3">
                     <ul class="nav nav-tabs nav-fill border-bottom-0" role="tablist">
                         <li class="nav-item">
@@ -89,7 +90,7 @@ include 'includes/header.php';
                     <form action="login.php?role=<?php echo urlencode($role); ?>" method="POST">
                         <input type="hidden" name="role" value="<?php echo e($role); ?>">
                         
-                        <!-- Email -->
+                        
                         <div class="mb-3">
                             <label for="email" class="form-label">
                                 <?php echo $role === 'student' ? 'Email Address' : ($role === 'staff' ? 'Staff Email' : 'Admin Email'); ?>
@@ -97,13 +98,13 @@ include 'includes/header.php';
                             <input type="email" class="form-control" id="email" name="email" value="<?php echo e($email ?? ''); ?>" required>
                         </div>
 
-                        <!-- Password -->
+                        
                         <div class="mb-4">
                             <label for="password" class="form-label">Password</label>
                             <input type="password" class="form-control" id="password" name="password" required>
                         </div>
 
-                        <!-- Submit Button -->
+                        
                         <?php
                         $btn_class = $role === 'student' ? 'btn-primary' : ($role === 'staff' ? 'btn-info text-white' : 'btn-dark');
                         $btn_text = $role === 'student' ? 'Login as Student' : ($role === 'staff' ? 'Login as Staff' : 'Login as Admin');

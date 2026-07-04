@@ -1,16 +1,16 @@
 <?php
 require_once 'includes/auth.php';
 
-// If a user is already logged in, redirect them directly to their dashboard
+
 redirect_if_logged_in();
 
 $is_public_page = true;
-$body_class = "homepage-body";
+$body_class = "portal-homepage-body";
 $page_title = "Admissions Portal";
 include 'includes/header.php';
 ?>
 
-<!-- Hero Banner Section -->
+
 <div class="hero-section-premium text-center">
     <div class="container">
         <div class="hero-badge">
@@ -21,10 +21,10 @@ include 'includes/header.php';
     </div>
 </div>
 
-<!-- Portal Selection Section -->
+
 <div class="container portal-grid mb-5" id="portals">
     <div class="row g-4 justify-content-center">
-        <!-- Student Card -->
+        
         <div class="col-md-4">
             <div class="premium-card card-student">
                 <div>
@@ -41,7 +41,7 @@ include 'includes/header.php';
             </div>
         </div>
 
-        <!-- Staff Card -->
+        
         <div class="col-md-4">
             <div class="premium-card card-staff">
                 <div>
@@ -57,7 +57,7 @@ include 'includes/header.php';
             </div>
         </div>
 
-        <!-- Admin Card -->
+        
         <div class="col-md-4">
             <div class="premium-card card-admin">
                 <div>   

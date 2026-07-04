@@ -2,13 +2,13 @@
 require_once '../includes/db_connect.php';
 require_once '../includes/auth.php';
 
-// Verify student access
+
 check_access('student');
 
 $user_id = $_SESSION['user_id'];
 
 try {
-    // Fetch student profile, course name, and payment info
+    
     $stmt = $pdo->prepare("
         SELECT s.*, c.course_name, c.department 
         FROM students s 
@@ -18,7 +18,7 @@ try {
     $stmt->execute(['user_id' => $user_id]);
     $student = $stmt->fetch();
 
-    // Prevent access if not paid
+    
     if (!$student || $student['payment_status'] !== 'Paid') {
         die("Unauthorized access: You have not completed the fee payment yet.");
     }
@@ -27,17 +27,17 @@ try {
     die("Database Error: " . $e->getMessage());
 }
 
-// --------------------------------------------------------------------
-// PDF GENERATION USING FPDF
-// --------------------------------------------------------------------
+
+
+
 require_once '../libs/fpdf.php';
 
 class PaymentReceiptPDF extends FPDF {
-    // Page Header
+    
     function Header() {
-        // Logo-like Header Layout
+        
         $this->SetFont('Arial', 'B', 18);
-        $this->SetTextColor(15, 76, 129); // Royal Blue Theme color (#0f4c81)
+        $this->SetTextColor(15, 76, 129); 
         $this->Cell(0, 10, 'STATE COLLEGE OF TECHNOLOGY', 0, 1, 'C');
         
         $this->SetFont('Arial', '', 10);
@@ -45,13 +45,13 @@ class PaymentReceiptPDF extends FPDF {
         $this->Cell(0, 5, 'Affiliated to State Technical University | Estd. 1998', 0, 1, 'C');
         $this->Cell(0, 5, 'Website: www.statecollege.edu.in | Email: accounts@statecollege.edu.in', 0, 1, 'C');
         
-        // Horizontal Line
+        
         $this->SetDrawColor(220, 224, 230);
         $this->Line(10, 36, 200, 36);
         $this->Ln(8);
     }
 
-    // Page Footer
+    
     function Footer() {
         $this->SetY(-15);
         $this->SetFont('Arial', 'I', 8);
@@ -64,15 +64,15 @@ $pdf = new PaymentReceiptPDF('P', 'mm', 'A4');
 $pdf->SetMargins(15, 15, 15);
 $pdf->AddPage();
 
-// Receipt Document Title
+
 $pdf->SetFont('Arial', 'B', 14);
 $pdf->SetTextColor(33, 37, 41);
 $pdf->Cell(0, 10, 'FEE PAYMENT RECEIPT', 0, 1, 'C');
 $pdf->Ln(2);
 
-// Meta box: Receipt Number & Date
+
 $pdf->SetFont('Arial', 'B', 10);
-// Generate a receipt number
+
 $receipt_no = "REC-" . substr(md5($student['transaction_id']), 0, 8);
 $pdf->Cell(95, 8, 'Receipt No: ' . strtoupper($receipt_no), 0, 0, 'L');
 $pdf->Cell(75, 8, 'Date: ' . date('d-M-Y'), 0, 1, 'R');
@@ -82,7 +82,7 @@ $pdf->SetLineWidth(0.5);
 $pdf->Line(15, 62, 195, 62);
 $pdf->Ln(5);
 
-// 1. Payer Details
+
 $pdf->SetFont('Arial', 'B', 11);
 $pdf->SetTextColor(15, 76, 129);
 $pdf->Cell(0, 8, '1. Payer Details', 0, 1, 'L');
@@ -107,7 +107,7 @@ $pdf->Cell(45, 8, 'Applied Course:', 0, 0, 'L');
 $pdf->Cell(135, 8, $student['course_name'] . " (" . $student['department'] . ")", 0, 1, 'L');
 $pdf->Ln(4);
 
-// 2. Payment Details
+
 $pdf->SetFont('Arial', 'B', 11);
 $pdf->SetTextColor(15, 76, 129);
 $pdf->Cell(0, 8, '2. Transaction Information', 0, 1, 'L');
@@ -116,7 +116,7 @@ $pdf->SetTextColor(33, 37, 41);
 
 $pdf->Cell(45, 8, 'Transaction Status:', 0, 0, 'L');
 $pdf->SetFont('Arial', 'B', 10);
-$pdf->SetTextColor(40, 167, 69); // Green
+$pdf->SetTextColor(40, 167, 69); 
 $pdf->Cell(135, 8, 'SUCCESS / PAID', 0, 1, 'L');
 $pdf->SetTextColor(33, 37, 41);
 
@@ -130,7 +130,7 @@ $pdf->Cell(45, 8, 'Payment Mode:', 0, 0, 'L');
 $pdf->Cell(135, 8, 'UPI (Unified Payments Interface)', 0, 1, 'L');
 $pdf->Ln(4);
 
-// Table for Fee Breakdown
+
 $pdf->SetFont('Arial', 'B', 10);
 $pdf->SetFillColor(240, 244, 248);
 $pdf->Cell(10, 10, 'S.No', 1, 0, 'C', true);
@@ -147,15 +147,15 @@ $pdf->Cell(130, 10, 'Total Paid Amount', 1, 0, 'R', true);
 $pdf->Cell(50, 10, 'Rs. 500.00', 1, 1, 'R', true);
 $pdf->Ln(15);
 
-// Stamp and Signature Layout
+
 $pdf->Ln(5);
 $sig_y = $pdf->GetY();
 
 $pdf->SetFont('Arial', 'B', 11);
-$pdf->SetTextColor(40, 167, 69); // Success Green
+$pdf->SetTextColor(40, 167, 69); 
 $pdf->Cell(90, 15, 'PAYMENT VERIFIED ONLINE', 0, 0, 'L');
 
-// Draw signature line on the right side
+
 $pdf->Line(135, $sig_y + 10, 195, $sig_y + 10);
 
 $pdf->SetFont('Arial', '', 9);
@@ -170,6 +170,6 @@ $pdf->SetFont('Arial', 'I', 8);
 $pdf->SetTextColor(108, 117, 125);
 $pdf->Cell(0, 5, 'Note: This is an official digital payment receipt generated from SCT Admission portal.', 0, 1, 'C');
 
-// Output PDF in inline mode
+
 $pdf->Output('I', 'Payment_Receipt_' . $student['admission_no'] . '.pdf');
 ?>

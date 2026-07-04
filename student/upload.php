@@ -2,7 +2,7 @@
 require_once '../includes/db_connect.php';
 require_once '../includes/auth.php';
 
-// Verify student access
+
 check_access('student');
 
 $user_id = $_SESSION['user_id'];
@@ -10,19 +10,19 @@ $error_msg = "";
 $success_msg = "";
 $all_uploaded = false;
 
-// 1. Fetch student record and details
+
 try {
     $stmt = $pdo->prepare("SELECT * FROM students WHERE user_id = :user_id");
     $stmt->execute(['user_id' => $user_id]);
     $student = $stmt->fetch();
     
     if (!$student) {
-        // Must fill details form first
+        
         header("Location: apply.php");
         exit;
     }
     
-    // Check if application is already finalized
+    
     if ($student['is_submitted'] == 1) {
         header("Location: dashboard.php");
         exit;
@@ -31,7 +31,7 @@ try {
     $student_id = $student['student_id'];
     $admission_no = $student['admission_no'];
     
-    // Fetch current document paths
+    
     $doc_stmt = $pdo->prepare("SELECT * FROM documents WHERE student_id = :student_id");
     $doc_stmt->execute(['student_id' => $student_id]);
     $documents = $doc_stmt->fetch();
@@ -47,26 +47,26 @@ try {
     die("Database Error: " . $e->getMessage());
 }
 
-// 2. Process uploads
+
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $fields = ['photo', 'marksheet10', 'marksheet12', 'leaving_certificate', 'aadhaar'];
     $uploaded_paths = [];
     $upload_errors = [];
     
-    // Define base upload path in root directory
+    
     $upload_base_dir = "../uploads/";
     
-    // Create folders if they do not exist
+    
     foreach ($fields as $field) {
         $target_dir = $upload_base_dir . $field . "/";
         if (!file_exists($target_dir)) {
             mkdir($target_dir, 0755, true);
-            // Write a dummy index.html to prevent folder directory listing
+            
             file_put_to_file($target_dir . "index.html", "Access Denied");
         }
     }
     
-    // Helper function to write protect index.html
+    
     function file_put_to_file($file, $data) {
         file_put_contents($file, $data);
     }
@@ -77,7 +77,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $file_size = $_FILES[$field]['size'];
             $file_tmp  = $_FILES[$field]['tmp_name'];
             
-            // Validate File Extensions
+            
             $ext = strtolower(pathinfo($file_name, PATHINFO_EXTENSION));
             if ($field === 'photo') {
                 $allowed = ['jpg', 'jpeg', 'png'];
@@ -90,19 +90,19 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 continue;
             }
             
-            // Validate File Size (Max 2MB = 2097152 bytes)
+            
             if ($file_size > 2097152) {
                 $upload_errors[] = ucfirst($field) . " file size exceeds the 2MB limit.";
                 continue;
             }
             
-            // Securely rename file to prevent collision (e.g. photo_ADM2026001_16238382.png)
+            
             $new_name = $field . "_" . $admission_no . "_" . time() . "." . $ext;
             $dest_path = $upload_base_dir . $field . "/" . $new_name;
             
-            // Move uploaded file to destination folder
+            
             if (move_uploaded_file($file_tmp, $dest_path)) {
-                // Delete previous file if it exists to free server space
+                
                 if ($documents && !empty($documents[$field])) {
                     $old_file_path = $upload_base_dir . $field . "/" . basename($documents[$field]);
                     if (file_exists($old_file_path)) {
@@ -110,7 +110,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     }
                 }
                 
-                // Store path to update database
+                
                 $uploaded_paths[$field] = $new_name;
             } else {
                 $upload_errors[] = "Failed to upload " . ucfirst($field) . ". Please try again.";
@@ -118,11 +118,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         }
     }
     
-    // Update Database if there are uploaded files and no errors
+    
     if (empty($upload_errors) && !empty($uploaded_paths)) {
         try {
             if ($documents) {
-                // Update existing record
+                
                 $sets = [];
                 $params = ['student_id' => $student_id];
                 
@@ -135,7 +135,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 $update_stmt = $pdo->prepare($update_sql);
                 $update_stmt->execute($params);
             } else {
-                // Insert new record
+                
                 $cols = ['student_id'];
                 $vals = [':student_id'];
                 $params = ['student_id' => $student_id];
@@ -151,7 +151,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 $insert_stmt->execute($params);
             }
             
-            // Refresh documents details
+            
             $doc_stmt = $pdo->prepare("SELECT * FROM documents WHERE student_id = :student_id");
             $doc_stmt->execute(['student_id' => $student_id]);
             $documents = $doc_stmt->fetch();
@@ -163,7 +163,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                              !empty($documents['leaving_certificate']) && 
                              !empty($documents['aadhaar']));
 
-            // Check if all 5 documents are uploaded
+            
             if ($all_uploaded) {
                 $success_msg = "Documents uploaded successfully! All required documents are complete. <a href='payment.php' class='alert-link'>Proceed to pay processing fee <i class='fa-solid fa-arrow-right ms-1'></i></a>";
             } else {
@@ -183,15 +183,15 @@ include '../includes/header.php';
 ?>
 
 <div class="wrapper">
-    <!-- Sidebar -->
+    
     <?php include '../includes/sidebar.php'; ?>
 
-    <!-- Page Content -->
+    
     <div id="content">
         <?php render_topbar('Document Upload Center'); ?>
 
         <div class="container-fluid">
-            <!-- Stepper Container -->
+            
             <div class="status-card-premium status-card-step">
                 <div class="status-stepper-premium">
                     <div class="status-stepper-step-premium completed">
@@ -213,7 +213,7 @@ include '../includes/header.php';
                 </div>
             </div>
 
-            <!-- Notifications -->
+            
             <?php if (!empty($success_msg)): ?>
                 <div class="alert alert-success" role="alert">
                     <i class="fa-solid fa-circle-check me-2"></i><?php echo $success_msg; ?>
@@ -226,7 +226,7 @@ include '../includes/header.php';
             <?php endif; ?>
 
             <div class="row">
-                <!-- Upload Form -->
+                
                 <div class="col-lg-8">
                     <div class="card">
                         <div class="card-header">
@@ -244,7 +244,7 @@ include '../includes/header.php';
                             <?php endif; ?>
                             <form action="upload.php" method="POST" enctype="multipart/form-data">
                                 
-                                <!-- Student Photo -->
+                                
                                 <div class="mb-4 pb-3 border-bottom">
                                     <label class="form-label">1. Student Passport Size Photograph <span class="text-danger">*</span></label>
                                     <input type="file" name="photo" class="form-control" <?php echo ($documents && !empty($documents['photo'])) ? '' : 'required'; ?>>
@@ -257,7 +257,7 @@ include '../includes/header.php';
                                     <?php endif; ?>
                                 </div>
 
-                                <!-- 10th Marksheet -->
+                                
                                 <div class="mb-4 pb-3 border-bottom">
                                     <label class="form-label">2. 10th Standard Marksheet <span class="text-danger">*</span></label>
                                     <input type="file" name="marksheet10" class="form-control" <?php echo ($documents && !empty($documents['marksheet10'])) ? '' : 'required'; ?>>
@@ -270,7 +270,7 @@ include '../includes/header.php';
                                     <?php endif; ?>
                                 </div>
 
-                                <!-- 12th Marksheet -->
+                                
                                 <div class="mb-4 pb-3 border-bottom">
                                     <label class="form-label">3. 12th Standard Marksheet <span class="text-danger">*</span></label>
                                     <input type="file" name="marksheet12" class="form-control" <?php echo ($documents && !empty($documents['marksheet12'])) ? '' : 'required'; ?>>
@@ -283,7 +283,7 @@ include '../includes/header.php';
                                     <?php endif; ?>
                                 </div>
 
-                                <!-- School Leaving Certificate -->
+                                
                                 <div class="mb-4 pb-3 border-bottom">
                                     <label class="form-label">4. School Leaving Certificate <span class="text-danger">*</span></label>
                                     <input type="file" name="leaving_certificate" class="form-control" <?php echo ($documents && !empty($documents['leaving_certificate'])) ? '' : 'required'; ?>>
@@ -296,7 +296,7 @@ include '../includes/header.php';
                                     <?php endif; ?>
                                 </div>
 
-                                <!-- Aadhaar Card -->
+                                
                                 <div class="mb-4">
                                     <label class="form-label">5. Aadhaar Card <span class="text-danger">*</span></label>
                                     <input type="file" name="aadhaar" class="form-control" <?php echo ($documents && !empty($documents['aadhaar'])) ? '' : 'required'; ?>>
@@ -309,7 +309,7 @@ include '../includes/header.php';
                                     <?php endif; ?>
                                 </div>
 
-                                <!-- Buttons -->
+                                
                                 <div class="d-flex justify-content-between mt-5 pt-3 border-top">
                                     <a href="dashboard.php" class="btn btn-outline-secondary py-2"><i class="fa-solid fa-arrow-left me-1"></i>Back to Dashboard</a>
                                     <div class="d-flex gap-2">
@@ -329,7 +329,7 @@ include '../includes/header.php';
                     </div>
                 </div>
 
-                <!-- Info Help Sidebar -->
+                
                 <div class="col-lg-4">
                     <div class="card bg-white">
                         <div class="card-header bg-light">

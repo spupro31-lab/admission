@@ -1,5 +1,5 @@
 <?php if (isset($is_public_page) && $is_public_page === true): ?>
-<!-- Footer Section -->
+
 <footer class="premium-footer">
     <div class="container">
         <div class="row g-4">
