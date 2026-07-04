@@ -635,7 +635,6 @@ a:hover {
 }
 
 .premium-card,
-.feature-box,
 .timeline-section,
 .status-card-premium {
   background: var(--white);
@@ -652,8 +651,7 @@ a:hover {
   padding: 30px 24px;
 }
 
-.premium-card:hover,
-.feature-box:hover {
+.premium-card:hover {
   box-shadow: var(--shadow);
   transform: translateY(-3px);
 }
@@ -691,7 +689,6 @@ a:hover {
 }
 
 .premium-card p,
-.feature-box p,
 .step-card p {
   color: var(--slate-600);
   line-height: 1.65;
@@ -817,26 +814,10 @@ a:hover {
   width: 60px;
 }
 
-.step-card h5,
-.feature-box h5 {
+.step-card h5 {
   color: var(--slate-950);
   font-size: 17px;
   font-weight: 800;
-}
-
-.features-section {
-  padding-bottom: 70px;
-}
-
-.feature-box {
-  height: 100%;
-  padding: 26px;
-}
-
-.feature-icon {
-  color: var(--teal);
-  font-size: 26px;
-  margin-bottom: 16px;
 }
 
 .premium-footer {
@@ -1056,23 +1037,6 @@ a:hover {
   padding-left: 18px;
 }
 
-.timeline-item {
-  margin-bottom: 18px;
-  position: relative;
-}
-
-.timeline-item::before {
-  background: var(--primary);
-  border: 3px solid var(--white);
-  border-radius: 50%;
-  box-shadow: 0 0 0 1px var(--slate-200);
-  content: "";
-  height: 12px;
-  left: -25px;
-  position: absolute;
-  top: 5px;
-  width: 12px;
-}
 
 @media (max-width: 991px) {
   .timeline-stepper {
@@ -1226,16 +1190,13 @@ a:hover {
   transform: scale(1.1);
 }
 
-
 .campus-facilities-section,
-.placement-highlights-section,
 .student-testimonials-section {
   padding: 60px 0;
   border-top: 1px solid var(--slate-200);
 }
 
 .facility-card,
-.placement-card,
 .testimonial-card {
   background: var(--white);
   border: 1px solid var(--slate-200);
@@ -1249,14 +1210,12 @@ a:hover {
 }
 
 .facility-card:hover,
-.placement-card:hover,
 .testimonial-card:hover {
   box-shadow: var(--shadow);
   transform: translateY(-5px);
 }
 
-.facility-icon-wrapper,
-.placement-icon-wrapper {
+.facility-icon-wrapper {
   width: 60px;
   height: 60px;
   border-radius: var(--radius);
@@ -1267,8 +1226,7 @@ a:hover {
   margin-bottom: 20px;
 }
 
-.facility-card h4,
-.placement-card h4 {
+.facility-card h4 {
   font-size: 19px;
   font-weight: 700;
   color: var(--slate-950);
