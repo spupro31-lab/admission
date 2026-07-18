@@ -190,7 +190,7 @@ include '../includes/header.php';
                                                 </span>
                                                 <small class="text-muted"><?php echo date('d-M-Y H:i', strtotime($log['updated_at'])); ?></small>
                                             </div>
-                                            <p class="text-muted small mb-0 bg-light p-2 rounded mt-1 border"><?php echo e($log['remarks']); ?></p>
+                                            <p class="text-muted small mb-0 bg-light p-2 rounded mt-1 border" style="white-space: pre-wrap;"><?php echo e($log['remarks']); ?></p>
                                         </div>
                                     <?php endforeach; ?>
                                 </div>

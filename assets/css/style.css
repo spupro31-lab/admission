@@ -963,6 +963,7 @@ a:hover {
   font-size: 13px;
   margin: 14px 0;
   padding: 12px 14px;
+  white-space: pre-wrap;
 }
 
 .status-stepper-premium {

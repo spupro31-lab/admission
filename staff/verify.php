@@ -51,27 +51,39 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action'])) {
     
     if ($action === 'approve') {
         try {
-            $pdo->beginTransaction();
+            // Get total seats for this student's course
+            $stmt_seats = $pdo->prepare("SELECT total_seats FROM courses WHERE course_id = :course_id");
+            $stmt_seats->execute(['course_id' => $student['course_id']]);
+            $total_seats = $stmt_seats->fetchColumn();
             
+            // Count already approved students for this course
+            $stmt_count = $pdo->prepare("SELECT COUNT(*) FROM students WHERE course_id = :course_id AND status = 'Approved'");
+            $stmt_count->execute(['course_id' => $student['course_id']]);
+            $approved_count = $stmt_count->fetchColumn();
             
-            $update_stmt = $pdo->prepare("UPDATE students SET status = 'Approved' WHERE student_id = :student_id");
-            $update_stmt->execute(['student_id' => $student_id]);
-            
-            
-            $hist_stmt = $pdo->prepare("INSERT INTO status_history (student_id, status, remarks) VALUES (:student_id, 'Approved', :remarks)");
-            $hist_stmt->execute([
-                'student_id' => $student_id,
-                'remarks' => !empty($remarks) ? $remarks : "Verified and approved by staff member: " . $_SESSION['name']
-            ]);
-            
-            $pdo->commit();
-            $success_msg = "Application has been approved successfully.";
-            
-            
-            header("Location: dashboard.php?msg=approved");
-            exit;
+            if ($approved_count >= $total_seats) {
+                $error_msg = "Cannot approve student: No vacant seats available in this course.";
+            } else {
+                $pdo->beginTransaction();
+                
+                $update_stmt = $pdo->prepare("UPDATE students SET status = 'Approved' WHERE student_id = :student_id");
+                $update_stmt->execute(['student_id' => $student_id]);
+                
+                $hist_stmt = $pdo->prepare("INSERT INTO status_history (student_id, status, remarks) VALUES (:student_id, 'Approved', :remarks)");
+                $hist_stmt->execute([
+                    'student_id' => $student_id,
+                    'remarks' => !empty($remarks) ? $remarks : "Verified and approved by staff member: " . $_SESSION['name']
+                ]);
+                
+                $pdo->commit();
+                
+                header("Location: dashboard.php?msg=approved");
+                exit;
+            }
         } catch (PDOException $e) {
-            $pdo->rollBack();
+            if ($pdo->inTransaction()) {
+                $pdo->rollBack();
+            }
             $error_msg = "Transaction failed: " . $e->getMessage();
         }
     } elseif ($action === 'reject') {
@@ -305,8 +317,18 @@ include '../includes/header.php';
                                     <form action="verify.php?id=<?php echo $student_id; ?>" method="POST" id="verifyForm">
                                         
                                         <div class="mb-3">
-                                            <label for="remarks" class="form-label">Review Remarks / Reason for Rejection</label>
-                                            <textarea class="form-control" id="remarks" name="remarks" rows="3" placeholder="Enter feedback here... Required for rejections."></textarea>
+                                            <div class="d-flex justify-content-between align-items-center mb-2">
+                                                <label for="remarks" class="form-label mb-0 fw-semibold">Review Remarks / Reason for Rejection</label>
+                                                <div class="btn-group" role="group" aria-label="Template shortcuts">
+                                                    <button type="button" class="btn btn-outline-success btn-sm px-2 py-0.5" style="font-size: 0.75rem;" id="btnTemplateApprove">
+                                                        <i class="fa-solid fa-circle-check me-1"></i>Approve
+                                                    </button>
+                                                    <button type="button" class="btn btn-outline-danger btn-sm px-2 py-0.5" style="font-size: 0.75rem;" id="btnTemplateReject">
+                                                        <i class="fa-solid fa-circle-xmark me-1"></i>Reject
+                                                    </button>
+                                                </div>
+                                            </div>
+                                            <textarea class="form-control" id="remarks" name="remarks" rows="6" placeholder="Enter feedback here... Required for rejections."></textarea>
                                         </div>
 
                                         <div class="row g-2">
@@ -348,6 +370,28 @@ function confirmReject() {
     }
     return confirm("Are you sure you want to reject this application?");
 }
+
+// Auto-populate template buttons
+document.getElementById('btnTemplateApprove').addEventListener('click', function() {
+    const courseName = <?php echo json_encode($student['course_name']); ?>;
+    const staffName = <?php echo json_encode($_SESSION['name']); ?>;
+    const textarea = document.getElementById('remarks');
+    textarea.value = `Your 📑Application Submitted Successfully.\nAdmission Confirm ✔.\n\nThank You,\nConfirm By Faculty of : ${courseName}\nFaculty Name - ${staffName}`;
+});
+
+document.getElementById('btnTemplateReject').addEventListener('click', function() {
+    const textarea = document.getElementById('remarks');
+    textarea.value = `Admission Not Confirm ❌.\nYour Application has been Rejected due to discrepancy in\n 1. [rejected document name].\n 2. [rejected Fillup name/Email/Number].\n\nPlease correct the details or re-upload clear documents to submit again.\n\nThank You,\nAdmission Desk`;
+    
+    // Focus the textarea and highlight the placeholder to be replaced
+    textarea.focus();
+    const placeholder = "[rejected document name]";
+    const text = textarea.value;
+    const startIdx = text.indexOf(placeholder);
+    if (startIdx !== -1) {
+        textarea.setSelectionRange(startIdx, startIdx + placeholder.length);
+    }
+});
 </script>
 
 <?php include '../includes/footer.php'; ?>

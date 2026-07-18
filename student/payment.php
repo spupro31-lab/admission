@@ -115,8 +115,8 @@ include '../includes/header.php';
                                 </div>
                                 <a href="dashboard.php" class="btn btn-primary mt-3">Return to Dashboard</a>
                             <?php else: ?>
-                                <h5 class="fw-bold mb-3 text-primary">Admission Processing Fee: â‚¹500.00</h5>
-                                <p class="text-muted">Please pay the non-refundable processing fee of â‚¹500.00 using any UPI application (such as Google Pay, PhonePe, Paytm, BHIM, etc.) to the UPI ID listed below.</p>
+                                <h5 class="fw-bold mb-3 text-primary">Admission Processing Fee: ₹500.00</h5>
+                                <p class="text-muted">Please pay the non-refundable processing fee of ₹500.00 using any UPI application (such as Google Pay, PhonePe, Paytm, BHIM, etc.) to the UPI ID listed below.</p>
                                 
                                 <div class="p-4 my-4 bg-light rounded border border-dashed border-primary text-center">
                                     <h6 class="text-uppercase fw-bold text-muted mb-2">Scan or Pay via UPI</h6>
@@ -128,7 +128,7 @@ include '../includes/header.php';
                                     <h6 class="fw-bold mb-2"><i class="fa-solid fa-circle-info me-2 text-info"></i>How to complete the payment:</h6>
                                     <ol class="small text-muted ps-3">
                                         <li class="mb-2">Open your preferred UPI mobile application.</li>
-                                        <li class="mb-2">Send precisely <strong>â‚¹500.00</strong> to the UPI ID: <strong class="text-dark">sctadmissions@upi</strong>.</li>
+                                        <li class="mb-2">Send precisely <strong>₹500.00</strong> to the UPI ID: <strong class="text-dark">sctadmissions@upi</strong>.</li>
                                         <li class="mb-2">Note down the 12-digit UPI Transaction Reference Number / UTR number from your payment confirmation screen.</li>
                                         <li class="mb-2">Enter that Reference ID in the payment submission form on the right and submit.</li>
                                     </ol>

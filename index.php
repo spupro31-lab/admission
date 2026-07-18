@@ -100,7 +100,7 @@ include 'includes/header.php';
                 <div class="fw-bold text-dark small text-uppercase tracking-wider">Top Recruiters</div>
                 <p class="text-muted small mt-2 mb-0">Direct recruitment ties with MNCs and tech startups.</p>
             </div>
-        </div>
+        </div>      
         <div class="col-6 col-lg-3">
             <div class="card border-0 shadow-sm p-4 bg-white h-100 rounded-3">
                 <div class="fs-1 fw-extrabold text-warning mb-1">50K+</div>

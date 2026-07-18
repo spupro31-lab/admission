@@ -102,7 +102,7 @@ include '../includes/header.php';
                                                 </div>
                                                 <div class="bg-light p-3 rounded mt-2 border">
                                                     <strong>Remarks:</strong>
-                                                    <p class="text-muted mb-0 small mt-1"><?php echo e($log['remarks']); ?></p>
+                                                    <p class="text-muted mb-0 small mt-1" style="white-space: pre-wrap;"><?php echo e($log['remarks']); ?></p>
                                                 </div>
                                             </div>
                                         <?php endforeach; ?>

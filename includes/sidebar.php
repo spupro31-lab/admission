@@ -32,7 +32,6 @@ $nav_items = [
     ],
     'staff' => [
         ['href' => 'staff/dashboard.php', 'icon' => 'fa-gauge', 'label' => 'Dashboard', 'pages' => ['dashboard.php']],
-        ['href' => 'staff/verify.php', 'icon' => 'fa-id-card-clip', 'label' => 'Verify Applications', 'pages' => ['verify.php', 'verify_details.php']],
         ['href' => 'staff/reports.php', 'icon' => 'fa-chart-line', 'label' => 'Reports', 'pages' => ['reports.php']],
     ],
     'student' => [

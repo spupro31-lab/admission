@@ -94,7 +94,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     ) VALUES (
                         :user_id, :admission_no, :full_name, :father_name, :mother_name, :gender, :dob, :category, :mobile, :email,
                         :address, :city, :state, :pincode, :tenth_percentage, :twelfth_percentage, :school_name,
-                        :passing_year, :course_id, 'Pending', 1
+                        :passing_year, :course_id, 'Pending', 0
                     )
                 ");
                 
