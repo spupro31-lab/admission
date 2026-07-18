@@ -73,9 +73,10 @@ include 'includes/header.php';
 
     
     <div id="content">
-        <?php render_topbar('User Profile Desk'); ?>
+        <?php render_topbar(); ?>
 
         <div class="container-fluid">
+            <?php render_page_header('User Profile Desk'); ?>
             
             <?php render_alert($success_msg); ?>
             <?php render_alert($error_msg, 'danger'); ?>

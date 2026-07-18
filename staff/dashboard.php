@@ -82,9 +82,10 @@ include '../includes/header.php';
 
     
     <div id="content">
-        <?php render_topbar('Staff Control Panel', '<span class="text-muted small"><i class="fa-solid fa-user-gear me-1"></i>' . e($_SESSION['name']) . ' (Staff)</span>'); ?>
+        <?php render_topbar(); ?>
 
         <div class="container-fluid">
+            <?php render_page_header('Staff Control Panel', '<span class="text-muted small"><i class="fa-solid fa-user-gear me-1"></i>' . e($_SESSION['name']) . ' (Staff)</span>'); ?>
             
             <div class="row g-4 mb-4">
                 

@@ -62,9 +62,10 @@ include '../includes/header.php';
 
     
     <div id="content">
-        <?php render_topbar('Administrator Command Center', '<span class="badge bg-danger"><i class="fa-solid fa-shield-halved me-1"></i>Secure Admin</span>'); ?>
+        <?php render_topbar(); ?>
 
         <div class="container-fluid">
+            <?php render_page_header('Administrator Command Center', '<span class="badge bg-danger"><i class="fa-solid fa-shield-halved me-1"></i>Secure Admin</span>'); ?>
             
             <div class="row g-4 mb-4">
                 

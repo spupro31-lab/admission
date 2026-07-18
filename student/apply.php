@@ -192,9 +192,10 @@ include '../includes/header.php';
 
     
     <div id="content">
-        <?php render_topbar($page_title); ?>
+        <?php render_topbar(); ?>
 
         <div class="container-fluid">
+            <?php render_page_header($page_title); ?>
             
             <div class="status-card-premium status-card-step">
                 <div class="status-stepper-premium">

@@ -137,9 +137,10 @@ include '../includes/header.php';
 
     
     <div id="content">
-        <?php render_topbar('Edit Applicant Info', '<a href="manage_students.php" class="btn btn-sm btn-outline-secondary"><i class="fa-solid fa-arrow-left me-1"></i>Back to Database</a>'); ?>
+        <?php render_topbar(); ?>
 
         <div class="container-fluid">
+            <?php render_page_header('Edit Applicant Info', '<a href="manage_students.php" class="btn btn-sm btn-outline-secondary"><i class="fa-solid fa-arrow-left me-1"></i>Back to Database</a>'); ?>
             
             <?php if (!empty($error_msg)): ?>
                 <div class="alert alert-danger" role="alert">

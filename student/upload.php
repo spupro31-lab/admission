@@ -188,9 +188,10 @@ include '../includes/header.php';
 
     
     <div id="content">
-        <?php render_topbar('Document Upload Center'); ?>
+        <?php render_topbar(); ?>
 
         <div class="container-fluid">
+            <?php render_page_header('Document Upload Center'); ?>
             
             <div class="status-card-premium status-card-step">
                 <div class="status-stepper-premium">

@@ -55,9 +55,10 @@ include '../includes/header.php';
 
     
     <div id="content">
-        <?php render_topbar('Student Profile Viewer', '<a href="manage_students.php" class="btn btn-sm btn-outline-secondary"><i class="fa-solid fa-arrow-left me-1"></i>Back to Database</a>'); ?>
+        <?php render_topbar(); ?>
 
         <div class="container-fluid">
+            <?php render_page_header('Student Profile Viewer', '<a href="manage_students.php" class="btn btn-sm btn-outline-secondary"><i class="fa-solid fa-arrow-left me-1"></i>Back to Database</a>'); ?>
             <div class="row">
                 
                 <div class="col-lg-7">

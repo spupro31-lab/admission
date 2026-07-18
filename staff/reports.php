@@ -133,9 +133,10 @@ include '../includes/header.php';
 
     
     <div id="content">
-        <?php render_topbar('Reports & Audits'); ?>
+        <?php render_topbar(); ?>
 
         <div class="container-fluid">
+            <?php render_page_header('Reports & Audits'); ?>
             
             <div class="card mb-4">
                 <div class="card-body">

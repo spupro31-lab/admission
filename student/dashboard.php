@@ -67,9 +67,10 @@ include '../includes/header.php';
 
     
     <div id="content">
-        <?php render_topbar('Student Admission Portal', '<span class="text-muted small"><i class="fa-solid fa-circle-user me-1"></i>' . e($_SESSION['email']) . '</span>'); ?>
+        <?php render_topbar(); ?>
 
         <div class="container-fluid">
+            <?php render_page_header('Student Admission Portal', '<span class="text-muted small"><i class="fa-solid fa-circle-user me-1"></i>' . e($_SESSION['email']) . '</span>'); ?>
             
             <?php if (isset($_GET['msg']) && $_GET['msg'] === 'submitted'): ?>
                 <div class="alert alert-success alert-dismissible fade show" role="alert">

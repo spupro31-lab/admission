@@ -238,9 +238,10 @@ include '../includes/header.php';
 
     
     <div id="content">
-        <?php render_topbar('Student Accounts Desk', '<a href="add_student.php" class="btn btn-sm btn-primary"><i class="fa-solid fa-user-plus me-1"></i>Add Student</a>'); ?>
+        <?php render_topbar(); ?>
 
         <div class="container-fluid">
+            <?php render_page_header('Student Accounts Desk', '<a href="add_student.php" class="btn btn-sm btn-primary"><i class="fa-solid fa-user-plus me-1"></i>Add Student</a>'); ?>
             
             <?php if (!empty($success_msg)): ?>
                 <div class="alert alert-success" role="alert">

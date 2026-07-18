@@ -124,9 +124,10 @@ include '../includes/header.php';
 
     
     <div id="content">
-        <?php render_topbar('Staff Management Portal', '<button type="button" class="btn btn-sm btn-primary" data-bs-toggle="modal" data-bs-target="#addStaffModal"><i class="fa-solid fa-plus me-1"></i>Create Staff Account</button>'); ?>
+        <?php render_topbar(); ?>
 
         <div class="container-fluid">
+            <?php render_page_header('Staff Management Portal', '<button type="button" class="btn btn-sm btn-primary" data-bs-toggle="modal" data-bs-target="#addStaffModal"><i class="fa-solid fa-plus me-1"></i>Create Staff Account</button>'); ?>
             
             <?php if (!empty($success_msg)): ?>
                 <div class="alert alert-success" role="alert">

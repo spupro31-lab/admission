@@ -122,10 +122,10 @@ function redirect_if_logged_in() {
     }
 }
 
-function render_topbar($title, $actions = '') {
+function render_topbar($title = '', $actions = '') {
     ?>
     <nav class="navbar navbar-expand-lg app-topbar">
-        <div class="container-fluid">
+        <div class="container-fluid justify-content-start">
             <button type="button" id="sidebarCollapse" class="btn topbar-toggle" aria-label="Toggle sidebar">
                 <i class="fa-solid fa-bars"></i>
             </button>
@@ -134,14 +134,21 @@ function render_topbar($title, $actions = '') {
                 <span class="fw-bold text-dark me-2">SCT Portal</span>
                 <span class="text-muted border-start ps-2 d-none d-md-inline" style="font-size: 13px;">State College of Technology</span>
             </span>
-            <span class="ms-3 fw-semibold text-primary d-none d-lg-inline-block">/ &nbsp;<?php echo e($title); ?></span>
-            <?php if ($actions !== ''): ?>
-                <div class="ms-auto topbar-actions">
-                    <?php echo $actions; ?>
-                </div>
-            <?php endif; ?>
         </div>
     </nav>
+    <?php
+}
+
+function render_page_header($title, $actions = '') {
+    ?>
+    <div class="d-flex justify-content-between align-items-center mb-4 pb-2 border-bottom">
+        <h2 class="h4 fw-bold text-dark mb-0"><?php echo e($title); ?></h2>
+        <?php if ($actions !== ''): ?>
+            <div>
+                <?php echo $actions; ?>
+            </div>
+        <?php endif; ?>
+    </div>
     <?php
 }
 

@@ -35,9 +35,10 @@ include '../includes/header.php';
 
     
     <div id="content">
-        <?php render_topbar('Application Status Tracker'); ?>
+        <?php render_topbar(); ?>
 
         <div class="container-fluid">
+            <?php render_page_header('Application Status Tracker'); ?>
             <?php if (!$student): ?>
                 <div class="alert alert-warning" role="alert">
                     <i class="fa-solid fa-triangle-exclamation me-2"></i>You have not initiated an admission form yet. Please fill the admission details first.
