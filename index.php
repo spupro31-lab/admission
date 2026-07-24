@@ -17,7 +17,7 @@ include 'includes/header.php';
         <div class="row align-items-center g-5">
             
             <div class="col-lg-7 text-center text-lg-start">
-                <h1 class="display-4 fw-extrabold mb-3 text-dark" style="line-height: 1.15; font-family: 'Poppins', sans-serif;">
+                <h1 class="display-4 fw-extrabold mb-3 text-dark" style="line-height: 1.15;">
                     Unlock Your Academic Potential & <span class="text-primary">Innovate for Tomorrow</span>
                 </h1>
                 <p class="lead mb-4">

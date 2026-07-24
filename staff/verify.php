@@ -377,7 +377,7 @@ document.getElementById('btnTemplateApprove').addEventListener('click', function
     const courseName = <?php echo json_encode($student['course_name']); ?>;
     const staffName = <?php echo json_encode($_SESSION['name']); ?>;
     const textarea = document.getElementById('remarks');
-    textarea.value = `Your 📑Application Submitted Successfully.\nAdmission Confirm ✔.\n\nThank You,\nConfirm By Faculty of : ${courseName}\nFaculty Name - ${staffName}`;
+    textarea.value = `Your 📑Application Submitted Successfully.\nAdmission Confirm ✔.\n\nThank You,\nConfirm By Faculty of : ${courseName}\nFaculty Name - ${staffName}\nFaculty Email - ${staffEmail}`;
 });
 
 document.getElementById('btnTemplateReject').addEventListener('click', function() {
