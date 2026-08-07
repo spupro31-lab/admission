@@ -7,7 +7,7 @@ try {
     $stmt = $pdo->query("SELECT * FROM courses ORDER BY department, course_name");
     $courses_from_db = $stmt->fetchAll();
 } catch (PDOException $e) {
-    
+
     $courses_from_db = [];
 }
 
@@ -127,7 +127,7 @@ include 'includes/header.php';
         </div>
     <?php else: ?>
         <div class="row g-4">
-            <?php foreach ($courses_from_db as $course): 
+            <?php foreach ($courses_from_db as $course):
                 $course_name = $course['course_name'];
                 $details = $course_details_map[$course_name] ?? $default_details;
             ?>
@@ -149,10 +149,10 @@ include 'includes/header.php';
                                 <span class="fs-4 fw-bold text-dark"><?php echo e($course['total_seats']); ?> Seats</span>
                             </div>
                         </div>
-                        
+
                         <div class="card-body p-4 bg-light bg-opacity-50 border-top">
                             <div class="row g-4">
-                                
+
                                 <div class="col-md-4">
                                     <div class="p-3 bg-white rounded shadow-sm h-100">
                                         <h5 class="fw-bold text-primary mb-3"><i class="fa-solid fa-list-check me-2"></i>Program Info</h5>
@@ -177,8 +177,8 @@ include 'includes/header.php';
                                         </div>
                                     </div>
                                 </div>
-                                
-                                
+
+
                                 <div class="col-md-4">
                                     <div class="p-3 bg-white rounded shadow-sm h-100">
                                         <h5 class="fw-bold text-success mb-3"><i class="fa-solid fa-user-graduate me-2"></i>How Students Study</h5>
@@ -187,8 +187,8 @@ include 'includes/header.php';
                                         </p>
                                     </div>
                                 </div>
-                                
-                                
+
+
                                 <div class="col-md-4">
                                     <div class="p-3 bg-white rounded shadow-sm h-100">
                                         <h5 class="fw-bold text-warning mb-3"><i class="fa-solid fa-user-tie me-2"></i>How Faculty Teach</h5>
@@ -205,7 +205,7 @@ include 'includes/header.php';
         </div>
     <?php endif; ?>
 
-    
+
     <div class="text-center mt-5 p-5 bg-white rounded shadow-sm">
         <h3 class="fw-bold text-dark mb-2">Ready to embark on your educational journey?</h3>
         <p class="text-muted mb-4 mx-auto" style="max-width: 600px;">Create your student account in minutes, fill out your academic marks, upload your documents, and track your admission status online.</p>
@@ -217,4 +217,3 @@ include 'includes/header.php';
 </div>
 
 <?php include 'includes/footer.php'; ?>
-

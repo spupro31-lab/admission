@@ -9,13 +9,13 @@ include 'includes/header.php';
 
 
 <div class="hero-section-home mb-5">
-    
+
     <div class="position-absolute" style="width: 350px; height: 350px; background: rgba(15, 23, 42, 0.05); border-radius: 50%; top: -100px; right: -50px; filter: blur(60px);"></div>
     <div class="position-absolute" style="width: 250px; height: 250px; background: rgba(15, 23, 42, 0.03); border-radius: 50%; bottom: -50px; left: -50px; filter: blur(50px);"></div>
-    
+
     <div class="container position-relative z-1 my-3">
         <div class="row align-items-center g-5">
-            
+
             <div class="col-lg-7 text-center text-lg-start">
                 <h1 class="display-4 fw-extrabold mb-3 text-dark" style="line-height: 1.15;">
                     Unlock Your Academic Potential & <span class="text-primary">Innovate for Tomorrow</span>
@@ -32,7 +32,7 @@ include 'includes/header.php';
                     </a>
                 </div>
             </div>
-            
+
             <div class="col-lg-5 d-none d-lg-block">
                 <div class="bg-white border border-secondary border-opacity-10 rounded-4 p-4 shadow-sm">
                     <div class="d-flex align-items-center justify-content-between mb-4 border-bottom border-secondary border-opacity-25 pb-3">
@@ -47,7 +47,7 @@ include 'includes/header.php';
                         </div>
                         <span class="badge bg-success px-2.5 py-1">Online</span>
                     </div>
-                    
+
                     <div class="text-start text-muted small">
                         <div class="d-flex gap-3 mb-3 align-items-start">
                             <span class="badge bg-primary text-white mt-1">1</span>
@@ -100,7 +100,7 @@ include 'includes/header.php';
                 <div class="fw-bold text-dark small text-uppercase tracking-wider">Top Recruiters</div>
                 <p class="text-muted small mt-2 mb-0">Direct recruitment ties with MNCs and tech startups.</p>
             </div>
-        </div>      
+        </div>
         <div class="col-6 col-lg-3">
             <div class="card border-0 shadow-sm p-4 bg-white h-100 rounded-3">
                 <div class="fs-1 fw-extrabold text-warning mb-1">50K+</div>
@@ -127,9 +127,9 @@ include 'includes/header.php';
             We offer modern, comprehensive curriculum options designed by industry specialists to prepare you for global technology landscapes.
         </p>
     </div>
-    
+
     <div class="row g-4 justify-content-center">
-        
+
         <div class="col-md-4">
             <div class="card border-0 shadow-sm h-100 p-4 bg-white rounded-3 d-flex flex-column justify-content-between">
                 <div>
@@ -146,8 +146,8 @@ include 'includes/header.php';
                 </div>
             </div>
         </div>
-        
-        
+
+
         <div class="col-md-4">
             <div class="card border-0 shadow-sm h-100 p-4 bg-white rounded-3 d-flex flex-column justify-content-between">
                 <div>
@@ -164,8 +164,8 @@ include 'includes/header.php';
                 </div>
             </div>
         </div>
-        
-        
+
+
         <div class="col-md-4">
             <div class="card border-0 shadow-sm h-100 p-4 bg-white rounded-3 d-flex flex-column justify-content-between">
                 <div>
@@ -183,7 +183,7 @@ include 'includes/header.php';
             </div>
         </div>
     </div>
-    
+
     <div class="text-center mt-5">
         <a href="courses.php" class="btn btn-primary fw-bold px-4 py-2">
             <i class="fa-solid fa-magnifying-glass me-1"></i> View All Available Programs
@@ -196,7 +196,7 @@ include 'includes/header.php';
     <div class="timeline-section">
         <h2 class="section-title">Application Journey</h2>
         <p class="section-subtitle">Follow these 4 simple steps to complete your admission process at State College of Technology.</p>
-        
+
         <div class="timeline-stepper px-4">
             <div class="step-card">
                 <div class="step-number-bubble">1</div>

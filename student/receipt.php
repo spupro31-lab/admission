@@ -8,7 +8,7 @@ check_access('student');
 $user_id = $_SESSION['user_id'];
 
 try {
-    
+
     $stmt = $pdo->prepare("
         SELECT s.*, c.course_name, c.department, c.semester 
         FROM students s 
@@ -18,11 +18,10 @@ try {
     $stmt->execute(['user_id' => $user_id]);
     $student = $stmt->fetch();
 
-    
+
     if (!$student || $student['status'] !== 'Approved') {
         die("Unauthorized access: Your application is not approved yet.");
     }
-
 } catch (PDOException $e) {
     die("Database Error: " . $e->getMessage());
 }
@@ -33,33 +32,36 @@ try {
 
 require_once '../libs/fpdf.php';
 
-class AdmissionPDF extends FPDF {
-    
-    function Header() {
-        
+class AdmissionPDF extends FPDF
+{
+
+    function Header()
+    {
+
         $this->SetFont('Arial', 'B', 18);
-        $this->SetTextColor(15, 76, 129); 
+        $this->SetTextColor(15, 76, 129);
         $this->Cell(0, 10, 'STATE COLLEGE OF TECHNOLOGY', 0, 1, 'C');
-        
+
         $this->SetFont('Arial', '', 10);
         $this->SetTextColor(108, 117, 125);
         $this->Cell(0, 5, 'Affiliated to State Technical University | Estd. 1998', 0, 1, 'C');
         $this->Cell(0, 5, 'Website: www.statecollege.edu.in | Email: admissions@statecollege.edu.in', 0, 1, 'C');
-        
-        
+
+
         $this->SetDrawColor(220, 224, 230);
         $this->Line(10, 36, 200, 36);
         $this->Ln(8);
     }
 
-    
-    function Footer() {
-        
+
+    function Footer()
+    {
+
         $this->SetY(-15);
         $this->SetFont('Arial', 'I', 8);
         $this->SetTextColor(108, 117, 125);
-        
-        
+
+
         $this->Cell(0, 10, 'Page ' . $this->PageNo() . ' | Generated Online by Admissions Portal - ' . date('d-M-Y H:i'), 0, 0, 'C');
     }
 }
@@ -167,7 +169,7 @@ $pdf->Ln(10);
 $sig_y = $pdf->GetY();
 
 $pdf->SetFont('Arial', 'B', 12);
-$pdf->SetTextColor(40, 167, 69); 
+$pdf->SetTextColor(40, 167, 69);
 $pdf->Cell(90, 15, '[ STATUS: CONFIRMED / APPROVED ]', 0, 0, 'L');
 
 
@@ -188,5 +190,3 @@ $pdf->Cell(0, 5, 'Note: This is a computer-generated confirmation slip. No manua
 
 
 $pdf->Output('I', 'Admission_Receipt_' . $student['admission_no'] . '.pdf');
-?>
-

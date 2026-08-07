@@ -12,12 +12,12 @@ $success_msg = "";
 $courses = $pdo->query("SELECT * FROM courses ORDER BY course_name ASC")->fetchAll();
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    
+
     $name = trim($_POST['name']);
     $email = trim($_POST['email']);
     $password = $_POST['password'];
-    
-    
+
+
     $full_name = trim($_POST['full_name']);
     $father_name = trim($_POST['father_name']);
     $mother_name = trim($_POST['mother_name']);
@@ -29,37 +29,37 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $city = trim($_POST['city']);
     $state = trim($_POST['state']);
     $pincode = trim($_POST['pincode']);
-    
+
     $tenth_percentage = floatval($_POST['tenth_percentage']);
     $twelfth_percentage = floatval($_POST['twelfth_percentage']);
     $school_name = trim($_POST['school_name']);
     $passing_year = intval($_POST['passing_year']);
-    
+
     $course_id = intval($_POST['course_id']);
 
-    
+
     if (empty($name) || empty($email) || empty($password) || empty($full_name) || empty($father_name) || empty($mother_name) || empty($mobile) || empty($address) || empty($school_name) || empty($course_id)) {
         $error_msg = "Please fill in all mandatory account and admission fields.";
     } elseif ($twelfth_percentage < 35) {
         $error_msg = "Eligibility Alert: Applicant must have at least 35% in 12th standard.";
     } else {
         try {
-            
+
             $chk_email = $pdo->prepare("SELECT user_id FROM users WHERE email = :email");
             $chk_email->execute(['email' => $email]);
-            
-            
+
+
             $chk_mobile = $pdo->prepare("SELECT student_id FROM students WHERE mobile = :mobile");
             $chk_mobile->execute(['mobile' => $mobile]);
-            
+
             if ($chk_email->rowCount() > 0) {
                 $error_msg = "The email address is already registered.";
             } elseif ($chk_mobile->rowCount() > 0) {
                 $error_msg = "The mobile number is already registered.";
             } else {
                 $pdo->beginTransaction();
-                
-                
+
+
                 $hashed_password = password_hash($password, PASSWORD_DEFAULT);
                 $ins_user = $pdo->prepare("INSERT INTO users (name, email, password, role) VALUES (:name, :email, :password, 'student')");
                 $ins_user->execute([
@@ -68,15 +68,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     'password' => $hashed_password
                 ]);
                 $new_user_id = $pdo->lastInsertId();
-                
-                
+
+
                 $year = date('Y');
                 $prefix = "ADM" . $year;
-                
+
                 $max_stmt = $pdo->prepare("SELECT admission_no FROM students WHERE admission_no LIKE :prefix ORDER BY admission_no DESC LIMIT 1");
                 $max_stmt->execute(['prefix' => $prefix . "%"]);
                 $row = $max_stmt->fetch();
-                
+
                 if ($row) {
                     $last_num = (int) substr($row['admission_no'], 7);
                     $seq_num = $last_num + 1;
@@ -84,8 +84,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     $seq_num = 1;
                 }
                 $admission_no = sprintf("ADM%s%03d", $year, $seq_num);
-                
-                
+
+
                 $ins_student = $pdo->prepare("
                     INSERT INTO students (
                         user_id, admission_no, full_name, father_name, mother_name, gender, dob, category, mobile, email,
@@ -97,7 +97,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                         :passing_year, :course_id, 'Pending', 0
                     )
                 ");
-                
+
                 $ins_student->execute([
                     'user_id' => $new_user_id,
                     'admission_no' => $admission_no,
@@ -120,19 +120,19 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     'course_id' => $course_id
                 ]);
                 $new_student_id = $pdo->lastInsertId();
-                
-                
+
+
                 $ins_docs = $pdo->prepare("INSERT INTO documents (student_id) VALUES (:student_id)");
                 $ins_docs->execute(['student_id' => $new_student_id]);
-                
-                
+
+
                 $ins_hist = $pdo->prepare("INSERT INTO status_history (student_id, status, remarks) VALUES (:student_id, 'Pending', 'Profile registered by Administrator.')");
                 $ins_hist->execute(['student_id' => $new_student_id]);
-                
+
                 $pdo->commit();
                 $success_msg = "Student registered successfully. Admission No: " . $admission_no;
-                
-                
+
+
                 header("Location: manage_students.php?msg=added");
                 exit;
             }
@@ -148,16 +148,16 @@ include '../includes/header.php';
 ?>
 
 <div class="wrapper">
-    
+
     <?php include '../includes/sidebar.php'; ?>
 
-    
+
     <div id="content">
         <?php render_topbar(); ?>
 
         <div class="container-fluid">
             <?php render_page_header('Create Student Application', '<a href="manage_students.php" class="btn btn-sm btn-outline-secondary"><i class="fa-solid fa-arrow-left me-1"></i>Back to List</a>'); ?>
-            
+
             <?php if (!empty($error_msg)): ?>
                 <div class="alert alert-danger" role="alert">
                     <i class="fa-solid fa-triangle-exclamation me-2"></i><?php echo e($error_msg); ?>
@@ -170,8 +170,8 @@ include '../includes/header.php';
                 </div>
                 <div class="card-body">
                     <form action="add_student.php" method="POST">
-                        
-                        
+
+
                         <h5 class="fw-bold text-primary border-bottom pb-2 mb-3"><i class="fa-solid fa-key me-2"></i>1. Login Account Credentials</h5>
                         <div class="row g-3 mb-4">
                             <div class="col-md-4">
@@ -188,7 +188,7 @@ include '../includes/header.php';
                             </div>
                         </div>
 
-                        
+
                         <h5 class="fw-bold text-primary border-bottom pb-2 mb-3"><i class="fa-solid fa-address-card me-2"></i>2. Personal Details</h5>
                         <div class="row g-3 mb-4">
                             <div class="col-md-4">
@@ -249,7 +249,7 @@ include '../includes/header.php';
                             </div>
                         </div>
 
-                        
+
                         <h5 class="fw-bold text-primary border-bottom pb-2 mb-3"><i class="fa-solid fa-graduation-cap me-2"></i>3. Academic Scores</h5>
                         <div class="row g-3 mb-4">
                             <div class="col-md-3">
@@ -271,7 +271,7 @@ include '../includes/header.php';
                             </div>
                         </div>
 
-                        
+
                         <h5 class="fw-bold text-primary border-bottom pb-2 mb-3"><i class="fa-solid fa-book-bookmark me-2"></i>4. Degree Selection</h5>
                         <div class="row g-3 mb-5">
                             <div class="col-md-12">
@@ -299,4 +299,3 @@ include '../includes/header.php';
 </div>
 
 <?php include '../includes/footer.php'; ?>
-

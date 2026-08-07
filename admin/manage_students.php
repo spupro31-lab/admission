@@ -15,17 +15,12 @@ $payment_filter = isset($_GET['payment_filter']) ? trim($_GET['payment_filter'])
 $sort_by = isset($_GET['sort_by']) ? trim($_GET['sort_by']) : 'newest';
 $edit_id = isset($_GET['edit_id']) ? intval($_GET['edit_id']) : 0;
 
-
-
-
-
-
 if (isset($_GET['delete_id']) && !empty($_GET['delete_id'])) {
     $delete_id = intval($_GET['delete_id']);
     try {
         $pdo->beginTransaction();
-        
-        
+
+
         $stmt = $pdo->prepare("
             SELECT s.user_id, s.student_id, d.photo, d.marksheet10, d.marksheet12, d.leaving_certificate, d.aadhaar 
             FROM students s 
@@ -34,11 +29,11 @@ if (isset($_GET['delete_id']) && !empty($_GET['delete_id'])) {
         ");
         $stmt->execute(['id' => $delete_id]);
         $data = $stmt->fetch();
-        
+
         if ($data) {
             $user_id_to_del = $data['user_id'];
-            
-            
+
+
             $file_fields = ['photo', 'marksheet10', 'marksheet12', 'leaving_certificate', 'aadhaar'];
             foreach ($file_fields as $field) {
                 if (!empty($data[$field])) {
@@ -48,11 +43,11 @@ if (isset($_GET['delete_id']) && !empty($_GET['delete_id'])) {
                     }
                 }
             }
-            
-            
+
+
             $del_user = $pdo->prepare("DELETE FROM users WHERE user_id = :uid");
             $del_user->execute(['uid' => $user_id_to_del]);
-            
+
             $pdo->commit();
             $success_msg = "Student and all linked account records/files deleted successfully.";
         } else {
@@ -79,12 +74,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
     $city = trim($_POST['city']);
     $state = trim($_POST['state']);
     $pincode = trim($_POST['pincode']);
-    
+
     $tenth_percentage = floatval($_POST['tenth_percentage']);
     $twelfth_percentage = floatval($_POST['twelfth_percentage']);
     $school_name = trim($_POST['school_name']);
     $passing_year = intval($_POST['passing_year']);
-    
+
     $course_id = intval($_POST['course_id']);
     $status = $_POST['status'];
 
@@ -92,16 +87,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
         $error_msg = "All fields are required.";
     } else {
         try {
-            
+
             $chk = $pdo->prepare("SELECT student_id FROM students WHERE mobile = :mobile AND student_id != :id");
             $chk->execute(['mobile' => $mobile, 'id' => $student_id]);
-            
+
             if ($chk->rowCount() > 0) {
                 $error_msg = "Mobile number is already registered by another student.";
             } else {
                 $pdo->beginTransaction();
 
-                
+
                 $status_stmt = $pdo->prepare("SELECT status FROM students WHERE student_id = :id");
                 $status_stmt->execute(['id' => $student_id]);
                 $old_status = $status_stmt->fetchColumn();
@@ -137,7 +132,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
                     'student_id' => $student_id
                 ]);
 
-                
+
                 if ($old_status !== $status) {
                     $hist_stmt = $pdo->prepare("INSERT INTO status_history (student_id, status, remarks) VALUES (:student_id, :status, :remarks)");
                     $hist_stmt->execute([
@@ -149,7 +144,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
 
                 $pdo->commit();
                 $success_msg = "Student details updated successfully.";
-                $edit_id = 0; 
+                $edit_id = 0;
             }
         } catch (PDOException $e) {
             $pdo->rollBack();
@@ -182,7 +177,7 @@ try {
         WHERE 1=1
     ";
     $list_params = [];
-    
+
     if (!empty($search)) {
         $list_sql .= " AND (s.admission_no LIKE :search1 
                       OR s.full_name LIKE :search2 
@@ -206,9 +201,9 @@ try {
         $list_sql .= " AND s.payment_status = :payment_filter";
         $list_params['payment_filter'] = $payment_filter;
     }
-    
-    
-    $order_clause = " ORDER BY s.student_id DESC"; 
+
+
+    $order_clause = " ORDER BY s.student_id DESC";
     if ($sort_by === 'oldest') {
         $order_clause = " ORDER BY s.student_id ASC";
     } elseif ($sort_by === 'pct_high') {
@@ -220,7 +215,7 @@ try {
     }
 
     $list_sql .= $order_clause;
-    
+
     $list_stmt = $pdo->prepare($list_sql);
     $list_stmt->execute($list_params);
     $students = $list_stmt->fetchAll();
@@ -233,16 +228,16 @@ include '../includes/header.php';
 ?>
 
 <div class="wrapper">
-    
+
     <?php include '../includes/sidebar.php'; ?>
 
-    
+
     <div id="content">
         <?php render_topbar(); ?>
 
         <div class="container-fluid">
             <?php render_page_header('Student Accounts Desk', '<a href="add_student.php" class="btn btn-sm btn-primary"><i class="fa-solid fa-user-plus me-1"></i>Add Student</a>'); ?>
-            
+
             <?php if (!empty($success_msg)): ?>
                 <div class="alert alert-success" role="alert">
                     <i class="fa-solid fa-circle-check me-2"></i><?php echo $success_msg; ?>
@@ -254,15 +249,15 @@ include '../includes/header.php';
                 </div>
             <?php endif; ?>
 
-            
 
-            
+
+
             <div class="card mb-4 shadow-sm border-0">
                 <div class="card-body">
                     <form action="manage_students.php" method="GET" class="row g-3 align-items-end">
                         <div class="col-md-3">
                             <label for="search" class="form-label">Search</label>
-                            <input type="text" class="form-control" id="search" name="search" 
+                            <input type="text" class="form-control" id="search" name="search"
                                 placeholder="ID, Name, Mobile..." value="<?php echo e($search); ?>">
                         </div>
                         <div class="col-md-2">
@@ -310,7 +305,7 @@ include '../includes/header.php';
                 </div>
             </div>
 
-            
+
             <div class="card">
                 <div class="card-header">
                     <i class="fa-solid fa-users me-2"></i>Students Database Records
@@ -358,15 +353,15 @@ include '../includes/header.php';
                                                 <?php endif; ?>
                                             </td>
                                             <td class="text-center">
-                                                
+
                                                 <a href="view_students.php?id=<?php echo $s['student_id']; ?>" class="btn btn-sm btn-outline-primary me-1" title="View Profile">
                                                     <i class="fa-solid fa-eye"></i>
                                                 </a>
-                                                
+
                                                 <a href="edit_student.php?id=<?php echo $s['student_id']; ?>" class="btn btn-sm btn-outline-secondary me-1" title="Edit Profile">
                                                     <i class="fa-solid fa-user-pen"></i>
                                                 </a>
-                                                
+
                                                 <a href="manage_students.php?delete_id=<?php echo $s['student_id']; ?>&search=<?php echo urlencode($search); ?>" class="btn btn-sm btn-outline-danger" onclick="return confirm('DANGER: Deleting this student will wipe out their credentials, documents, and logs. Proceed?');">
                                                     <i class="fa-solid fa-user-minus"></i>
                                                 </a>
@@ -384,34 +379,34 @@ include '../includes/header.php';
 </div>
 
 <script>
-document.addEventListener('DOMContentLoaded', function() {
-    const searchInput = document.getElementById('search');
-    if (searchInput) {
-        // Restore focus and cursor position to the end if there's a search value
-        if (searchInput.value) {
-            searchInput.focus();
-            const val = searchInput.value;
-            searchInput.value = '';
-            searchInput.value = val;
-        }
-        
-        // Debounce typing in search input
-        let timeout = null;
-        searchInput.addEventListener('input', function() {
-            clearTimeout(timeout);
-            timeout = setTimeout(() => {
-                searchInput.form.submit();
-            }, 600); // 600ms debounce
-        });
-    }
+    document.addEventListener('DOMContentLoaded', function() {
+        const searchInput = document.getElementById('search');
+        if (searchInput) {
+            // Restore focus and cursor position to the end if there's a search value
+            if (searchInput.value) {
+                searchInput.focus();
+                const val = searchInput.value;
+                searchInput.value = '';
+                searchInput.value = val;
+            }
 
-    // Auto-submit form when any dropdown selection changes
-    const selects = document.querySelectorAll('form select');
-    selects.forEach(select => {
-        select.addEventListener('change', function() {
-            this.form.submit();
+            // Debounce typing in search input
+            let timeout = null;
+            searchInput.addEventListener('input', function() {
+                clearTimeout(timeout);
+                timeout = setTimeout(() => {
+                    searchInput.form.submit();
+                }, 600); // 600ms debounce
+            });
+        }
+
+        // Auto-submit form when any dropdown selection changes
+        const selects = document.querySelectorAll('form select');
+        selects.forEach(select => {
+            select.addEventListener('change', function() {
+                this.form.submit();
+            });
         });
     });
-});
 </script>
 <?php include '../includes/footer.php'; ?>

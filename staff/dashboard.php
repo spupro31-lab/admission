@@ -11,7 +11,7 @@ $course_filter = isset($_GET['course_filter']) ? trim($_GET['course_filter']) : 
 $sort_by = isset($_GET['sort_by']) ? trim($_GET['sort_by']) : 'newest';
 
 try {
-    
+
     $stats = [
         'total' => $pdo->query("SELECT COUNT(*) FROM students WHERE is_submitted = 1")->fetchColumn(),
         'pending' => $pdo->query("SELECT COUNT(*) FROM students WHERE is_submitted = 1 AND status = 'Pending'")->fetchColumn(),
@@ -19,10 +19,10 @@ try {
         'rejected' => $pdo->query("SELECT COUNT(*) FROM students WHERE is_submitted = 1 AND status = 'Rejected'")->fetchColumn()
     ];
 
-    
+
     $courses_list = $pdo->query("SELECT course_id, course_name FROM courses ORDER BY course_name ASC")->fetchAll();
 
-    
+
     $query = "
         SELECT s.*, c.course_name 
         FROM students s 
@@ -50,8 +50,8 @@ try {
         $params['course_filter'] = $course_filter;
     }
 
-    
-    $order_clause = " ORDER BY s.student_id DESC"; 
+
+    $order_clause = " ORDER BY s.student_id DESC";
     if ($sort_by === 'oldest') {
         $order_clause = " ORDER BY s.student_id ASC";
     } elseif ($sort_by === 'pct_high') {
@@ -63,11 +63,10 @@ try {
     }
 
     $query .= $order_clause;
-    
+
     $stmt = $pdo->prepare($query);
     $stmt->execute($params);
     $applications = $stmt->fetchAll();
-
 } catch (PDOException $e) {
     die("Database Error: " . $e->getMessage());
 }
@@ -77,18 +76,18 @@ include '../includes/header.php';
 ?>
 
 <div class="wrapper">
-    
+
     <?php include '../includes/sidebar.php'; ?>
 
-    
+
     <div id="content">
         <?php render_topbar(); ?>
 
         <div class="container-fluid">
             <?php render_page_header('Staff Control Panel', '<span class="text-muted small"><i class="fa-solid fa-user-gear me-1"></i>' . e($_SESSION['name']) . ' (Staff)</span>'); ?>
-            
+
             <div class="row g-4 mb-4">
-                
+
                 <div class="col-md-3">
                     <div class="card bg-white p-3 stat-card courses">
                         <div class="d-flex justify-content-between align-items-center">
@@ -100,7 +99,7 @@ include '../includes/header.php';
                         </div>
                     </div>
                 </div>
-                
+
                 <div class="col-md-3">
                     <div class="card bg-white p-3 stat-card pending">
                         <div class="d-flex justify-content-between align-items-center">
@@ -112,7 +111,7 @@ include '../includes/header.php';
                         </div>
                     </div>
                 </div>
-                
+
                 <div class="col-md-3">
                     <div class="card bg-white p-3 stat-card approved">
                         <div class="d-flex justify-content-between align-items-center">
@@ -124,7 +123,7 @@ include '../includes/header.php';
                         </div>
                     </div>
                 </div>
-                
+
                 <div class="col-md-3">
                     <div class="card bg-white p-3 stat-card rejected">
                         <div class="d-flex justify-content-between align-items-center">
@@ -138,7 +137,7 @@ include '../includes/header.php';
                 </div>
             </div>
 
-            
+
             <div class="card mb-4 shadow-sm border-0">
                 <div class="card-body">
                     <form action="dashboard.php" method="GET" class="row g-3 align-items-end">
@@ -146,7 +145,7 @@ include '../includes/header.php';
                             <label for="search" class="form-label">Search Applications</label>
                             <div class="input-group">
                                 <span class="input-group-text bg-white border-end-0"><i class="fa-solid fa-magnifying-glass text-muted"></i></span>
-                                <input type="text" class="form-control border-start-0" id="search" name="search" 
+                                <input type="text" class="form-control border-start-0" id="search" name="search"
                                     placeholder="ID, Name, Mobile..." value="<?php echo e($search); ?>">
                             </div>
                         </div>
@@ -187,7 +186,7 @@ include '../includes/header.php';
                 </div>
             </div>
 
-            
+
             <div class="card">
                 <div class="card-header">
                     <i class="fa-solid fa-table-list me-2"></i>Submitted Applications
@@ -216,7 +215,7 @@ include '../includes/header.php';
                                             <td class="fw-bold text-primary"><?php echo e($app['admission_no']); ?></td>
                                             <td><?php echo e($app['full_name']); ?></td>
                                             <td><?php echo e($app['course_name']); ?></td>
-                                            <td><?php echo e($app['mobile']); ?></td>   
+                                            <td><?php echo e($app['mobile']); ?></td>
                                             <td>
                                                 <?php if ($app['status'] === 'Pending'): ?>
                                                     <span class="badge badge-pending">Pending</span>
@@ -245,35 +244,34 @@ include '../includes/header.php';
 </div>
 
 <script>
-document.addEventListener('DOMContentLoaded', function() {
-    const searchInput = document.getElementById('search');
-    if (searchInput) {
-        // Restore focus and cursor position to the end if there's a search value
-        if (searchInput.value) {
-            searchInput.focus();
-            const val = searchInput.value;
-            searchInput.value = '';
-            searchInput.value = val;
-        }
-        
-        // Debounce typing in search input
-        let timeout = null;
-        searchInput.addEventListener('input', function() {
-            clearTimeout(timeout);
-            timeout = setTimeout(() => {
-                searchInput.form.submit();
-            }, 600); // 600ms debounce
-        });
-    }
+    document.addEventListener('DOMContentLoaded', function() {
+        const searchInput = document.getElementById('search');
+        if (searchInput) {
+            // Restore focus and cursor position to the end if there's a search value
+            if (searchInput.value) {
+                searchInput.focus();
+                const val = searchInput.value;
+                searchInput.value = '';
+                searchInput.value = val;
+            }
 
-    // Auto-submit form when any dropdown selection changes
-    const selects = document.querySelectorAll('form select');
-    selects.forEach(select => {
-        select.addEventListener('change', function() {
-            this.form.submit();
+            // Debounce typing in search input
+            let timeout = null;
+            searchInput.addEventListener('input', function() {
+                clearTimeout(timeout);
+                timeout = setTimeout(() => {
+                    searchInput.form.submit();
+                }, 600); // 600ms debounce
+            });
+        }
+
+        // Auto-submit form when any dropdown selection changes
+        const selects = document.querySelectorAll('form select');
+        selects.forEach(select => {
+            select.addEventListener('change', function() {
+                this.form.submit();
+            });
         });
     });
-});
 </script>
 <?php include '../includes/footer.php'; ?>
-

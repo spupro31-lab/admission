@@ -24,7 +24,7 @@ include 'includes/header.php';
 
 <div class="container portal-grid mb-5" id="portals">
     <div class="row g-4 justify-content-center">
-        
+
         <div class="col-md-4">
             <div class="premium-card card-student">
                 <div>
@@ -41,7 +41,7 @@ include 'includes/header.php';
             </div>
         </div>
 
-        
+
         <div class="col-md-4">
             <div class="premium-card card-staff">
                 <div>
@@ -57,10 +57,10 @@ include 'includes/header.php';
             </div>
         </div>
 
-        
+
         <div class="col-md-4">
             <div class="premium-card card-admin">
-                <div>   
+                <div>
                     <div class="card-icon-wrapper">
                         <i class="fa-solid fa-screwdriver-wrench"></i>
                     </div>

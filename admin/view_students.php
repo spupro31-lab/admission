@@ -16,7 +16,7 @@ $documents = null;
 $history = [];
 
 try {
-    
+
     $stmt = $pdo->prepare("
         SELECT s.*, c.course_name, c.department, c.semester 
         FROM students s 
@@ -25,22 +25,21 @@ try {
     ");
     $stmt->execute(['student_id' => $student_id]);
     $student = $stmt->fetch();
-    
+
     if (!$student) {
         header("Location: manage_students.php");
         exit;
     }
-    
-    
+
+
     $doc_stmt = $pdo->prepare("SELECT * FROM documents WHERE student_id = :student_id");
     $doc_stmt->execute(['student_id' => $student_id]);
     $documents = $doc_stmt->fetch();
-    
-    
+
+
     $hist_stmt = $pdo->prepare("SELECT * FROM status_history WHERE student_id = :student_id ORDER BY history_id DESC");
     $hist_stmt->execute(['student_id' => $student_id]);
     $history = $hist_stmt->fetchAll();
-    
 } catch (PDOException $e) {
     die("Database Error: " . $e->getMessage());
 }
@@ -50,17 +49,17 @@ include '../includes/header.php';
 ?>
 
 <div class="wrapper">
-    
+
     <?php include '../includes/sidebar.php'; ?>
 
-    
+
     <div id="content">
         <?php render_topbar(); ?>
 
         <div class="container-fluid">
             <?php render_page_header('Student Profile Viewer', '<a href="manage_students.php" class="btn btn-sm btn-outline-secondary"><i class="fa-solid fa-arrow-left me-1"></i>Back to Database</a>'); ?>
             <div class="row">
-                
+
                 <div class="col-lg-7">
                     <div class="card">
                         <div class="card-header">
@@ -86,7 +85,7 @@ include '../includes/header.php';
                                 </div>
                             </div>
 
-                            
+
                             <h6 class="fw-bold text-primary border-bottom pb-2 mb-3">1. Personal Information</h6>
                             <div class="row g-2 mb-4">
                                 <div class="col-md-12"><strong>Student Full Name:</strong> <?php echo e($student['full_name']); ?></div>
@@ -101,7 +100,7 @@ include '../includes/header.php';
                                 <div class="col-md-12"><strong>Full Address:</strong> <?php echo e($student['address']) . ", " . e($student['city']) . ", " . e($student['state']); ?></div>
                             </div>
 
-                            
+
                             <h6 class="fw-bold text-primary border-bottom pb-2 mb-3">2. Academic Qualifications</h6>
                             <div class="row g-2 mb-4">
                                 <div class="col-md-6"><strong>10th Percentage:</strong> <?php echo e($student['tenth_percentage']); ?>%</div>
@@ -110,7 +109,7 @@ include '../includes/header.php';
                                 <div class="col-md-6"><strong>Passing Year:</strong> <?php echo e($student['passing_year']); ?></div>
                             </div>
 
-                            
+
                             <h6 class="fw-bold text-primary border-bottom pb-2 mb-3">3. Preferred Course Detail</h6>
                             <div class="row g-2 mb-4">
                                 <div class="col-md-12"><strong>Program:</strong> <?php echo e($student['course_name']); ?></div>
@@ -118,11 +117,11 @@ include '../includes/header.php';
                                 <div class="col-md-6"><strong>Semester:</strong> <?php echo e($student['semester']); ?></div>
                             </div>
 
-                            
+
                             <h6 class="fw-bold text-primary border-bottom pb-2 mb-3">4. Processing Fee Payment Detail</h6>
                             <div class="row g-2">
                                 <div class="col-md-6">
-                                    <strong>Payment Status:</strong> 
+                                    <strong>Payment Status:</strong>
                                     <?php if ($student['payment_status'] === 'Paid'): ?>
                                         <span class="badge bg-success-subtle text-success font-weight-bold px-2 py-1"><i class="fa-solid fa-circle-check me-1"></i>Paid</span>
                                     <?php else: ?>
@@ -130,7 +129,7 @@ include '../includes/header.php';
                                     <?php endif; ?>
                                 </div>
                                 <div class="col-md-6">
-                                    <strong>UPI UTR/Ref ID:</strong> 
+                                    <strong>UPI UTR/Ref ID:</strong>
                                     <span class="font-monospace text-dark fw-bold"><?php echo e($student['transaction_id'] ? $student['transaction_id'] : 'N/A'); ?></span>
                                 </div>
                             </div>
@@ -138,9 +137,9 @@ include '../includes/header.php';
                     </div>
                 </div>
 
-                
+
                 <div class="col-lg-5">
-                    
+
                     <div class="card mb-4">
                         <div class="card-header">
                             <i class="fa-solid fa-folder-closed me-2 text-primary"></i>Uploaded Certificates File
@@ -172,7 +171,7 @@ include '../includes/header.php';
                         </div>
                     </div>
 
-                    
+
                     <div class="card">
                         <div class="card-header">
                             <i class="fa-solid fa-timeline me-2 text-primary"></i>Application Review Timeline
@@ -205,4 +204,3 @@ include '../includes/header.php';
 </div>
 
 <?php include '../includes/footer.php'; ?>
-

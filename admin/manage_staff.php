@@ -8,11 +8,6 @@ check_access('admin');
 $error_msg = "";
 $success_msg = "";
 
-
-
-
-
-
 if (isset($_GET['delete_id']) && !empty($_GET['delete_id'])) {
     $delete_id = intval($_GET['delete_id']);
     try {
@@ -41,16 +36,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action'])) {
                 $error_msg = "Password is required and must be at least 6 characters long.";
             } else {
                 try {
-                    
+
                     $chk = $pdo->prepare("SELECT staff_id FROM admission_staff WHERE email = :email");
                     $chk->execute(['email' => $email]);
-                    
+
                     if ($chk->rowCount() > 0) {
                         $error_msg = "This email is already registered to a staff account.";
                     } else {
-                        
+
                         $hashed_password = password_hash($password, PASSWORD_DEFAULT);
-                        
+
                         $stmt = $pdo->prepare("INSERT INTO admission_staff (name, email, password) VALUES (:name, :email, :password)");
                         $stmt->execute([
                             'name' => $name,
@@ -66,15 +61,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action'])) {
         } elseif ($action === 'edit') {
             $staff_id = intval($_POST['staff_id']);
             try {
-                
+
                 $chk = $pdo->prepare("SELECT staff_id FROM admission_staff WHERE email = :email AND staff_id != :id");
                 $chk->execute(['email' => $email, 'id' => $staff_id]);
-                
+
                 if ($chk->rowCount() > 0) {
                     $error_msg = "This email is already registered to another staff account.";
                 } else {
                     if (!empty($password)) {
-                        
+
                         if (strlen($password) < 6) {
                             $error_msg = "Password must be at least 6 characters long.";
                         } else {
@@ -89,7 +84,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action'])) {
                             $success_msg = "Staff details and password updated successfully.";
                         }
                     } else {
-                        
+
                         $stmt = $pdo->prepare("UPDATE admission_staff SET name = :name, email = :email WHERE staff_id = :id");
                         $stmt->execute([
                             'name' => $name,
@@ -119,16 +114,16 @@ include '../includes/header.php';
 ?>
 
 <div class="wrapper">
-    
+
     <?php include '../includes/sidebar.php'; ?>
 
-    
+
     <div id="content">
         <?php render_topbar(); ?>
 
         <div class="container-fluid">
             <?php render_page_header('Staff Management Portal', '<button type="button" class="btn btn-sm btn-primary" data-bs-toggle="modal" data-bs-target="#addStaffModal"><i class="fa-solid fa-plus me-1"></i>Create Staff Account</button>'); ?>
-            
+
             <?php if (!empty($success_msg)): ?>
                 <div class="alert alert-success" role="alert">
                     <i class="fa-solid fa-circle-check me-2"></i><?php echo $success_msg; ?>
@@ -140,7 +135,7 @@ include '../includes/header.php';
                 </div>
             <?php endif; ?>
 
-            
+
             <div class="card">
                 <div class="card-header">
                     <i class="fa-solid fa-user-tie me-2"></i>Admission Staff Accounts
@@ -168,11 +163,11 @@ include '../includes/header.php';
                                             <td class="fw-bold text-primary"><?php echo e($s['name']); ?></td>
                                             <td><?php echo e($s['email']); ?></td>
                                             <td class="text-center">
-                                                
+
                                                 <button class="btn btn-sm btn-outline-secondary me-2" onclick="editStaff(<?php echo e(json_encode($s)); ?>)">
                                                     <i class="fa-solid fa-user-pen"></i> Edit
                                                 </button>
-                                                
+
                                                 <a href="manage_staff.php?delete_id=<?php echo $s['staff_id']; ?>" class="btn btn-sm btn-outline-danger" onclick="return confirm('Are you sure you want to delete this staff account?');">
                                                     <i class="fa-solid fa-user-minus"></i> Delete
                                                 </a>
@@ -260,16 +255,16 @@ include '../includes/header.php';
 
 
 <script>
-function editStaff(staff) {
-    document.getElementById('edit_staff_id').value = staff.staff_id;
-    document.getElementById('edit_name').value = staff.name;
-    document.getElementById('edit_email').value = staff.email;
-    document.getElementById('edit_password').value = ""; // Always reset password input
-    
-    // Show edit modal
-    const editModal = new bootstrap.Modal(document.getElementById('editStaffModal'));
-    editModal.show();
-}
+    function editStaff(staff) {
+        document.getElementById('edit_staff_id').value = staff.staff_id;
+        document.getElementById('edit_name').value = staff.name;
+        document.getElementById('edit_email').value = staff.email;
+        document.getElementById('edit_password').value = ""; // Always reset password input
+
+        // Show edit modal
+        const editModal = new bootstrap.Modal(document.getElementById('editStaffModal'));
+        editModal.show();
+    }
 </script>
 
 <?php include '../includes/footer.php'; ?>

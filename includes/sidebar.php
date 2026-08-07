@@ -18,7 +18,6 @@ if ($role === 'student' && isset($_SESSION['user_id'])) {
             $student_is_submitted = true;
         }
     } catch (PDOException $e) {
-        
     }
 }
 
@@ -52,7 +51,7 @@ $items = $nav_items[$role] ?? [];
     </div>
 
     <ul class="list-unstyled components">
-        <?php foreach ($items as $item): 
+        <?php foreach ($items as $item):
             $is_disabled = false;
             if ($role === 'student' && $student_is_submitted) {
                 if (in_array($item['href'], ['student/apply.php', 'student/upload.php', 'student/payment.php'], true)) {
@@ -60,16 +59,16 @@ $items = $nav_items[$role] ?? [];
                 }
             }
         ?>
-            <li class="<?php 
-                $li_classes = [];
-                if (in_array($current_page, $item['pages'], true)) {
-                    $li_classes[] = 'active';
-                }
-                if ($is_disabled) {
-                    $li_classes[] = 'disabled';
-                }
-                echo implode(' ', $li_classes);
-            ?>">
+            <li class="<?php
+                        $li_classes = [];
+                        if (in_array($current_page, $item['pages'], true)) {
+                            $li_classes[] = 'active';
+                        }
+                        if ($is_disabled) {
+                            $li_classes[] = 'disabled';
+                        }
+                        echo implode(' ', $li_classes);
+                        ?>">
                 <?php if ($is_disabled): ?>
                     <a href="javascript:void(0);" onclick="event.preventDefault();" class="disabled-nav-link" title="Application already submitted">
                         <i class="fa-solid <?php echo e($item['icon']); ?>"></i>

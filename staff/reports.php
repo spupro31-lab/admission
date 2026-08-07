@@ -13,7 +13,7 @@ $status_filter = isset($_GET['status_filter']) ? trim($_GET['status_filter']) : 
 
 if (isset($_GET['export']) && $_GET['export'] === 'csv') {
     try {
-        
+
         $export_query = "
             SELECT s.admission_no, s.full_name, s.father_name, s.mother_name, s.gender, s.dob, s.category, 
                    s.mobile, s.email, s.tenth_percentage, s.twelfth_percentage, 
@@ -35,29 +35,42 @@ if (isset($_GET['export']) && $_GET['export'] === 'csv') {
         }
 
         $export_query .= " ORDER BY s.student_id DESC";
-        
+
         $stmt = $pdo->prepare($export_query);
         $stmt->execute($export_params);
         $records = $stmt->fetchAll();
 
-        
+
         ob_end_clean();
-        
-        
+
+
         header('Content-Type: text/csv; charset=utf-8');
         header('Content-Disposition: attachment; filename=Student_Admission_Report_' . date('Ymd_His') . '.csv');
-        
-        
+
+
         $output = fopen('php://output', 'w');
-        
-        
+
+
         fputcsv($output, [
-            'Admission ID', 'Full Name', "Father's Name", "Mother's Name", 'Gender', 'DOB', 'Category', 
-            'Mobile', 'Email', '10th %', '12th %', 'School Name', 'Passing Year', 
-            'Course Selected', 'Status', 'Date Submitted'
+            'Admission ID',
+            'Full Name',
+            "Father's Name",
+            "Mother's Name",
+            'Gender',
+            'DOB',
+            'Category',
+            'Mobile',
+            'Email',
+            '10th %',
+            '12th %',
+            'School Name',
+            'Passing Year',
+            'Course Selected',
+            'Status',
+            'Date Submitted'
         ]);
-        
-        
+
+
         foreach ($records as $row) {
             fputcsv($output, [
                 $row['admission_no'],
@@ -78,10 +91,9 @@ if (isset($_GET['export']) && $_GET['export'] === 'csv') {
                 $row['created_at']
             ]);
         }
-        
+
         fclose($output);
         exit;
-        
     } catch (PDOException $e) {
         die("Export Error: " . $e->getMessage());
     }
@@ -91,10 +103,10 @@ if (isset($_GET['export']) && $_GET['export'] === 'csv') {
 
 
 try {
-    
+
     $courses = $pdo->query("SELECT * FROM courses ORDER BY course_name ASC")->fetchAll();
 
-    
+
     $list_query = "
         SELECT s.*, c.course_name 
         FROM students s 
@@ -114,11 +126,10 @@ try {
     }
 
     $list_query .= " ORDER BY s.student_id DESC";
-    
+
     $stmt = $pdo->prepare($list_query);
     $stmt->execute($list_params);
     $applicants = $stmt->fetchAll();
-
 } catch (PDOException $e) {
     die("Database Error: " . $e->getMessage());
 }
@@ -128,20 +139,20 @@ include '../includes/header.php';
 ?>
 
 <div class="wrapper">
-    
+
     <?php include '../includes/sidebar.php'; ?>
 
-    
+
     <div id="content">
         <?php render_topbar(); ?>
 
         <div class="container-fluid">
             <?php render_page_header('Reports & Audits'); ?>
-            
+
             <div class="card mb-4">
                 <div class="card-body">
                     <form action="reports.php" method="GET" class="row g-3 align-items-end">
-                        
+
                         <div class="col-md-4">
                             <label for="course_filter" class="form-label">Filter by Course</label>
                             <select class="form-select form-control" id="course_filter" name="course_filter">
@@ -153,7 +164,7 @@ include '../includes/header.php';
                                 <?php endforeach; ?>
                             </select>
                         </div>
-                        
+
                         <div class="col-md-4">
                             <label for="status_filter" class="form-label">Filter by Status</label>
                             <select class="form-select form-control" id="status_filter" name="status_filter">
@@ -163,12 +174,12 @@ include '../includes/header.php';
                                 <option value="Rejected" <?php echo ($status_filter === 'Rejected') ? 'selected' : ''; ?>>Rejected</option>
                             </select>
                         </div>
-                        
+
                         <div class="col-md-4 d-flex gap-2">
                             <button type="submit" class="btn btn-primary flex-grow-1 py-2">
                                 <i class="fa-solid fa-arrows-rotate me-1"></i>Apply Filters
                             </button>
-                            
+
                             <a href="reports.php?course_filter=<?php echo $course_filter; ?>&status_filter=<?php echo $status_filter; ?>&export=csv" class="btn btn-success py-2 px-3" title="Export to CSV">
                                 <i class="fa-solid fa-file-csv fs-5"></i> Export
                             </a>
@@ -177,7 +188,7 @@ include '../includes/header.php';
                 </div>
             </div>
 
-            
+
             <div class="card">
                 <div class="card-header">
                     <i class="fa-solid fa-file-invoice me-2"></i>Admission Records List
@@ -235,4 +246,3 @@ include '../includes/header.php';
 </div>
 
 <?php include '../includes/footer.php'; ?>
-

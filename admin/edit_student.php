@@ -17,14 +17,14 @@ $student_id = intval($_GET['id']);
 $student = null;
 
 try {
-    
+
     $courses = $pdo->query("SELECT * FROM courses ORDER BY course_name ASC")->fetchAll();
 
-    
+
     $stmt = $pdo->prepare("SELECT * FROM students WHERE student_id = :id");
     $stmt->execute(['id' => $student_id]);
     $student = $stmt->fetch();
-    
+
     if (!$student) {
         header("Location: manage_students.php");
         exit;
@@ -46,12 +46,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
     $city = trim($_POST['city']);
     $state = trim($_POST['state']);
     $pincode = trim($_POST['pincode']);
-    
+
     $tenth_percentage = floatval($_POST['tenth_percentage']);
     $twelfth_percentage = floatval($_POST['twelfth_percentage']);
     $school_name = trim($_POST['school_name']);
     $passing_year = intval($_POST['passing_year']);
-    
+
     $course_id = intval($_POST['course_id']);
     $status = $_POST['status'];
 
@@ -59,16 +59,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
         $error_msg = "All fields are compulsory.";
     } else {
         try {
-            
+
             $chk = $pdo->prepare("SELECT student_id FROM students WHERE mobile = :mobile AND student_id != :id");
             $chk->execute(['mobile' => $mobile, 'id' => $student_id]);
-            
+
             if ($chk->rowCount() > 0) {
                 $error_msg = "Mobile number is already registered by another student.";
             } else {
                 $pdo->beginTransaction();
 
-                
+
                 $status_stmt = $pdo->prepare("SELECT status FROM students WHERE student_id = :id");
                 $status_stmt->execute(['id' => $student_id]);
                 $old_status = $status_stmt->fetchColumn();
@@ -104,7 +104,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
                     'student_id' => $student_id
                 ]);
 
-                
+
                 if ($old_status !== $status) {
                     $hist_stmt = $pdo->prepare("INSERT INTO status_history (student_id, status, remarks) VALUES (:student_id, :status, :remarks)");
                     $hist_stmt->execute([
@@ -115,8 +115,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
                 }
 
                 $pdo->commit();
-                
-                
+
+
                 header("Location: manage_students.php?msg=updated");
                 exit;
             }
@@ -132,16 +132,16 @@ include '../includes/header.php';
 ?>
 
 <div class="wrapper">
-    
+
     <?php include '../includes/sidebar.php'; ?>
 
-    
+
     <div id="content">
         <?php render_topbar(); ?>
 
         <div class="container-fluid">
             <?php render_page_header('Edit Applicant Info', '<a href="manage_students.php" class="btn btn-sm btn-outline-secondary"><i class="fa-solid fa-arrow-left me-1"></i>Back to Database</a>'); ?>
-            
+
             <?php if (!empty($error_msg)): ?>
                 <div class="alert alert-danger" role="alert">
                     <i class="fa-solid fa-triangle-exclamation me-2"></i><?php echo e($error_msg); ?>
@@ -155,7 +155,7 @@ include '../includes/header.php';
                 <div class="card-body">
                     <form action="edit_student.php?id=<?php echo $student_id; ?>" method="POST">
                         <input type="hidden" name="action" value="update_student">
-                        
+
                         <h6 class="fw-bold text-primary border-bottom pb-2 mb-3">1. Personal Information</h6>
                         <div class="row g-3 mb-4">
                             <div class="col-md-4">
@@ -262,4 +262,3 @@ include '../includes/header.php';
 </div>
 
 <?php include '../includes/footer.php'; ?>
-

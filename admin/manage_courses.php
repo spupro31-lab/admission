@@ -8,11 +8,6 @@ check_access('admin');
 $error_msg = "";
 $success_msg = "";
 
-
-
-
-
-
 if (isset($_GET['delete_id']) && !empty($_GET['delete_id'])) {
     $delete_id = intval($_GET['delete_id']);
     try {
@@ -80,16 +75,16 @@ include '../includes/header.php';
 ?>
 
 <div class="wrapper">
-    
+
     <?php include '../includes/sidebar.php'; ?>
 
-    
+
     <div id="content">
         <?php render_topbar(); ?>
 
         <div class="container-fluid">
             <?php render_page_header('Course Management Portal', '<button type="button" class="btn btn-sm btn-primary" data-bs-toggle="modal" data-bs-target="#addCourseModal"><i class="fa-solid fa-plus me-1"></i>Add New Course</button>'); ?>
-            
+
             <?php if (!empty($success_msg)): ?>
                 <div class="alert alert-success" role="alert">
                     <i class="fa-solid fa-circle-check me-2"></i><?php echo $success_msg; ?>
@@ -101,7 +96,7 @@ include '../includes/header.php';
                 </div>
             <?php endif; ?>
 
-            
+
             <div class="card">
                 <div class="card-header">
                     <i class="fa-solid fa-book-bookmark me-2"></i>Available Courses List
@@ -133,11 +128,11 @@ include '../includes/header.php';
                                             <td><?php echo e($c['semester']); ?></td>
                                             <td><?php echo e($c['total_seats']); ?></td>
                                             <td class="text-center">
-                                                
+
                                                 <button class="btn btn-sm btn-outline-secondary me-2" onclick="editCourse(<?php echo e(json_encode($c)); ?>)">
                                                     <i class="fa-solid fa-pen-to-square"></i> Edit
                                                 </button>
-                                                
+
                                                 <a href="manage_courses.php?delete_id=<?php echo $c['course_id']; ?>" class="btn btn-sm btn-outline-danger" onclick="return confirm('Are you sure you want to delete this course? This action is irreversible.');">
                                                     <i class="fa-solid fa-trash-can"></i> Delete
                                                 </a>
@@ -233,18 +228,17 @@ include '../includes/header.php';
 
 
 <script>
-function editCourse(course) {
-    document.getElementById('edit_course_id').value = course.course_id;
-    document.getElementById('edit_course_name').value = course.course_name;
-    document.getElementById('edit_department').value = course.department;
-    document.getElementById('edit_semester').value = course.semester;
-    document.getElementById('edit_total_seats').value = course.total_seats;
-    
-    // Programmatically trigger modal show
-    const editModal = new bootstrap.Modal(document.getElementById('editCourseModal'));
-    editModal.show();
-}
+    function editCourse(course) {
+        document.getElementById('edit_course_id').value = course.course_id;
+        document.getElementById('edit_course_name').value = course.course_name;
+        document.getElementById('edit_department').value = course.department;
+        document.getElementById('edit_semester').value = course.semester;
+        document.getElementById('edit_total_seats').value = course.total_seats;
+
+        // Programmatically trigger modal show
+        const editModal = new bootstrap.Modal(document.getElementById('editCourseModal'));
+        editModal.show();
+    }
 </script>
 
 <?php include '../includes/footer.php'; ?>
-

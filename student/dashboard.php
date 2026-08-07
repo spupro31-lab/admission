@@ -12,19 +12,19 @@ $has_form = false;
 $has_docs = false;
 
 try {
-    
+
     $stmt = $pdo->prepare("SELECT s.*, c.course_name FROM students s LEFT JOIN courses c ON s.course_id = c.course_id WHERE s.user_id = :user_id");
     $stmt->execute(['user_id' => $user_id]);
     $student = $stmt->fetch();
 
     if ($student) {
         $has_form = true;
-        
-        
+
+
         $doc_stmt = $pdo->prepare("SELECT * FROM documents WHERE student_id = :student_id");
         $doc_stmt->execute(['student_id' => $student['student_id']]);
         $documents = $doc_stmt->fetch();
-        
+
         if ($documents && !empty($documents['photo']) && !empty($documents['marksheet10']) && !empty($documents['marksheet12']) && !empty($documents['leaving_certificate']) && !empty($documents['aadhaar'])) {
             $has_docs = true;
         }
@@ -38,17 +38,17 @@ if (isset($_POST['action']) && $_POST['action'] === 'final_submit' && $has_form 
     try {
         $pdo->beginTransaction();
 
-        
+
         $update_stmt = $pdo->prepare("UPDATE students SET is_submitted = 1, status = 'Pending' WHERE student_id = :student_id");
         $update_stmt->execute(['student_id' => $student['student_id']]);
 
-        
+
         $history_stmt = $pdo->prepare("INSERT INTO status_history (student_id, status, remarks) VALUES (:student_id, 'Pending', 'Application submitted by student.')");
         $history_stmt->execute(['student_id' => $student['student_id']]);
 
         $pdo->commit();
-        
-        
+
+
         header("Location: dashboard.php?msg=submitted");
         exit;
     } catch (PDOException $e) {
@@ -62,16 +62,16 @@ include '../includes/header.php';
 ?>
 
 <div class="wrapper">
-    
+
     <?php include '../includes/sidebar.php'; ?>
 
-    
+
     <div id="content">
         <?php render_topbar(); ?>
 
         <div class="container-fluid">
             <?php render_page_header('Student Admission Portal', '<span class="text-muted small"><i class="fa-solid fa-circle-user me-1"></i>' . e($_SESSION['email']) . '</span>'); ?>
-            
+
             <?php if (isset($_GET['msg']) && $_GET['msg'] === 'submitted'): ?>
                 <div class="alert alert-success alert-dismissible fade show" role="alert">
                     <i class="fa-solid fa-circle-check me-2"></i>Your application has been finalized and submitted successfully!
@@ -94,11 +94,11 @@ include '../includes/header.php';
                 </div>
             </div>
 
-            
+
             <div class="row mb-4">
                 <div class="col-md-12">
                     <?php if (!$has_form): ?>
-                        
+
                         <div class="status-card-premium status-card-step">
                             <div class="status-stepper-premium">
                                 <div class="status-stepper-step-premium active">
@@ -118,7 +118,7 @@ include '../includes/header.php';
                                     <div class="status-stepper-label-premium">Submit</div>
                                 </div>
                             </div>
-                            
+
                             <div class="status-header-premium">
                                 <div class="status-icon-wrapper-premium">
                                     <i class="fa-solid fa-pen-to-square"></i>
@@ -136,7 +136,7 @@ include '../includes/header.php';
                             </div>
                         </div>
                     <?php elseif ($has_form && !$has_docs): ?>
-                        
+
                         <div class="status-card-premium status-card-step">
                             <div class="status-stepper-premium">
                                 <div class="status-stepper-step-premium completed">
@@ -156,7 +156,7 @@ include '../includes/header.php';
                                     <div class="status-stepper-label-premium">Submit</div>
                                 </div>
                             </div>
-                            
+
                             <div class="status-header-premium">
                                 <div class="status-icon-wrapper-premium">
                                     <i class="fa-solid fa-cloud-arrow-up"></i>
@@ -175,7 +175,7 @@ include '../includes/header.php';
                             </div>
                         </div>
                     <?php elseif ($has_form && $has_docs && $student['payment_status'] === 'Unpaid'): ?>
-                        
+
                         <div class="status-card-premium status-card-step">
                             <div class="status-stepper-premium">
                                 <div class="status-stepper-step-premium completed">
@@ -195,7 +195,7 @@ include '../includes/header.php';
                                     <div class="status-stepper-label-premium">Submit</div>
                                 </div>
                             </div>
-                            
+
                             <div class="status-header-premium">
                                 <div class="status-icon-wrapper-premium">
                                     <i class="fa-solid fa-credit-card"></i>
@@ -215,7 +215,7 @@ include '../includes/header.php';
                             </div>
                         </div>
                     <?php elseif ($has_form && $has_docs && $student['payment_status'] === 'Paid' && $student['is_submitted'] == 0): ?>
-                        
+
                         <div class="status-card-premium status-card-step">
                             <div class="status-stepper-premium">
                                 <div class="status-stepper-step-premium completed">
@@ -235,7 +235,7 @@ include '../includes/header.php';
                                     <div class="status-stepper-label-premium">Submit</div>
                                 </div>
                             </div>
-                            
+
                             <div class="status-header-premium">
                                 <div class="status-icon-wrapper-premium">
                                     <i class="fa-solid fa-clipboard-check"></i>
@@ -261,7 +261,7 @@ include '../includes/header.php';
                             </div>
                         </div>
                     <?php else: ?>
-                        
+
                         <?php if ($student['status'] === 'Pending'): ?>
                             <div class="status-card-premium status-card-pending">
                                 <div class="status-stepper-premium">
@@ -282,7 +282,7 @@ include '../includes/header.php';
                                         <div class="status-stepper-label-premium">Verification</div>
                                     </div>
                                 </div>
-                                
+
                                 <div class="status-header-premium">
                                     <div class="status-icon-wrapper-premium">
                                         <i class="fa-solid fa-clock-rotate-left"></i>
@@ -319,7 +319,7 @@ include '../includes/header.php';
                                         <div class="status-stepper-label-premium">Verification</div>
                                     </div>
                                 </div>
-                                
+
                                 <div class="status-header-premium">
                                     <div class="status-icon-wrapper-premium">
                                         <i class="fa-solid fa-circle-check"></i>
@@ -357,7 +357,7 @@ include '../includes/header.php';
                                         <div class="status-stepper-label-premium">Verification</div>
                                     </div>
                                 </div>
-                                
+
                                 <div class="status-header-premium">
                                     <div class="status-icon-wrapper-premium">
                                         <i class="fa-solid fa-triangle-exclamation"></i>
@@ -370,10 +370,10 @@ include '../includes/header.php';
                                 <div class="status-body-premium">
                                     <p>Your application was rejected by the admission staff due to verification issues.</p>
                                     <?php
-                                        
-                                        $hist_stmt = $pdo->prepare("SELECT remarks FROM status_history WHERE student_id = :student_id ORDER BY history_id DESC LIMIT 1");
-                                        $hist_stmt->execute(['student_id' => $student['student_id']]);
-                                        $history = $hist_stmt->fetch();
+
+                                    $hist_stmt = $pdo->prepare("SELECT remarks FROM status_history WHERE student_id = :student_id ORDER BY history_id DESC LIMIT 1");
+                                    $hist_stmt->execute(['student_id' => $student['student_id']]);
+                                    $history = $hist_stmt->fetch();
                                     ?>
                                     <div class="status-remarks-box">
                                         <strong>Staff Remarks:</strong> <?php echo e($history ? $history['remarks'] : 'No remarks provided.'); ?>
@@ -390,10 +390,10 @@ include '../includes/header.php';
                 </div>
             </div>
 
-            
+
             <?php if ($has_form): ?>
                 <div class="row">
-                    
+
                     <div class="col-lg-8">
                         <div class="card">
                             <div class="card-header">
@@ -464,7 +464,7 @@ include '../includes/header.php';
                         </div>
                     </div>
 
-                    
+
                     <div class="col-lg-4">
                         <div class="card">
                             <div class="card-header">
@@ -472,7 +472,7 @@ include '../includes/header.php';
                             </div>
                             <div class="card-body">
                                 <ul class="list-group list-group-flush">
-                                    
+
                                     <li class="list-group-item d-flex justify-content-between align-items-center px-0 py-3">
                                         <span><i class="fa-regular fa-image me-2 text-primary"></i>Student Photo</span>
                                         <?php if ($documents && !empty($documents['photo'])): ?>
@@ -482,7 +482,7 @@ include '../includes/header.php';
                                         <?php endif; ?>
                                     </li>
 
-                                    
+
                                     <li class="list-group-item d-flex justify-content-between align-items-center px-0 py-3">
                                         <span><i class="fa-regular fa-file-pdf me-2 text-danger"></i>10th Marksheet</span>
                                         <?php if ($documents && !empty($documents['marksheet10'])): ?>
@@ -492,7 +492,7 @@ include '../includes/header.php';
                                         <?php endif; ?>
                                     </li>
 
-                                    
+
                                     <li class="list-group-item d-flex justify-content-between align-items-center px-0 py-3">
                                         <span><i class="fa-regular fa-file-pdf me-2 text-danger"></i>12th Marksheet</span>
                                         <?php if ($documents && !empty($documents['marksheet12'])): ?>
@@ -502,7 +502,7 @@ include '../includes/header.php';
                                         <?php endif; ?>
                                     </li>
 
-                                    
+
                                     <li class="list-group-item d-flex justify-content-between align-items-center px-0 py-3">
                                         <span><i class="fa-regular fa-file-word me-2 text-info"></i>Leaving Certificate</span>
                                         <?php if ($documents && !empty($documents['leaving_certificate'])): ?>
@@ -512,7 +512,7 @@ include '../includes/header.php';
                                         <?php endif; ?>
                                     </li>
 
-                                    
+
                                     <li class="list-group-item d-flex justify-content-between align-items-center px-0 py-3">
                                         <span><i class="fa-regular fa-address-card me-2 text-success"></i>Aadhaar Card</span>
                                         <?php if ($documents && !empty($documents['aadhaar'])): ?>

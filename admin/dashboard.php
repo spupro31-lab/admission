@@ -6,7 +6,7 @@ require_once '../includes/auth.php';
 check_access('admin');
 
 try {
-    
+
     $stats = [
         'total_apps' => $pdo->query("SELECT COUNT(*) FROM students WHERE is_submitted = 1")->fetchColumn(),
         'approved' => $pdo->query("SELECT COUNT(*) FROM students WHERE status = 'Approved'")->fetchColumn(),
@@ -16,10 +16,10 @@ try {
         'staff' => $pdo->query("SELECT COUNT(*) FROM admission_staff")->fetchColumn()
     ];
 
-    
+
     $gender_stmt = $pdo->query("SELECT gender, COUNT(*) as count FROM students WHERE is_submitted = 1 GROUP BY gender");
     $gender_data = $gender_stmt->fetchAll();
-    
+
     $gender_labels = [];
     $gender_counts = [];
     foreach ($gender_data as $g) {
@@ -27,17 +27,17 @@ try {
         $gender_counts[] = (int)$g['count'];
     }
 
-    
+
     $category_stmt = $pdo->query("SELECT category, COUNT(*) as count FROM students WHERE is_submitted = 1 GROUP BY category");
     $category_data = $category_stmt->fetchAll();
-    
+
     $category_labels = [];
     $category_counts = [];
     foreach ($category_data as $c) {
         $category_labels[] = $c['category'];
         $category_counts[] = (int)$c['count'];
     }
-    
+
     $recent_apps_stmt = $pdo->query("
         SELECT s.student_id, s.full_name, s.email, s.status, s.created_at, c.course_name 
         FROM students s 
@@ -47,7 +47,6 @@ try {
         LIMIT 5
     ");
     $recent_apps = $recent_apps_stmt->fetchAll();
-
 } catch (PDOException $e) {
     die("Database Query Failed: " . $e->getMessage());
 }
@@ -57,18 +56,18 @@ include '../includes/header.php';
 ?>
 
 <div class="wrapper">
-    
+
     <?php include '../includes/sidebar.php'; ?>
 
-    
+
     <div id="content">
         <?php render_topbar(); ?>
 
         <div class="container-fluid">
             <?php render_page_header('Administrator Command Center', '<span class="badge bg-danger"><i class="fa-solid fa-shield-halved me-1"></i>Secure Admin</span>'); ?>
-            
+
             <div class="row g-4 mb-4">
-                
+
                 <div class="col-md-4 col-xl-2">
                     <div class="card bg-white p-3 stat-card courses">
                         <div class="d-flex justify-content-between align-items-center">
@@ -80,7 +79,7 @@ include '../includes/header.php';
                         </div>
                     </div>
                 </div>
-                
+
                 <div class="col-md-4 col-xl-2">
                     <div class="card bg-white p-3 stat-card pending">
                         <div class="d-flex justify-content-between align-items-center">
@@ -92,7 +91,7 @@ include '../includes/header.php';
                         </div>
                     </div>
                 </div>
-                
+
                 <div class="col-md-4 col-xl-2">
                     <div class="card bg-white p-3 stat-card approved">
                         <div class="d-flex justify-content-between align-items-center">
@@ -104,7 +103,7 @@ include '../includes/header.php';
                         </div>
                     </div>
                 </div>
-                
+
                 <div class="col-md-4 col-xl-2">
                     <div class="card bg-white p-3 stat-card rejected">
                         <div class="d-flex justify-content-between align-items-center">
@@ -116,7 +115,7 @@ include '../includes/header.php';
                         </div>
                     </div>
                 </div>
-                
+
                 <div class="col-md-4 col-xl-2">
                     <div class="card bg-white p-3 stat-card courses">
                         <div class="d-flex justify-content-between align-items-center">
@@ -128,7 +127,7 @@ include '../includes/header.php';
                         </div>
                     </div>
                 </div>
-                
+
                 <div class="col-md-4 col-xl-2">
                     <div class="card bg-white p-3 stat-card approved">
                         <div class="d-flex justify-content-between align-items-center">
@@ -142,9 +141,9 @@ include '../includes/header.php';
                 </div>
             </div>
 
-            
+
             <div class="row">
-                
+
                 <div class="col-lg-6 mb-4">
                     <div class="card h-100">
                         <div class="card-header">
@@ -160,7 +159,7 @@ include '../includes/header.php';
                     </div>
                 </div>
 
-                
+
                 <div class="col-lg-6 mb-4">
                     <div class="card h-100">
                         <div class="card-header">
@@ -184,68 +183,67 @@ include '../includes/header.php';
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
 <script>
-document.addEventListener("DOMContentLoaded", function() {
-    <?php if (!empty($gender_counts)): ?>
-    // 1. Initialize Gender Chart
-    const ctxGender = document.getElementById('genderChart').getContext('2d');
-    new Chart(ctxGender, {
-        type: 'doughnut',
-        data: {
-            labels: <?php echo json_encode($gender_labels); ?>,
-            datasets: [{
-                data: <?php echo json_encode($gender_counts); ?>,
-                backgroundColor: ['#0f4c81', '#328cc1', '#ff9f1c', '#e71d36'],
-                borderWidth: 1
-            }]
-        },
-        options: {
-            responsive: true,
-            maintainAspectRatio: false,
-            plugins: {
-                legend: {
-                    position: 'bottom'
-                }
-            }
-        }
-    });
-    <?php endif; ?>
-
-    <?php if (!empty($category_counts)): ?>
-    // 2. Initialize Category Chart
-    const ctxCategory = document.getElementById('categoryChart').getContext('2d');
-    new Chart(ctxCategory, {
-        type: 'bar',
-        data: {
-            labels: <?php echo json_encode($category_labels); ?>,
-            datasets: [{
-                label: 'Number of Applicants',
-                data: <?php echo json_encode($category_counts); ?>,
-                backgroundColor: '#328cc1',
-                borderColor: '#0f4c81',
-                borderWidth: 1
-            }]
-        },
-        options: {
-            responsive: true,
-            maintainAspectRatio: false,
-            scales: {
-                y: {
-                    beginAtZero: true,
-                    ticks: {
-                        stepSize: 1
+    document.addEventListener("DOMContentLoaded", function() {
+        <?php if (!empty($gender_counts)): ?>
+            // 1. Initialize Gender Chart
+            const ctxGender = document.getElementById('genderChart').getContext('2d');
+            new Chart(ctxGender, {
+                type: 'doughnut',
+                data: {
+                    labels: <?php echo json_encode($gender_labels); ?>,
+                    datasets: [{
+                        data: <?php echo json_encode($gender_counts); ?>,
+                        backgroundColor: ['#0f4c81', '#328cc1', '#ff9f1c', '#e71d36'],
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            position: 'bottom'
+                        }
                     }
                 }
-            },
-            plugins: {
-                legend: {
-                    display: false
+            });
+        <?php endif; ?>
+
+        <?php if (!empty($category_counts)): ?>
+            // 2. Initialize Category Chart
+            const ctxCategory = document.getElementById('categoryChart').getContext('2d');
+            new Chart(ctxCategory, {
+                type: 'bar',
+                data: {
+                    labels: <?php echo json_encode($category_labels); ?>,
+                    datasets: [{
+                        label: 'Number of Applicants',
+                        data: <?php echo json_encode($category_counts); ?>,
+                        backgroundColor: '#328cc1',
+                        borderColor: '#0f4c81',
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            ticks: {
+                                stepSize: 1
+                            }
+                        }
+                    },
+                    plugins: {
+                        legend: {
+                            display: false
+                        }
+                    }
                 }
-            }
-        }
+            });
+        <?php endif; ?>
     });
-    <?php endif; ?>
-});
 </script>
 
 <?php include '../includes/footer.php'; ?>
-

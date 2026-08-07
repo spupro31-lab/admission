@@ -13,7 +13,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $password = $_POST['password'] ?? '';
     $confirm_password = $_POST['confirm_password'] ?? '';
 
-    
+
     if (empty($name) || empty($email) || empty($password) || empty($confirm_password)) {
         $error_msg = "All fields are required.";
     } elseif (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
@@ -24,17 +24,17 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $error_msg = "Passwords do not match.";
     } else {
         try {
-            
+
             $stmt = $pdo->prepare("SELECT user_id FROM users WHERE email = :email");
             $stmt->execute(['email' => $email]);
-            
+
             if ($stmt->rowCount() > 0) {
                 $error_msg = "This email is already registered. Please login.";
             } else {
-                
+
                 $hashed_password = password_hash($password, PASSWORD_DEFAULT);
 
-                
+
                 $insert_stmt = $pdo->prepare("INSERT INTO users (name, email, password, role) VALUES (:name, :email, :password, 'student')");
                 $insert_stmt->execute([
                     'name' => $name,
@@ -42,7 +42,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     'password' => $hashed_password
                 ]);
 
-                
+
                 $new_user_id = $pdo->lastInsertId();
 
                 login_user($new_user_id, 'student', $name, $email);
@@ -73,38 +73,38 @@ include 'includes/header.php';
                     <p class="text-muted small mt-2"><i class="fa-solid fa-user-plus me-1 text-primary"></i>Student Registration</p>
                 </div>
                 <div class="card-body pt-0">
-                    
+
                     <?php render_alert($error_msg, 'danger', false, true); ?>
 
                     <form action="student_register.php" method="POST">
-                        
+
                         <div class="mb-3">
                             <label for="name" class="form-label">Full Name</label>
                             <input type="text" class="form-control" id="name" name="name" value="<?php echo e($name ?? ''); ?>" required>
                         </div>
 
-                        
+
                         <div class="mb-3">
                             <label for="email" class="form-label">Email Address</label>
                             <input type="email" class="form-control" id="email" name="email" value="<?php echo e($email ?? ''); ?>" required>
                         </div>
 
-                        
+
                         <div class="mb-3">
                             <label for="password" class="form-label">Password (Min. 6 chars)</label>
                             <input type="password" class="form-control" id="password" name="password" required>
                         </div>
 
-                        
+
                         <div class="mb-4">
                             <label for="confirm_password" class="form-label">Confirm Password</label>
                             <input type="password" class="form-control" id="confirm_password" name="confirm_password" required>
                         </div>
 
-                        
+
                         <button type="submit" class="btn btn-primary w-100 py-2 mb-3">Register Now</button>
                     </form>
-                    
+
                     <div class="text-center mt-3">
                         <span class="text-muted small">Already have an account?</span>
                         <a href="login.php?role=student" class="text-decoration-none small fw-bold ms-1">Login here</a>
@@ -119,4 +119,3 @@ include 'includes/header.php';
 </div>
 
 <?php include 'includes/footer.php'; ?>
-

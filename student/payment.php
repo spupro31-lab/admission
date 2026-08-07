@@ -10,33 +10,32 @@ $error_msg = "";
 $success_msg = "";
 
 try {
-    
+
     $stmt = $pdo->prepare("SELECT s.*, d.photo, d.marksheet10, d.marksheet12, d.leaving_certificate, d.aadhaar 
                            FROM students s 
                            LEFT JOIN documents d ON s.student_id = d.student_id 
                            WHERE s.user_id = :user_id");
     $stmt->execute(['user_id' => $user_id]);
     $student = $stmt->fetch();
-    
+
     if (!$student) {
-        
+
         header("Location: apply.php");
         exit;
     }
-    
-    
+
+
     $has_docs = ($student['photo'] && $student['marksheet10'] && $student['marksheet12'] && $student['leaving_certificate'] && $student['aadhaar']);
     if (!$has_docs) {
         header("Location: upload.php");
         exit;
     }
-    
-    
+
+
     if ($student['is_submitted'] == 1) {
         header("Location: dashboard.php");
         exit;
     }
-    
 } catch (PDOException $e) {
     die("Database Error: " . $e->getMessage());
 }
@@ -44,20 +43,20 @@ try {
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $transaction_id = trim($_POST['transaction_id']);
-    
+
     if (empty($transaction_id)) {
         $error_msg = "Please enter your Transaction Reference ID / UTR number.";
     } elseif (strlen($transaction_id) < 8) {
         $error_msg = "Transaction Reference ID must be at least 8 characters long.";
     } else {
         try {
-            
+
             $update_stmt = $pdo->prepare("UPDATE students SET payment_status = 'Paid', transaction_id = :transaction_id WHERE student_id = :student_id");
             $update_stmt->execute([
                 'transaction_id' => $transaction_id,
                 'student_id' => $student['student_id']
             ]);
-            
+
             header("Location: dashboard.php?msg=paid");
             exit;
         } catch (PDOException $e) {
@@ -71,16 +70,16 @@ include '../includes/header.php';
 ?>
 
 <div class="wrapper">
-    
+
     <?php include '../includes/sidebar.php'; ?>
 
-    
+
     <div id="content">
         <?php render_topbar(); ?>
 
         <div class="container-fluid">
             <?php render_page_header('Student Admission Portal', '<span class="text-muted small"><i class="fa-solid fa-circle-user me-1"></i>' . e($_SESSION['email']) . '</span>'); ?>
-            
+
             <div class="status-card-premium status-card-step">
                 <div class="status-stepper-premium">
                     <div class="status-stepper-step-premium completed">
@@ -103,7 +102,7 @@ include '../includes/header.php';
             </div>
 
             <div class="row">
-                
+
                 <div class="col-lg-7">
                     <div class="card">
                         <div class="card-header">
@@ -118,7 +117,7 @@ include '../includes/header.php';
                             <?php else: ?>
                                 <h5 class="fw-bold mb-3 text-primary">Admission Processing Fee: ₹500.00</h5>
                                 <p class="text-muted">Please pay the non-refundable processing fee of ₹500.00 using any UPI application (such as Google Pay, PhonePe, Paytm, BHIM, etc.) to the UPI ID listed below.</p>
-                                
+
                                 <div class="p-4 my-4 bg-light rounded border border-dashed border-primary text-center">
                                     <h6 class="text-uppercase fw-bold text-muted mb-2">Scan or Pay via UPI</h6>
                                     <div class="fs-4 fw-bold text-dark my-2"><i class="fa-solid fa-qrcode me-2 text-primary"></i>sctadmissions@upi</div>
@@ -139,7 +138,7 @@ include '../includes/header.php';
                     </div>
                 </div>
 
-                
+
                 <?php if ($student['payment_status'] !== 'Paid'): ?>
                     <div class="col-lg-5">
                         <div class="card">
@@ -178,4 +177,3 @@ include '../includes/header.php';
 </div>
 
 <?php include '../includes/footer.php'; ?>
-

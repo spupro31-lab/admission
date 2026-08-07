@@ -417,9 +417,13 @@ a:hover {
 }
 
 .homepage-body {
-  background-image: 
-    linear-gradient(135deg, rgba(255, 255, 255, 0.8), rgba(240, 246, 255, 0.78)),
-    url('../images/university_campus.png');
+  background-image:
+    linear-gradient(
+      135deg,
+      rgba(255, 255, 255, 0.8),
+      rgba(240, 246, 255, 0.78)
+    ),
+    url("../images/university_campus.png");
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
@@ -510,7 +514,6 @@ a:hover {
   max-width: 760px;
 }
 
-
 .portal-homepage-body {
   background-image:
     linear-gradient(
@@ -580,7 +583,11 @@ a:hover {
 
 .login-page-body.role-student {
   background-image:
-    linear-gradient(135deg, rgba(255, 255, 255, 0.8), rgba(240, 246, 255, 0.78)),
+    linear-gradient(
+      135deg,
+      rgba(255, 255, 255, 0.8),
+      rgba(240, 246, 255, 0.78)
+    ),
     url("../images/student_bg.png");
   background-size: cover;
   background-position: center;
@@ -590,7 +597,11 @@ a:hover {
 
 .login-page-body.role-staff {
   background-image:
-    linear-gradient(135deg, rgba(255, 255, 255, 0.8), rgba(240, 246, 255, 0.78)),
+    linear-gradient(
+      135deg,
+      rgba(255, 255, 255, 0.8),
+      rgba(240, 246, 255, 0.78)
+    ),
     url("../images/staff_bg.png");
   background-size: cover;
   background-position: center;
@@ -600,7 +611,11 @@ a:hover {
 
 .login-page-body.role-admin {
   background-image:
-    linear-gradient(135deg, rgba(255, 255, 255, 0.8), rgba(240, 246, 255, 0.78)),
+    linear-gradient(
+      135deg,
+      rgba(255, 255, 255, 0.8),
+      rgba(240, 246, 255, 0.78)
+    ),
     url("../images/admin_bg.png");
   background-size: cover;
   background-position: center;
@@ -1040,7 +1055,6 @@ a:hover {
   padding-left: 18px;
 }
 
-
 @media (max-width: 991px) {
   .timeline-stepper {
     flex-wrap: wrap;
@@ -1151,8 +1165,6 @@ a:hover {
     width: 100% !important;
   }
 }
-
-
 
 .courses-hero-section {
   background:
@@ -1276,7 +1288,6 @@ a:hover {
   color: var(--slate-600);
 }
 
-
 .homepage-body .glass-nav,
 .portal-homepage-body .glass-nav,
 .login-page-body .glass-nav {
@@ -1369,7 +1380,6 @@ a:hover {
   font-weight: 600;
   text-shadow: 0 1px 10px rgba(255, 255, 255, 0.95);
 }
-
 
 @media (max-width: 991px) {
   .hero-section-home {
