@@ -12,6 +12,7 @@ $success_msg = "";
 
 $student = null;
 $has_record = false;
+$courses = [];
 
 try {
     $stmt = $pdo->prepare("SELECT * FROM students WHERE user_id = :user_id");
