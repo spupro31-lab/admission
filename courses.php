@@ -2,18 +2,25 @@
 require_once 'includes/db_connect.php';
 require_once 'includes/auth.php';
 
-
 try {
     $stmt = $pdo->query("SELECT * FROM courses ORDER BY department, course_name");
     $courses_from_db = $stmt->fetchAll();
 } catch (PDOException $e) {
-
     $courses_from_db = [];
 }
 
+// Map short/abbreviated database course names to full expanded forms
+$course_full_names = [
+    'B.Sc. Computer Science' => 'Bachelor of Science in Computer Science',
+    'Bachelor of Computer Applications (BCA)' => 'Bachelor of Computer Applications',
+    'B.Com. (General)' => 'Bachelor of Commerce (General)',
+    'B.A. English Literature' => 'Bachelor of Arts in English Literature',
+    'B.Sc. Information Technology (B.Sc. IT)' => 'Bachelor of Science in Information Technology'
+];
 
+// Details map keyed by full form and standard name
 $course_details_map = [
-    'B.Sc. Computer Science' => [
+    'Bachelor of Science in Computer Science' => [
         'icon' => 'fa-laptop-code text-primary',
         'duration' => '3 Years (6 Semesters)',
         'eligibility' => 'Higher Secondary (10+2) with Mathematics as a core subject, minimum 50% marks.',
@@ -22,12 +29,10 @@ $course_details_map = [
             'Data Structures & Algorithms',
             'Database Management Systems (DBMS)',
             'Operating Systems & Networking',
-            'Software Engineering Principles'
-        ],
-        'how_students_study' => 'Students engage in intensive hands-on programming labs, design databases, write systems code, and collaborate in peer-programming sessions. Every semester culminates in a practical software project applying modern frameworks.',
-        'how_faculty_teach' => 'Faculty members employ case-study-driven teaching. They guide students through complex system concepts in labs, conduct interactive coding reviews, invite industry guests, and support undergraduate research in AI and systems engineering.'
+            'Software Engineering & Web Basics'
+        ]
     ],
-    'Bachelor of Computer Applications (BCA)' => [
+    'Bachelor of Computer Applications' => [
         'icon' => 'fa-mobile-screen-button text-success',
         'duration' => '3 Years (6 Semesters)',
         'eligibility' => 'Higher Secondary (10+2) in any stream with English, minimum 45% marks.',
@@ -36,12 +41,10 @@ $course_details_map = [
             'Object-Oriented Programming',
             'Mobile App Development',
             'Cloud Computing Foundations',
-            'E-Commerce & Digital Marketing'
-        ],
-        'how_students_study' => 'Students design web portals, build mobile applications, host applications on cloud platforms, and practice software testing. They work on real-world projects in collaboration with startup labs.',
-        'how_faculty_teach' => 'Faculty members prioritize project-based learning. They utilize code-along tutorials, continuous practical evaluations, and guide students in building production-ready apps for local community businesses.'
+            'Software Testing & Projects'
+        ]
     ],
-    'B.Com. (General)' => [
+    'Bachelor of Commerce (General)' => [
         'icon' => 'fa-chart-pie text-warning',
         'duration' => '3 Years (6 Semesters)',
         'eligibility' => 'Higher Secondary (10+2) in Commerce or Science stream, minimum 50% marks.',
@@ -49,13 +52,11 @@ $course_details_map = [
             'Financial & Management Accounting',
             'Business Law & Corporate Governance',
             'Micro & Macro Economics',
-            'Direct & Indirect Taxation',
+            'Direct & Indirect Taxation (GST)',
             'Auditing & Financial Modeling'
-        ],
-        'how_students_study' => 'Students analyze real corporate balance sheets, simulate stock trading, study tax regulations, and solve business finance case studies. They practice accounting software like Tally and ERP systems.',
-        'how_faculty_teach' => 'Faculty use real-world financial reports, business news analyses, and workshops by Chartered Accountants. They mentor students in analytical modeling, financial decision-making, and tax planning.'
+        ]
     ],
-    'B.A. English Literature' => [
+    'Bachelor of Arts in English Literature' => [
         'icon' => 'fa-book-open-reader text-danger',
         'duration' => '3 Years (6 Semesters)',
         'eligibility' => 'Higher Secondary (10+2) in any stream with minimum 50% marks in English.',
@@ -64,12 +65,10 @@ $course_details_map = [
             'Classical & Modern Poetry',
             'Drama & Creative Writing',
             'Linguistics & Phonetics',
-            'Literary Criticism & Theory'
-        ],
-        'how_students_study' => 'Students read diverse texts, participate in seminar discussions, write critical essays, perform script readings, and publish creative pieces in the college literary magazine.',
-        'how_faculty_teach' => 'Faculty foster critical thinking and discussion. They use interactive seminar circles, run creative writing workshops, direct drama performances, and support students in comparative literature research.'
+            'Literary Criticism & Media Writing'
+        ]
     ],
-    'B.Sc. Information Technology (B.Sc. IT)' => [
+    'Bachelor of Science in Information Technology' => [
         'icon' => 'fa-shield-halved text-info',
         'duration' => '3 Years (6 Semesters)',
         'eligibility' => 'Higher Secondary (10+2) with Mathematics/IT, minimum 45% marks.',
@@ -78,10 +77,8 @@ $course_details_map = [
             'Cybersecurity & Network Security',
             'Web Application Architecture',
             'Big Data & Analytics',
-            'IT Project Management'
-        ],
-        'how_students_study' => 'Students configure secure server networks, simulate security threat attacks and defense, learn cloud migration, and analyze massive logs using modern analytical software.',
-        'how_faculty_teach' => 'Faculty teach through hands-on virtual sandbox environments. They conduct capture-the-flag (CTF) cybersecurity challenges, guide students in network design certifications, and lead workshops on systems engineering.'
+            'IT Infrastructure & DevOps'
+        ]
     ]
 ];
 
@@ -91,112 +88,108 @@ $default_details = [
     'eligibility' => 'Higher Secondary (10+2) from a recognized board with minimum 45% marks.',
     'curriculum' => [
         'Core Foundational Coursework',
-        'Advanced Specialized Subjects',
-        'Elective Professional Modules',
-        'Seminars & Research Projects',
+        'Specialized Subject Modules',
+        'Elective Modules',
         'Practical Laboratory Work'
-    ],
-    'how_students_study' => 'Students engage in lectures, group research, laboratory experiments, and interactive seminars, building a strong foundation in both theory and practical applications.',
-    'how_faculty_teach' => 'Faculty members use a blend of lectures, interactive labs, and individual mentoring. They help students develop critical thinking and guide their projects to academic and industrial success.'
+    ]
 ];
 
 $is_public_page = true;
 $body_class = "courses-page-body";
-$page_title = "Academic Programs & Courses";
+$page_title = "Academic Courses & Programs";
 include 'includes/header.php';
 ?>
 
-
-<div class="courses-hero-section text-center">
+<!-- Course Page Header Banner -->
+<div class="bg-white border-bottom py-4 shadow-sm">
     <div class="container">
-        <span class="badge bg-light text-primary border px-3 py-2 mb-3 fw-bold text-uppercase tracking-wider">State College of Technology</span>
-        <h1 class="hero-title fw-extrabold text-dark mb-3">Academic Programs & Course Details</h1>
-        <p class="hero-subtitle text-muted mx-auto" style="max-width: 700px;">
-            Discover our world-class educational pathways. Explore detailed curricula, learning patterns, and how our expert faculty members guide students towards Excellence.
-        </p>
+        <div class="row align-items-center gy-3">
+            <div class="col-md-7 text-center text-md-start">
+                <span class="text-primary fw-bold small text-uppercase tracking-wider d-block mb-1">
+                    <i class="fa-solid fa-graduation-cap me-1"></i> Official Course Catalog
+                </span>
+                <h2 class="fw-extrabold text-dark mb-0">State College of Technology</h2>
+            </div>
+            <div class="col-md-5 text-center text-md-end">
+                <h4 class="fw-bold text-primary mb-0 mt-3">
+                    <i class="fa-solid fa-book-open me-2"></i>Academic Programs & Courses
+                </h4>
+            </div>
+        </div>
     </div>
 </div>
 
+<!-- Search & Filter Controls -->
+<div class="container my-4">
+    <div class="row align-items-center gy-3 bg-white p-3 rounded-4 border">
+        <div class="col-12 col-lg-7 mt-0">
+            <div class="d-flex align-items-center gap-2 flex-wrap" id="deptFilters">
+                <button class="btn btn-primary btn-sm fw-bold px-3 filter-btn active" data-dept="all">All Courses</button>
+                <button class="btn btn-outline-secondary btn-sm fw-semibold px-3 filter-btn" data-dept="Science & IT">Science & IT</button>
+                <button class="btn btn-outline-secondary btn-sm fw-semibold px-3 filter-btn" data-dept="Commerce">Commerce</button>
+                <button class="btn btn-outline-secondary btn-sm fw-semibold px-3 filter-btn" data-dept="Arts & Humanities">Arts & Humanities</button>
+            </div>
+        </div>
+        <div class="col-12 col-lg-5 mt-3 mt-lg-0">
+            <div class="input-group">
+                <span class="input-group-text bg-white rounded-start-4 border-end-0"><i class="fa-solid fa-magnifying-glass text-muted"></i></span>
+                <input type="text" id="courseSearch" class="form-control rounded-end-4 border-start-0" placeholder="Search course name or subject...">
+            </div>
+        </div>
+    </div>
+</div>
 
-<div class="container my-5">
+<!-- Course Cards List -->
+<div class="container mb-5">
     <?php if (empty($courses_from_db)): ?>
         <div class="alert alert-info text-center shadow-sm py-4">
             <i class="fa-solid fa-circle-info fs-3 mb-2 text-info"></i>
             <h5>No Active Courses Found</h5>
-            <p class="mb-0 text-muted">Courses database is currently empty. Please check back later or contact admin.</p>
+            <p class="mb-0 text-muted">Course database is currently empty. Please check back later or contact admin.</p>
         </div>
     <?php else: ?>
-        <div class="row g-4">
+        <div class="row g-4" id="courseCardList">
             <?php foreach ($courses_from_db as $course):
-                $course_name = $course['course_name'];
-                $details = $course_details_map[$course_name] ?? $default_details;
+                $c_name = $course['course_name'];
+                $full_name = $course_full_names[$c_name] ?? $c_name;
+                $details = $course_details_map[$full_name] ?? $course_details_map[$c_name] ?? $default_details;
             ?>
-                <div class="col-12" id="course-<?php echo e($course['course_id']); ?>">
-                    <div class="course-detail-card card border-0 shadow-sm overflow-hidden mb-4">
-                        <div class="card-header bg-white border-0 py-4 px-4 d-flex flex-wrap justify-content-between align-items-center gap-3">
-                            <div class="d-flex align-items-center gap-3">
-                                <div class="course-card-icon rounded-circle d-flex align-items-center justify-content-center bg-light" style="width: 60px; height: 60px; font-size: 24px;">
+                <div class="col-md-6 col-lg-4 course-item"
+                    data-dept="<?php echo e($course['department']); ?>"
+                    data-search="<?php echo e(strtolower($full_name . ' ' . $c_name . ' ' . $course['department'] . ' ' . implode(' ', $details['curriculum']))); ?>">
+                    <div class="card h-100 border-0 shadow-sm rounded-4 overflow-hidden d-flex flex-column">
+                        <div class="card-body p-4 d-flex flex-column">
+                            <div class="d-flex align-items-center justify-content-between mb-3">
+                                <span class="badge bg-primary text-white px-2.5 py-1 rounded-pill small"><?php echo e($course['department']); ?></span>
+                            </div>
+
+                            <div class="d-flex align-items-center gap-3 mb-3">
+                                <div class="rounded-circle bg-light d-flex align-items-center justify-content-center flex-shrink-0" style="width: 48px; height: 48px; font-size: 20px;">
                                     <i class="fa-solid <?php echo e($details['icon']); ?>"></i>
                                 </div>
-                                <div>
-                                    <h3 class="mb-1 fw-bold text-dark"><?php echo e($course_name); ?></h3>
-                                    <span class="badge bg-primary text-white py-1.5 px-3 rounded-pill"><?php echo e($course['department']); ?></span>
-                                    <span class="badge bg-secondary text-white py-1.5 px-3 rounded-pill ms-1"><?php echo e($course['semester']); ?></span>
-                                </div>
+                                <h4 class="card-title fw-bold text-dark mb-0 fs-5"><?php echo e($full_name); ?></h4>
                             </div>
-                            <div class="text-lg-end text-start">
-                                <div class="small text-muted mb-1"><i class="fa-solid fa-chair text-primary me-1"></i>Total Allotted Seats</div>
-                                <span class="fs-4 fw-bold text-dark"><?php echo e($course['total_seats']); ?> Seats</span>
+
+                            <div class="mb-3 pb-3 border-bottom text-muted small">
+                                <i class="fa-regular fa-clock me-1 text-primary"></i> <strong>Duration:</strong> <?php echo e($details['duration']); ?>
+
                             </div>
-                        </div>
 
-                        <div class="card-body p-4 bg-light bg-opacity-50 border-top">
-                            <div class="row g-4">
+                            <div class="mb-3">
+                                <h6 class="fw-bold text-dark small mb-1"><i class="fa-solid fa-graduation-cap me-1 text-secondary"></i>Eligibility:</h6>
+                                <p class="text-muted small mb-0" style="line-height: 1.5;"><?php echo e($details['eligibility']); ?></p>
+                            </div>
 
-                                <div class="col-md-4">
-                                    <div class="p-3 bg-white rounded shadow-sm h-100">
-                                        <h5 class="fw-bold text-primary mb-3"><i class="fa-solid fa-list-check me-2"></i>Program Info</h5>
-                                        <div class="mb-3">
-                                            <span class="small text-muted d-block">Duration:</span>
-                                            <strong class="text-dark"><?php echo e($details['duration'] ?? '3 Years (6 Semesters)'); ?></strong>
-                                        </div>
-                                        <div class="mb-3">
-                                            <span class="small text-muted d-block">Eligibility:</span>
-                                            <strong class="text-dark d-block small" style="line-height: 1.5;"><?php echo e($details['eligibility']); ?></strong>
-                                        </div>
-                                        <div>
-                                            <span class="small text-muted d-block mb-2">Curriculum Highlights:</span>
-                                            <ul class="list-unstyled mb-0">
-                                                <?php foreach ($details['curriculum'] as $item): ?>
-                                                    <li class="small text-muted mb-1.5 d-flex align-items-start">
-                                                        <i class="fa-solid fa-circle-check text-success me-2 mt-1" style="font-size: 11px;"></i>
-                                                        <span><?php echo e($item); ?></span>
-                                                    </li>
-                                                <?php endforeach; ?>
-                                            </ul>
-                                        </div>
-                                    </div>
-                                </div>
-
-
-                                <div class="col-md-4">
-                                    <div class="p-3 bg-white rounded shadow-sm h-100">
-                                        <h5 class="fw-bold text-success mb-3"><i class="fa-solid fa-user-graduate me-2"></i>How Students Study</h5>
-                                        <p class="text-muted small" style="line-height: 1.7; text-align: justify;">
-                                            <?php echo e($details['how_students_study']); ?>
-                                        </p>
-                                    </div>
-                                </div>
-
-
-                                <div class="col-md-4">
-                                    <div class="p-3 bg-white rounded shadow-sm h-100">
-                                        <h5 class="fw-bold text-warning mb-3"><i class="fa-solid fa-user-tie me-2"></i>How Faculty Teach</h5>
-                                        <p class="text-muted small" style="line-height: 1.7; text-align: justify;">
-                                            <?php echo e($details['how_faculty_teach']); ?>
-                                        </p>
-                                    </div>
-                                </div>
+                            <div class="flex-grow-1">
+                                <h6 class="fw-bold text-dark small mb-2"><i class="fa-solid fa-list-check me-1 text-success"></i>Key Subjects:</h6>
+                                <ul class="list-unstyled mb-0">
+                                    <?php foreach ($details['curriculum'] as $item): ?>
+                                        <li class="small text-muted mb-1.5 d-flex align-items-start">
+                                            <i class="fa-solid fa-circle-check text-success me-2 mt-1" style="font-size: 11px;"></i>
+                                            <span><?php echo e($item); ?></span>
+                                        </li>
+                                    <?php endforeach; ?>
+                                </ul>
                             </div>
                         </div>
                     </div>
@@ -205,15 +198,62 @@ include 'includes/header.php';
         </div>
     <?php endif; ?>
 
-
-    <div class="text-center mt-5 p-5 bg-white rounded shadow-sm">
-        <h3 class="fw-bold text-dark mb-2">Ready to embark on your educational journey?</h3>
-        <p class="text-muted mb-4 mx-auto" style="max-width: 600px;">Create your student account in minutes, fill out your academic marks, upload your documents, and track your admission status online.</p>
+    <!-- Clean Bottom Call-to-Action -->
+    <div class="text-center mt-5 p-4 bg-white rounded shadow-sm border">
+        <h4 class="fw-bold text-dark mb-2">Ready to apply for admission?</h4>
+        <p class="text-muted mb-3 mx-auto" style="max-width: 550px;">Create your account, fill in your marks, upload required documents, and track your status online.</p>
         <div class="d-flex justify-content-center gap-3 flex-wrap">
-            <a href="student_register.php" class="btn btn-primary btn-lg fw-bold px-4 py-2.5 shadow-sm"><i class="fa-solid fa-user-plus me-2"></i>Register for Admission</a>
-            <a href="login.php?role=student" class="btn btn-outline-secondary btn-lg fw-bold px-4 py-2.5"><i class="fa-solid fa-right-to-bracket me-2"></i>Student Login Portal</a>
+            <a href="student_register.php" class="btn btn-primary fw-bold px-4 py-2"><i class="fa-solid fa-user-plus me-1"></i>Register Account</a>
+            <a href="login.php?role=student" class="btn btn-outline-secondary fw-bold px-4 py-2"><i class="fa-solid fa-right-to-bracket me-1"></i>Student Login</a>
         </div>
     </div>
 </div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const filterBtns = document.querySelectorAll('.filter-btn');
+        const searchInput = document.getElementById('courseSearch');
+        const cards = document.querySelectorAll('.course-item');
+
+        let activeDept = 'all';
+        let searchQuery = '';
+
+        filterBtns.forEach(btn => {
+            btn.addEventListener('click', function() {
+                filterBtns.forEach(b => {
+                    b.classList.remove('btn-primary', 'active');
+                    b.classList.add('btn-outline-secondary');
+                });
+                this.classList.remove('btn-outline-secondary');
+                this.classList.add('btn-primary', 'active');
+                activeDept = this.getAttribute('data-dept');
+                filterCards();
+            });
+        });
+
+        if (searchInput) {
+            searchInput.addEventListener('input', function() {
+                searchQuery = this.value.toLowerCase().trim();
+                filterCards();
+            });
+        }
+
+        function filterCards() {
+            cards.forEach(card => {
+                const dept = card.getAttribute('data-dept');
+                const searchData = card.getAttribute('data-search');
+
+                const matchesDept = (activeDept === 'all' || dept === activeDept);
+                const matchesSearch = (!searchQuery || searchData.includes(searchQuery));
+
+                if (matchesDept && matchesSearch) {
+                    card.style.display = 'block';
+                } else {
+                    card.style.display = 'none';
+                }
+            });
+        }
+    });
+</script>
 
 <?php include 'includes/footer.php'; ?>

@@ -310,9 +310,9 @@ include '../includes/header.php';
                                 </div>
 
 
-                                <div class="d-flex justify-content-between mt-5 pt-3 border-top">
+                                <div class="d-flex justify-content-between flex-wrap gap-3 mt-5 pt-3 border-top">
                                     <a href="dashboard.php" class="btn btn-outline-secondary py-2"><i class="fa-solid fa-arrow-left me-1"></i>Back to Dashboard</a>
-                                    <div class="d-flex gap-2">
+                                    <div class="d-flex flex-wrap gap-2">
                                         <button type="submit" class="btn btn-secondary px-4 py-2 fw-bold">
                                             <i class="fa-solid fa-arrow-up-from-bracket me-1"></i>Upload Selected
                                         </button>

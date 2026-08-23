@@ -8,76 +8,26 @@ include 'includes/header.php';
 ?>
 
 
-<div class="hero-section-home mb-5">
+<div class="home-hero-section">
+    <div class="home-hero-decor home-hero-decor--top"></div>
+    <div class="home-hero-decor home-hero-decor--bottom"></div>
 
-    <div class="position-absolute" style="width: 350px; height: 350px; background: rgba(15, 23, 42, 0.05); border-radius: 50%; top: -100px; right: -50px; filter: blur(60px);"></div>
-    <div class="position-absolute" style="width: 250px; height: 250px; background: rgba(15, 23, 42, 0.03); border-radius: 50%; bottom: -50px; left: -50px; filter: blur(50px);"></div>
-
-    <div class="container position-relative z-1 my-3">
-        <div class="row align-items-center g-5">
-
-            <div class="col-lg-7 text-center text-lg-start">
-                <h1 class="display-4 fw-extrabold mb-3 text-dark" style="line-height: 1.15;">
-                    Unlock Your Academic Potential & <span class="text-primary">Innovate for Tomorrow</span>
+    <div class="container position-relative py-3">
+        <div class="row justify-content-center">
+            <div class="col-lg-10 text-center">
+                <h1 class="home-hero-title mb-3">
+                    State College of <span class="text-primary">Technology</span>
                 </h1>
-                <p class="lead mb-4">
+                <p class="home-hero-subtitle mx-auto mb-4" style="max-width: 720px;">
                     Welcome to the State College of Technology. Experience a fully digital, streamlined admission process. Apply for courses, upload your credentials, and track your application status in real time.
                 </p>
-                <div class="d-flex gap-3 justify-content-center justify-content-lg-start flex-wrap mt-2">
-                    <a href="portal.php" class="btn btn-primary btn-lg px-4 py-3 fw-bold text-white shadow-sm d-flex align-items-center gap-2">
+                <div class="d-flex gap-3 justify-content-center flex-wrap">
+                    <a href="portal.php" class="btn btn-premium-primary rounded-4 btn-lg px-4 py-3 fw-bold d-inline-flex align-items-center gap-2 shadow-sm">
                         <i class="fa-solid fa-right-to-bracket"></i> Admission Portal Access
                     </a>
-                    <a href="courses.php" class="btn btn-outline-primary btn-lg px-4 py-3 fw-bold d-flex align-items-center gap-2">
+                    <a href="courses.php" class="btn btn-premium-secondary rounded-4 btn-lg px-4 py-3 fw-bold d-inline-flex align-items-center gap-2">
                         <i class="fa-solid fa-book-open"></i> Explore Courses
                     </a>
-                </div>
-            </div>
-
-            <div class="col-lg-5 d-none d-lg-block">
-                <div class="bg-white border border-secondary border-opacity-10 rounded-4 p-4 shadow-sm">
-                    <div class="d-flex align-items-center justify-content-between mb-4 border-bottom border-secondary border-opacity-25 pb-3">
-                        <div class="d-flex align-items-center gap-2 text-start">
-                            <div class="bg-primary rounded-circle d-flex align-items-center justify-content-center text-white" style="width: 40px; height: 40px;">
-                                <i class="fa-solid fa-graduation-cap"></i>
-                            </div>
-                            <div>
-                                <h6 class="mb-0 text-dark">SCT Admission Desk</h6>
-                                <small class="text-muted text-xs">Verification System Status</small>
-                            </div>
-                        </div>
-                        <span class="badge bg-success px-2.5 py-1">Online</span>
-                    </div>
-
-                    <div class="text-start text-muted small">
-                        <div class="d-flex gap-3 mb-3 align-items-start">
-                            <span class="badge bg-primary text-white mt-1">1</span>
-                            <div>
-                                <strong class="text-dark d-block">Quick Register</strong>
-                                <span>Create accounts with name, email and password.</span>
-                            </div>
-                        </div>
-                        <div class="d-flex gap-3 mb-3 align-items-start">
-                            <span class="badge bg-primary text-white mt-1">2</span>
-                            <div>
-                                <strong class="text-dark d-block">Academic Profile</strong>
-                                <span>Enter 10th/12th scores and choose preferences.</span>
-                            </div>
-                        </div>
-                        <div class="d-flex gap-3 mb-3 align-items-start">
-                            <span class="badge bg-primary text-white mt-1">3</span>
-                            <div>
-                                <strong class="text-dark d-block">Secure Upload</strong>
-                                <span>Add marksheet transcripts, photos, and ID.</span>
-                            </div>
-                        </div>
-                        <div class="d-flex gap-3 align-items-start">
-                            <span class="badge bg-primary text-white mt-1">4</span>
-                            <div>
-                                <strong class="text-dark d-block">Verification Log</strong>
-                                <span>Review staff approval and download admission letter.</span>
-                            </div>
-                        </div>
-                    </div>
                 </div>
             </div>
         </div>
@@ -87,31 +37,31 @@ include 'includes/header.php';
 
 <div class="container my-5">
     <div class="row g-4 text-center">
-        <div class="col-6 col-lg-3">
-            <div class="card border-0 shadow-sm p-4 bg-white h-100 rounded-3">
+        <div class="col-12 col-sm-6 col-lg-3">
+            <div class="home-stat-card card border-0 h-100">
                 <div class="fs-1 fw-extrabold text-primary mb-1">94%</div>
-                <div class="fw-bold text-dark small text-uppercase tracking-wider">Placement Rate</div>
+                <div class="fw-bold text-dark small text-uppercase">Placement Rate</div>
                 <p class="text-muted small mt-2 mb-0">Consistently placed technical and commerce graduates in top firms.</p>
             </div>
         </div>
-        <div class="col-6 col-lg-3">
-            <div class="card border-0 shadow-sm p-4 bg-white h-100 rounded-3">
+        <div class="col-12 col-sm-6 col-lg-3">
+            <div class="home-stat-card card border-0 h-100 stat-success">
                 <div class="fs-1 fw-extrabold text-success mb-1">120+</div>
-                <div class="fw-bold text-dark small text-uppercase tracking-wider">Top Recruiters</div>
+                <div class="fw-bold text-dark small text-uppercase">Top Recruiters</div>
                 <p class="text-muted small mt-2 mb-0">Direct recruitment ties with MNCs and tech startups.</p>
             </div>
         </div>
-        <div class="col-6 col-lg-3">
-            <div class="card border-0 shadow-sm p-4 bg-white h-100 rounded-3">
+        <div class="col-12 col-sm-6 col-lg-3">
+            <div class="home-stat-card card border-0 h-100 stat-warning">
                 <div class="fs-1 fw-extrabold text-warning mb-1">50K+</div>
-                <div class="fw-bold text-dark small text-uppercase tracking-wider">Library Archive</div>
+                <div class="fw-bold text-dark small text-uppercase">Library Archive</div>
                 <p class="text-muted small mt-2 mb-0">Vast collection of books, academic journals, and digital logs.</p>
             </div>
         </div>
-        <div class="col-6 col-lg-3">
-            <div class="card border-0 shadow-sm p-4 bg-white h-100 rounded-3">
+        <div class="col-12 col-sm-6 col-lg-3">
+            <div class="home-stat-card card border-0 h-100 stat-danger">
                 <div class="fs-1 fw-extrabold text-danger mb-1">₹15 LPA</div>
-                <div class="fw-bold text-dark small text-uppercase tracking-wider">Highest Package</div>
+                <div class="fw-bold text-dark small text-uppercase">Highest Package</div>
                 <p class="text-muted small mt-2 mb-0">Impressive packages achieved in national hiring portals.</p>
             </div>
         </div>
@@ -120,74 +70,68 @@ include 'includes/header.php';
 
 
 <div class="container my-5 py-3">
-    <div class="text-center mb-5">
-        <span class="badge bg-light text-primary border px-3 py-2 mb-2 fw-bold text-uppercase">Programs</span>
-        <h2 class="fw-bold text-dark">Explore Our Academic Fields</h2>
-        <p class="text-muted mx-auto" style="max-width: 600px;">
-            We offer modern, comprehensive curriculum options designed by industry specialists to prepare you for global technology landscapes.
-        </p>
-    </div>
+    <h2 class="section-title">Explore Our Academic Fields</h2>
+    <p class="section-subtitle">
+        We offer modern, comprehensive curriculum options designed by industry specialists to prepare you for global technology landscapes.
+    </p>
 
     <div class="row g-4 justify-content-center">
-
-        <div class="col-md-4">
-            <div class="card border-0 shadow-sm h-100 p-4 bg-white rounded-3 d-flex flex-column justify-content-between">
-                <div>
-                    <div class="d-inline-flex align-items-center justify-content-center bg-light text-primary rounded-circle mb-3" style="width: 50px; height: 50px; font-size: 1.5rem;">
-                        <i class="fa-solid fa-code"></i>
+        <div class="col-12 col-md-6 col-lg-4">
+            <div class="premium-card home-program-card card-cs h-100">
+                <div class="d-flex flex-column h-100 justify-content-between">
+                    <div>
+                        <div class="card-icon-wrapper">
+                            <i class="fa-solid fa-code"></i>
+                        </div>
+                        <h3>Computer Science & IT</h3>
+                        <p>Programming, Algorithms, Data Systems, Cybersecurity networks, Cloud Computing, and App Development frameworks.</p>
                     </div>
-                    <h5 class="fw-bold text-dark mb-2">Computer Science & IT</h5>
-                    <p class="text-muted small mb-3">Programming, Algorithms, Data Systems, Cybersecurity networks, Cloud Computing, and App Development frameworks.</p>
-                </div>
-                <div class="border-top pt-3 mt-auto">
-                    <a href="courses.php" class="text-decoration-none small fw-bold text-primary d-inline-flex align-items-center gap-1">
-                        Syllabus details <i class="fa-solid fa-arrow-right-long"></i>
-                    </a>
+                    <div class="border-top pt-3 mt-3">
+                        <a href="courses.php" class="text-decoration-none small fw-bold text-primary d-inline-flex align-items-center gap-1">
+                            Syllabus details <i class="fa-solid fa-arrow-right-long"></i>
+                        </a>
+                    </div>
                 </div>
             </div>
         </div>
 
-
-        <div class="col-md-4">
-            <div class="card border-0 shadow-sm h-100 p-4 bg-white rounded-3 d-flex flex-column justify-content-between">
-                <div>
-                    <div class="d-inline-flex align-items-center justify-content-center bg-light text-warning rounded-circle mb-3" style="width: 50px; height: 50px; font-size: 1.5rem;">
-                        <i class="fa-solid fa-chart-line"></i>
+        <div class="col-12 col-md-6 col-lg-4">
+            <div class="premium-card home-program-card card-commerce h-100">
+                <div class="d-flex flex-column h-100 justify-content-between">
+                    <div>
+                        <div class="card-icon-wrapper">
+                            <i class="fa-solid fa-chart-line"></i>
+                        </div>
+                        <h3>Commerce & Accounting</h3>
+                        <p>Financial reporting, corporate governance, micro/macroeconomics, taxation systems, auditing, and corporate laws.</p>
                     </div>
-                    <h5 class="fw-bold text-dark mb-2">Commerce & Accounting</h5>
-                    <p class="text-muted small mb-3">Financial reporting, corporate governance, micro/macroeconomics, taxation systems, auditing, and corporate laws.</p>
-                </div>
-                <div class="border-top pt-3 mt-auto">
-                    <a href="courses.php" class="text-decoration-none small fw-bold text-warning d-inline-flex align-items-center gap-1">
-                        Syllabus details <i class="fa-solid fa-arrow-right-long"></i>
-                    </a>
+                    <div class="border-top pt-3 mt-3">
+                        <a href="courses.php" class="text-decoration-none small fw-bold text-warning d-inline-flex align-items-center gap-1">
+                            Syllabus details <i class="fa-solid fa-arrow-right-long"></i>
+                        </a>
+                    </div>
                 </div>
             </div>
         </div>
 
-
-        <div class="col-md-4">
-            <div class="card border-0 shadow-sm h-100 p-4 bg-white rounded-3 d-flex flex-column justify-content-between">
-                <div>
-                    <div class="d-inline-flex align-items-center justify-content-center bg-light text-danger rounded-circle mb-3" style="width: 50px; height: 50px; font-size: 1.5rem;">
-                        <i class="fa-solid fa-book-open-reader"></i>
+        <div class="col-12 col-md-6 col-lg-4">
+            <div class="premium-card home-program-card card-humanities h-100">
+                <div class="d-flex flex-column h-100 justify-content-between">
+                    <div>
+                        <div class="card-icon-wrapper">
+                            <i class="fa-solid fa-book-open-reader"></i>
+                        </div>
+                        <h3>Humanities & Languages</h3>
+                        <p>Linguistics, creative writing, drama critiques, classical and modern English poetry studies, and critical thinking development.</p>
                     </div>
-                    <h5 class="fw-bold text-dark mb-2">Humanities & Languages</h5>
-                    <p class="text-muted small mb-3">Linguistics, creative writing, drama critiques, classical and modern English poetry studies, and critical thinking development.</p>
-                </div>
-                <div class="border-top pt-3 mt-auto">
-                    <a href="courses.php" class="text-decoration-none small fw-bold text-danger d-inline-flex align-items-center gap-1">
-                        Syllabus details <i class="fa-solid fa-arrow-right-long"></i>
-                    </a>
+                    <div class="border-top pt-3 mt-3">
+                        <a href="courses.php" class="text-decoration-none small fw-bold text-danger d-inline-flex align-items-center gap-1">
+                            Syllabus details <i class="fa-solid fa-arrow-right-long"></i>
+                        </a>
+                    </div>
                 </div>
             </div>
         </div>
-    </div>
-
-    <div class="text-center mt-5">
-        <a href="courses.php" class="btn btn-primary fw-bold px-4 py-2">
-            <i class="fa-solid fa-magnifying-glass me-1"></i> View All Available Programs
-        </a>
     </div>
 </div>
 
@@ -197,7 +141,7 @@ include 'includes/header.php';
         <h2 class="section-title">Application Journey</h2>
         <p class="section-subtitle">Follow these 4 simple steps to complete your admission process at State College of Technology.</p>
 
-        <div class="timeline-stepper px-4">
+        <div class="timeline-stepper px-2 px-md-4">
             <div class="step-card">
                 <div class="step-number-bubble">1</div>
                 <h5>Quick Registration</h5>
@@ -228,8 +172,8 @@ include 'includes/header.php';
         <h2 class="section-title">Campus & Infrastructure</h2>
         <p class="section-subtitle">State-of-the-art facilities designed to foster academic success and research innovation.</p>
         <div class="row g-4 mt-2">
-            <div class="col-md-3">
-                <div class="facility-card text-center">
+            <div class="col-12 col-sm-6 col-lg-3">
+                <div class="facility-card text-center h-100">
                     <div class="facility-icon-wrapper bg-light text-primary mx-auto">
                         <i class="fa-solid fa-book-bookmark"></i>
                     </div>
@@ -237,8 +181,8 @@ include 'includes/header.php';
                     <p class="small text-muted mb-0">Over 50,000 reference books, international journals, and a high-speed digital research archive.</p>
                 </div>
             </div>
-            <div class="col-md-3">
-                <div class="facility-card text-center">
+            <div class="col-12 col-sm-6 col-lg-3">
+                <div class="facility-card text-center h-100">
                     <div class="facility-icon-wrapper bg-light text-success mx-auto">
                         <i class="fa-solid fa-microchip"></i>
                     </div>
@@ -246,8 +190,8 @@ include 'includes/header.php';
                     <p class="small text-muted mb-0">Intel Core i9 systems, high-speed fiber internet, and dedicated servers for software experimentation.</p>
                 </div>
             </div>
-            <div class="col-md-3">
-                <div class="facility-card text-center">
+            <div class="col-12 col-sm-6 col-lg-3">
+                <div class="facility-card text-center h-100">
                     <div class="facility-icon-wrapper bg-light text-warning mx-auto">
                         <i class="fa-solid fa-building-columns"></i>
                     </div>
@@ -255,8 +199,8 @@ include 'includes/header.php';
                     <p class="small text-muted mb-0">Acoustically treated lecture halls equipped with projection systems and interactive displays.</p>
                 </div>
             </div>
-            <div class="col-md-3">
-                <div class="facility-card text-center">
+            <div class="col-12 col-sm-6 col-lg-3">
+                <div class="facility-card text-center h-100">
                     <div class="facility-icon-wrapper bg-light text-danger mx-auto">
                         <i class="fa-solid fa-volleyball"></i>
                     </div>
@@ -269,65 +213,17 @@ include 'includes/header.php';
 </div>
 
 
-<div class="student-testimonials-section" id="testimonials">
-    <div class="container">
-        <h2 class="section-title">What Our Alumni Say</h2>
-        <p class="section-subtitle">Real feedback from students who transformed their careers at State College of Technology.</p>
-        <div class="row g-4 mt-2">
-            <div class="col-md-6">
-                <div class="testimonial-card">
-                    <div class="d-flex align-items-center mb-3">
-                        <div class="testimonial-avatar">A</div>
-                        <div class="testimonial-author-info">
-                            <h6 class="mb-0">Amit Sharma</h6>
-                            <span>B.Sc. Computer Science, Batch of 2024</span>
-                        </div>
-                    </div>
-                    <div class="testimonial-rating">
-                        <i class="fa-solid fa-star"></i>
-                        <i class="fa-solid fa-star"></i>
-                        <i class="fa-solid fa-star"></i>
-                        <i class="fa-solid fa-star"></i>
-                        <i class="fa-solid fa-star"></i>
-                    </div>
-                    <p class="mb-0">"The academic rigor and practical focus at SCT shaped my understanding of software engineering. Faculty guided me in building a deep web application, which helped me land a developer role at a leading technology firm during campus placements."</p>
-                </div>
-            </div>
-            <div class="col-md-6">
-                <div class="testimonial-card">
-                    <div class="d-flex align-items-center mb-3">
-                        <div class="testimonial-avatar">R</div>
-                        <div class="testimonial-author-info">
-                            <h6 class="mb-0">Riya Patel</h6>
-                            <span>Bachelor of Computer Applications (BCA), Batch of 2025</span>
-                        </div>
-                    </div>
-                    <div class="testimonial-rating">
-                        <i class="fa-solid fa-star"></i>
-                        <i class="fa-solid fa-star"></i>
-                        <i class="fa-solid fa-star"></i>
-                        <i class="fa-solid fa-star"></i>
-                        <i class="fa-solid fa-star-half-stroke"></i>
-                    </div>
-                    <p class="mb-0">"Studying at SCT has been an enriching experience. The hands-on labs and project-based assessments taught me web and mobile development frameworks. Faculty support was exceptional, assisting me at every stage of my academic project."</p>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
-
-
-<div class="border-top py-5 text-center bg-transparent">
-    <div class="container py-3">
-        <h3 class="fw-bold text-dark mb-2">Build Your Technical Career Path Today</h3>
-        <p class="text-secondary mb-4 mx-auto" style="max-width: 600px; color: var(--slate-800) !important; font-weight: 500;">
+<div class="home-cta-section">
+    <div class="container text-center">
+        <h3 class="home-cta-title">Build Your Technical Career Path Today</h3>
+        <p class="home-cta-subtitle">
             Registration is quick and online. Log in, specify your board marks, upload your PDF and picture credentials, and track your admission status instantly.
         </p>
         <div class="d-flex gap-3 justify-content-center flex-wrap">
-            <a href="portal.php" class="btn btn-primary btn-lg px-4 py-2.5 fw-bold shadow-sm">
+            <a href="portal.php" class="btn btn-premium-primary btn-lg px-4 py-2 fw-bold">
                 <i class="fa-solid fa-user-plus me-1"></i> Register & Apply Online
             </a>
-            <a href="login.php?role=student" class="btn btn-outline-primary btn-lg px-4 py-2.5 fw-bold">
+            <a href="login.php?role=student" class="btn btn-premium-secondary btn-lg px-4 py-2 fw-bold">
                 Student Portal Login
             </a>
         </div>

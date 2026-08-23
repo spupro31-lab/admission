@@ -44,6 +44,15 @@ if (isset($_GET['delete_id']) && !empty($_GET['delete_id'])) {
                 }
             }
 
+            // Explicitly delete child records to avoid relying on CASCADE
+            $del_docs = $pdo->prepare("DELETE FROM documents WHERE student_id = :sid");
+            $del_docs->execute(['sid' => $delete_id]);
+
+            $del_hist = $pdo->prepare("DELETE FROM status_history WHERE student_id = :sid");
+            $del_hist->execute(['sid' => $delete_id]);
+
+            $del_student = $pdo->prepare("DELETE FROM students WHERE student_id = :sid");
+            $del_student->execute(['sid' => $delete_id]);
 
             $del_user = $pdo->prepare("DELETE FROM users WHERE user_id = :uid");
             $del_user->execute(['uid' => $user_id_to_del]);
@@ -181,7 +190,7 @@ try {
     if (!empty($search)) {
         $list_sql .= " AND (s.admission_no LIKE :search1 
                       OR s.full_name LIKE :search2 
-                      OR s.mobile LIKE :search3)";
+                      OR CAST(s.mobile AS TEXT) LIKE :search3)";
         $list_params['search1'] = "%$search%";
         $list_params['search2'] = "%$search%";
         $list_params['search3'] = "%$search%";
@@ -255,12 +264,12 @@ include '../includes/header.php';
             <div class="card mb-4 shadow-sm border-0">
                 <div class="card-body">
                     <form action="manage_students.php" method="GET" class="row g-3 align-items-end">
-                        <div class="col-md-3">
+                        <div class="col-12 col-sm-6 col-lg-3">
                             <label for="search" class="form-label">Search</label>
                             <input type="text" class="form-control" id="search" name="search"
                                 placeholder="ID, Name, Mobile..." value="<?php echo e($search); ?>">
                         </div>
-                        <div class="col-md-2">
+                        <div class="col-6 col-sm-3 col-lg-2">
                             <label for="status_filter" class="form-label">Status</label>
                             <select class="form-select" id="status_filter" name="status_filter">
                                 <option value="">All Statuses</option>
@@ -269,7 +278,7 @@ include '../includes/header.php';
                                 <option value="Rejected" <?php echo ($status_filter === 'Rejected') ? 'selected' : ''; ?>>Rejected</option>
                             </select>
                         </div>
-                        <div class="col-md-2">
+                        <div class="col-6 col-sm-3 col-lg-2">
                             <label for="payment_filter" class="form-label">Payment</label>
                             <select class="form-select" id="payment_filter" name="payment_filter">
                                 <option value="">All Payments</option>
@@ -277,7 +286,7 @@ include '../includes/header.php';
                                 <option value="Unpaid" <?php echo ($payment_filter === 'Unpaid') ? 'selected' : ''; ?>>Unpaid</option>
                             </select>
                         </div>
-                        <div class="col-md-2">
+                        <div class="col-12 col-sm-6 col-lg-2">
                             <label for="course_filter" class="form-label">Course</label>
                             <select class="form-select" id="course_filter" name="course_filter">
                                 <option value="">All Courses</option>
@@ -288,7 +297,7 @@ include '../includes/header.php';
                                 <?php endforeach; ?>
                             </select>
                         </div>
-                        <div class="col-md-2">
+                        <div class="col-9 col-sm-4 col-lg-2">
                             <label for="sort_by" class="form-label">Sort By</label>
                             <select class="form-select" id="sort_by" name="sort_by">
                                 <option value="newest" <?php echo ($sort_by === 'newest') ? 'selected' : ''; ?>>Newest First</option>
@@ -298,8 +307,8 @@ include '../includes/header.php';
                                 <option value="name_asc" <?php echo ($sort_by === 'name_asc') ? 'selected' : ''; ?>>Name: A to Z</option>
                             </select>
                         </div>
-                        <div class="col-md-1">
-                            <a href="manage_students.php" class="btn btn-outline-secondary w-100 py-2 h-100" title="Reset"><i class="fa-solid fa-rotate-left"></i></a>
+                        <div class="col-3 col-sm-2 col-lg-1">
+                            <a href="manage_students.php" class="btn btn-outline-secondary w-100 py-2" title="Reset"><i class="fa-solid fa-rotate-left"></i></a>
                         </div>
                     </form>
                 </div>
@@ -315,13 +324,14 @@ include '../includes/header.php';
                         <table class="table table align-middle">
                             <thead>
                                 <tr>
+                                    <th>Sr. No.</th>
                                     <th>Admission ID</th>
                                     <th>Student Name</th>
                                     <th>Course Preference</th>
                                     <th>Mobile No</th>
                                     <th>Status</th>
                                     <th>Submission</th>
-                                    <th class="text-center">Actions</th>
+                                    <th class="text-center text-nowrap-action">Actions</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -330,8 +340,10 @@ include '../includes/header.php';
                                         <td colspan="8" class="text-center text-muted py-4">No student records registered in database.</td>
                                     </tr>
                                 <?php else: ?>
+                                    <?php $sr_no = 1; ?>
                                     <?php foreach ($students as $s): ?>
                                         <tr>
+                                            <td><?php echo $sr_no++; ?></td>
                                             <td class="fw-bold text-primary"><?php echo e($s['admission_no']); ?></td>
                                             <td><?php echo e($s['full_name']); ?></td>
                                             <td><?php echo e($s['course_name']); ?></td>
@@ -352,7 +364,7 @@ include '../includes/header.php';
                                                     <span class="badge bg-warning-subtle text-warning">Draft</span>
                                                 <?php endif; ?>
                                             </td>
-                                            <td class="text-center">
+                                            <td class="text-center text-nowrap-action">
 
                                                 <a href="view_students.php?id=<?php echo $s['student_id']; ?>" class="btn btn-sm btn-outline-primary me-1" title="View Profile">
                                                     <i class="fa-solid fa-eye"></i>

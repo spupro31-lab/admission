@@ -60,62 +60,152 @@ $page_title = "Student Registration";
 include 'includes/header.php';
 ?>
 
-<div class="container login-container py-5">
-    <div class="row justify-content-center">
-        <div class="col-md-6 col-lg-5">
-            <div class="card">
-                <div class="card-header text-center bg-white border-0 pt-4">
-                    <h3 class="fw-bold text-primary mb-1 d-flex align-items-center justify-content-center">
-                        <i class="fa-solid fa-graduation-cap me-2 text-info fs-3"></i>
-                        <span>SCT PORTAL</span>
-                    </h3>
-                    <p class="text-muted small mb-0 fw-semibold text-uppercase tracking-wider" style="font-size: 11px; color: var(--slate-500) !important;">State College of Technology</p>
-                    <p class="text-muted small mt-2"><i class="fa-solid fa-user-plus me-1 text-primary"></i>Student Registration</p>
+<div class="auth-hero-section">
+    <div class="home-hero-decor home-hero-decor--top"></div>
+    <div class="home-hero-decor home-hero-decor--bottom"></div>
+
+    <div class="container position-relative">
+        <div class="row align-items-center g-4 g-lg-5">
+            <!-- Left Info Column -->
+            <div class="col-lg-6 text-center text-lg-start">
+                <span class="auth-trust-badge mb-3">
+                    <i class="fa-solid fa-user-plus text-primary"></i> Fast & Easy Registration
+                </span>
+                <h1 class="home-hero-title mb-3">
+                    Start Your Journey at <span class="text-primary">SCT College</span>
+                </h1>
+                <p class="home-hero-subtitle mb-4">
+                    Create your official student portal account to unlock digital admission workflows, apply for engineering & technical programs, and track document verification in real time.
+                </p>
+
+                <div class="auth-feature-list d-none d-md-flex mb-4">
+                    <div class="auth-feature-item">
+                        <div class="auth-feature-icon icon-blue">
+                            <i class="fa-solid fa-id-card"></i>
+                        </div>
+                        <div>
+                            <strong class="text-dark d-block">Instant Profile Creation</strong>
+                            <span class="text-muted small">Set up your student account to save application progress anytime.</span>
+                        </div>
+                    </div>
+                    <div class="auth-feature-item">
+                        <div class="auth-feature-icon icon-blue">
+                            <i class="fa-solid fa-file-arrow-up"></i>
+                        </div>
+                        <div>
+                            <strong class="text-dark d-block">Digital Document Vault</strong>
+                            <span class="text-muted small">Upload your 10th/12th marksheets, certificates, and ID proof securely.</span>
+                        </div>
+                    </div>
+                    <div class="auth-feature-item">
+                        <div class="auth-feature-icon icon-blue">
+                            <i class="fa-solid fa-bell"></i>
+                        </div>
+                        <div>
+                            <strong class="text-dark d-block">Live Status Updates</strong>
+                            <span class="text-muted small">Receive notifications as staff review and verify your submitted credentials.</span>
+                        </div>
+                    </div>
                 </div>
-                <div class="card-body pt-0">
+
+                <div class="auth-support-box text-start d-flex align-items-center gap-3">
+                    <div class="fs-4 text-primary">
+                        <i class="fa-solid fa-circle-question"></i>
+                    </div>
+                    <div>
+                        <small class="text-muted d-block fw-semibold">Questions about Registration?</small>
+                        <span class="small text-dark fw-bold">Reach out to our helpline at <a href="mailto:admissions@statecollege.edu" class="text-decoration-underline">admissions@statecollege.edu</a></span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Right Auth Form Card Column -->
+            <div class="col-12 col-lg-6">
+                <div class="auth-card">
+                    <div class="auth-card-header">
+                        <div class="auth-card-logo">
+                            <i class="fa-solid fa-user-graduate"></i>
+                        </div>
+                        <h4 class="fw-extrabold text-dark mb-1">Create Account</h4>
+                        <p class="text-muted small mb-0">Join State College of Technology Admission Portal</p>
+                    </div>
 
                     <?php render_alert($error_msg, 'danger', false, true); ?>
 
                     <form action="student_register.php" method="POST">
-
                         <div class="mb-3">
-                            <label for="name" class="form-label">Full Name</label>
-                            <input type="text" class="form-control" id="name" name="name" value="<?php echo e($name ?? ''); ?>" required>
+                            <label for="name" class="form-label fw-semibold text-dark small">Full Name</label>
+                            <div class="input-group auth-input-group">
+                                <span class="input-group-text"><i class="fa-solid fa-user"></i></span>
+                                <input type="text" class="form-control" id="name" name="name" placeholder="John Doe" value="<?php echo e($name ?? ''); ?>" required autofocus>
+                            </div>
                         </div>
 
-
                         <div class="mb-3">
-                            <label for="email" class="form-label">Email Address</label>
-                            <input type="email" class="form-control" id="email" name="email" value="<?php echo e($email ?? ''); ?>" required>
+                            <label for="email" class="form-label fw-semibold text-dark small">Email Address</label>
+                            <div class="input-group auth-input-group">
+                                <span class="input-group-text"><i class="fa-solid fa-envelope"></i></span>
+                                <input type="email" class="form-control" id="email" name="email" placeholder="student@example.com" value="<?php echo e($email ?? ''); ?>" required>
+                            </div>
                         </div>
 
-
                         <div class="mb-3">
-                            <label for="password" class="form-label">Password (Min. 6 chars)</label>
-                            <input type="password" class="form-control" id="password" name="password" required>
+                            <label for="password" class="form-label fw-semibold text-dark small">Password <span class="text-muted fw-normal">(Min. 6 chars)</span></label>
+                            <div class="input-group auth-input-group has-toggle">
+                                <span class="input-group-text"><i class="fa-solid fa-lock"></i></span>
+                                <input type="password" class="form-control" id="password" name="password" placeholder="Create a password" required minlength="6">
+                                <button type="button" class="password-toggle-btn" onclick="togglePassword('password', this)" title="Toggle password visibility">
+                                    <i class="fa-solid fa-eye"></i>
+                                </button>
+                            </div>
                         </div>
-
 
                         <div class="mb-4">
-                            <label for="confirm_password" class="form-label">Confirm Password</label>
-                            <input type="password" class="form-control" id="confirm_password" name="confirm_password" required>
+                            <label for="confirm_password" class="form-label fw-semibold text-dark small">Confirm Password</label>
+                            <div class="input-group auth-input-group has-toggle">
+                                <span class="input-group-text"><i class="fa-solid fa-shield-halved"></i></span>
+                                <input type="password" class="form-control" id="confirm_password" name="confirm_password" placeholder="Re-enter password" required>
+                                <button type="button" class="password-toggle-btn" onclick="togglePassword('confirm_password', this)" title="Toggle password visibility">
+                                    <i class="fa-solid fa-eye"></i>
+                                </button>
+                            </div>
                         </div>
 
-
-                        <button type="submit" class="btn btn-primary w-100 py-2 mb-3">Register Now</button>
+                        <button type="submit" class="btn btn-premium-primary w-100 py-2.5 fw-bold text-center">
+                            <i class="fa-solid fa-user-plus me-2"></i>Register Now
+                        </button>
                     </form>
 
-                    <div class="text-center mt-3">
+                    <div class="text-center mt-4 pt-3 border-top border-slate-200">
                         <span class="text-muted small">Already have an account?</span>
-                        <a href="login.php?role=student" class="text-decoration-none small fw-bold ms-1">Login here</a>
+                        <a href="login.php?role=student" class="text-decoration-none small fw-bold ms-1 text-primary">Login here</a>
                     </div>
-                    <div class="text-center mt-2">
-                        <a href="index.php" class="text-decoration-none small text-muted"><i class="fa-solid fa-arrow-left me-1"></i>Back to Home</a>
+
+                    <div class="text-center mt-3">
+                        <a href="index.php" class="text-decoration-none small text-muted">
+                            <i class="fa-solid fa-arrow-left me-1"></i>Back to Main Website
+                        </a>
                     </div>
                 </div>
             </div>
         </div>
     </div>
 </div>
+
+<script>
+function togglePassword(inputId, btn) {
+    const input = document.getElementById(inputId);
+    const icon = btn.querySelector('i');
+    if (input.type === 'password') {
+        input.type = 'text';
+        icon.classList.remove('fa-eye');
+        icon.classList.add('fa-eye-slash');
+    } else {
+        input.type = 'password';
+        icon.classList.remove('fa-eye-slash');
+        icon.classList.add('fa-eye');
+    }
+}
+</script>
 
 <?php include 'includes/footer.php'; ?>

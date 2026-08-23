@@ -29,6 +29,10 @@ try {
         header("Location: manage_students.php");
         exit;
     }
+
+    $doc_stmt = $pdo->prepare("SELECT * FROM documents WHERE student_id = :student_id");
+    $doc_stmt->execute(['student_id' => $student_id]);
+    $documents = $doc_stmt->fetch();
 } catch (PDOException $e) {
     die("Database Error: " . $e->getMessage());
 }
@@ -153,24 +157,37 @@ include '../includes/header.php';
                     <i class="fa-solid fa-user-pen me-2"></i>Modify Student Profile: <?php echo e($student['admission_no']); ?>
                 </div>
                 <div class="card-body">
+                    <div class="text-center mb-4">
+                        <?php if (isset($documents) && $documents && !empty($documents['photo'])): ?>
+                            <img src="../uploads/photo/<?php echo e($documents['photo']); ?>" 
+                                 alt="<?php echo e($student['full_name']); ?>" 
+                                 class="border border-3 border-primary shadow-sm rounded" 
+                                 style="width: 120px; height: 120px; object-fit: cover;">
+                        <?php else: ?>
+                            <div class="border border-3 border-secondary bg-light d-inline-flex align-items-center justify-content-center rounded" 
+                                 style="width: 120px; height: 120px;">
+                                <i class="fa-solid fa-user-large fa-3x text-muted"></i>
+                            </div>
+                        <?php endif; ?>
+                    </div>
                     <form action="edit_student.php?id=<?php echo $student_id; ?>" method="POST">
                         <input type="hidden" name="action" value="update_student">
 
                         <h6 class="fw-bold text-primary border-bottom pb-2 mb-3">1. Personal Information</h6>
                         <div class="row g-3 mb-4">
-                            <div class="col-md-4">
+                            <div class="col-12 col-sm-6 col-md-4">
                                 <label class="form-label">Student Full Name</label>
                                 <input type="text" class="form-control" name="full_name" value="<?php echo e($student['full_name']); ?>" required>
                             </div>
-                            <div class="col-md-4">
+                            <div class="col-12 col-sm-6 col-md-4">
                                 <label class="form-label">Father's Name</label>
                                 <input type="text" class="form-control" name="father_name" value="<?php echo e($student['father_name']); ?>" required>
                             </div>
-                            <div class="col-md-4">
+                            <div class="col-12 col-sm-6 col-md-4">
                                 <label class="form-label">Mother's Name</label>
                                 <input type="text" class="form-control" name="mother_name" value="<?php echo e($student['mother_name']); ?>" required>
                             </div>
-                            <div class="col-md-3">
+                            <div class="col-12 col-sm-6 col-md-3">
                                 <label class="form-label">Gender</label>
                                 <select class="form-select form-control" name="gender" required>
                                     <option value="Male" <?php echo ($student['gender'] === 'Male') ? 'selected' : ''; ?>>Male</option>
@@ -178,31 +195,31 @@ include '../includes/header.php';
                                     <option value="Other" <?php echo ($student['gender'] === 'Other') ? 'selected' : ''; ?>>Other</option>
                                 </select>
                             </div>
-                            <div class="col-md-3">
+                            <div class="col-12 col-sm-6 col-md-3">
                                 <label class="form-label">DOB</label>
                                 <input type="date" class="form-control" name="dob" value="<?php echo e($student['dob']); ?>" required>
                             </div>
-                            <div class="col-md-3">
+                            <div class="col-12 col-sm-6 col-md-3">
                                 <label class="form-label">Category</label>
                                 <input type="text" class="form-control" name="category" value="<?php echo e($student['category']); ?>" required>
                             </div>
-                            <div class="col-md-3">
+                            <div class="col-12 col-sm-6 col-md-3">
                                 <label class="form-label">Mobile</label>
                                 <input type="text" class="form-control" name="mobile" value="<?php echo e($student['mobile']); ?>" required>
                             </div>
-                            <div class="col-md-6">
+                            <div class="col-12 col-md-6">
                                 <label class="form-label">Address</label>
                                 <input type="text" class="form-control" name="address" value="<?php echo e($student['address']); ?>" required>
                             </div>
-                            <div class="col-md-4">
+                            <div class="col-12 col-sm-4">
                                 <label class="form-label">City</label>
                                 <input type="text" class="form-control" name="city" value="<?php echo e($student['city']); ?>" required>
                             </div>
-                            <div class="col-md-4">
+                            <div class="col-12 col-sm-4">
                                 <label class="form-label">State</label>
                                 <input type="text" class="form-control" name="state" value="<?php echo e($student['state']); ?>" required>
                             </div>
-                            <div class="col-md-4">
+                            <div class="col-12 col-sm-4">
                                 <label class="form-label">Pincode</label>
                                 <input type="text" class="form-control" name="pincode" value="<?php echo e($student['pincode']); ?>" required>
                             </div>
@@ -210,19 +227,19 @@ include '../includes/header.php';
 
                         <h6 class="fw-bold text-primary border-bottom pb-2 mb-3">2. Academic Information</h6>
                         <div class="row g-3 mb-4">
-                            <div class="col-md-3">
+                            <div class="col-12 col-sm-6 col-md-3">
                                 <label class="form-label">10th Std (%)</label>
                                 <input type="number" step="0.01" min="0" max="100" class="form-control" name="tenth_percentage" value="<?php echo e($student['tenth_percentage']); ?>" required>
                             </div>
-                            <div class="col-md-3">
+                            <div class="col-12 col-sm-6 col-md-3">
                                 <label class="form-label">12th Std (%)</label>
                                 <input type="number" step="0.01" min="0" max="100" class="form-control" name="twelfth_percentage" value="<?php echo e($student['twelfth_percentage']); ?>" required>
                             </div>
-                            <div class="col-md-4">
+                            <div class="col-12 col-sm-8 col-md-4">
                                 <label class="form-label">School Name</label>
                                 <input type="text" class="form-control" name="school_name" value="<?php echo e($student['school_name']); ?>" required>
                             </div>
-                            <div class="col-md-2">
+                            <div class="col-12 col-sm-4 col-md-2">
                                 <label class="form-label">Passing Year</label>
                                 <input type="number" class="form-control" name="passing_year" value="<?php echo e($student['passing_year']); ?>" required>
                             </div>
@@ -230,7 +247,7 @@ include '../includes/header.php';
 
                         <h6 class="fw-bold text-primary border-bottom pb-2 mb-3">3. Status & Program Preference</h6>
                         <div class="row g-3 mb-5">
-                            <div class="col-md-6">
+                            <div class="col-12 col-md-6">
                                 <label class="form-label">Select Degree</label>
                                 <select class="form-select form-control" name="course_id" required>
                                     <?php foreach ($courses as $c): ?>
@@ -240,7 +257,7 @@ include '../includes/header.php';
                                     <?php endforeach; ?>
                                 </select>
                             </div>
-                            <div class="col-md-6">
+                            <div class="col-12 col-md-6">
                                 <label class="form-label">Admission Status</label>
                                 <select class="form-select form-control" name="status" required>
                                     <option value="Pending" <?php echo ($student['status'] === 'Pending') ? 'selected' : ''; ?>>Pending</option>

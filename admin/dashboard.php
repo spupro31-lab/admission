@@ -68,8 +68,8 @@ include '../includes/header.php';
 
             <div class="row g-4 mb-4">
 
-                <div class="col-md-4 col-xl-2">
-                    <div class="card bg-white p-3 stat-card courses">
+                <div class="col-12 col-sm-6 col-md-4 col-xl-2">
+                    <div class="card bg-white p-3 stat-card courses h-100">
                         <div class="d-flex justify-content-between align-items-center">
                             <div>
                                 <small class="text-muted fw-bold">Total Apps</small>
@@ -80,8 +80,8 @@ include '../includes/header.php';
                     </div>
                 </div>
 
-                <div class="col-md-4 col-xl-2">
-                    <div class="card bg-white p-3 stat-card pending">
+                <div class="col-12 col-sm-6 col-md-4 col-xl-2">
+                    <div class="card bg-white p-3 stat-card pending h-100">
                         <div class="d-flex justify-content-between align-items-center">
                             <div>
                                 <small class="text-muted fw-bold">Pending</small>
@@ -92,8 +92,8 @@ include '../includes/header.php';
                     </div>
                 </div>
 
-                <div class="col-md-4 col-xl-2">
-                    <div class="card bg-white p-3 stat-card approved">
+                <div class="col-12 col-sm-6 col-md-4 col-xl-2">
+                    <div class="card bg-white p-3 stat-card approved h-100">
                         <div class="d-flex justify-content-between align-items-center">
                             <div>
                                 <small class="text-muted fw-bold">Approved</small>
@@ -104,8 +104,8 @@ include '../includes/header.php';
                     </div>
                 </div>
 
-                <div class="col-md-4 col-xl-2">
-                    <div class="card bg-white p-3 stat-card rejected">
+                <div class="col-12 col-sm-6 col-md-4 col-xl-2">
+                    <div class="card bg-white p-3 stat-card rejected h-100">
                         <div class="d-flex justify-content-between align-items-center">
                             <div>
                                 <small class="text-muted fw-bold">Rejected</small>
@@ -116,8 +116,8 @@ include '../includes/header.php';
                     </div>
                 </div>
 
-                <div class="col-md-4 col-xl-2">
-                    <div class="card bg-white p-3 stat-card courses">
+                <div class="col-12 col-sm-6 col-md-4 col-xl-2">
+                    <div class="card bg-white p-3 stat-card courses h-100">
                         <div class="d-flex justify-content-between align-items-center">
                             <div>
                                 <small class="text-muted fw-bold">Active Courses</small>
@@ -128,8 +128,8 @@ include '../includes/header.php';
                     </div>
                 </div>
 
-                <div class="col-md-4 col-xl-2">
-                    <div class="card bg-white p-3 stat-card approved">
+                <div class="col-12 col-sm-6 col-md-4 col-xl-2">
+                    <div class="card bg-white p-3 stat-card approved h-100">
                         <div class="d-flex justify-content-between align-items-center">
                             <div>
                                 <small class="text-muted fw-bold">Active Staff</small>

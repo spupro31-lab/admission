@@ -106,12 +106,12 @@ include '../includes/header.php';
                         <table class="table table align-middle">
                             <thead>
                                 <tr>
-                                    <th># ID</th>
+                                    <th>Sr. No.</th>
                                     <th>Course Name</th>
                                     <th>Department</th>
                                     <th>Semester</th>
                                     <th>Total Seats</th>
-                                    <th class="text-center">Actions</th>
+                                    <th class="text-center text-nowrap-action">Actions</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -120,14 +120,15 @@ include '../includes/header.php';
                                         <td colspan="6" class="text-center text-muted py-4">No courses registered yet. Click "Add New Course" to define one.</td>
                                     </tr>
                                 <?php else: ?>
+                                    <?php $sr_no = 1; ?>
                                     <?php foreach ($courses as $c): ?>
                                         <tr>
-                                            <td><?php echo $c['course_id']; ?></td>
+                                            <td><?php echo $sr_no++; ?></td>
                                             <td class="fw-bold text-primary"><?php echo e($c['course_name']); ?></td>
                                             <td><?php echo e($c['department']); ?></td>
                                             <td><?php echo e($c['semester']); ?></td>
                                             <td><?php echo e($c['total_seats']); ?></td>
-                                            <td class="text-center">
+                                            <td class="text-center text-nowrap-action">
 
                                                 <button class="btn btn-sm btn-outline-secondary me-2" onclick="editCourse(<?php echo e(json_encode($c)); ?>)">
                                                     <i class="fa-solid fa-pen-to-square"></i> Edit
@@ -153,7 +154,7 @@ include '../includes/header.php';
 
 
 <div class="modal fade" id="addCourseModal" tabindex="-1" aria-labelledby="addCourseModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
+    <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title fw-bold" id="addCourseModalLabel"><i class="fa-solid fa-plus me-1 text-primary"></i>Add Course</h5>
@@ -190,7 +191,7 @@ include '../includes/header.php';
 
 
 <div class="modal fade" id="editCourseModal" tabindex="-1" aria-labelledby="editCourseModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
+    <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title fw-bold" id="editCourseModalLabel"><i class="fa-solid fa-pen-to-square me-1 text-primary"></i>Edit Course Details</h5>

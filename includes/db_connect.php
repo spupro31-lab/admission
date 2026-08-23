@@ -1,13 +1,14 @@
 <?php
 
 define('DB_HOST', 'localhost');
-define('DB_USER', 'root');
+define('DB_PORT', '5432'); 
+define('DB_USER', 'postgres');
 define('DB_PASS', 'Laksh.2912');
-define('DB_NAME', 'student_admission_db');
+define('DB_NAME', 'collage_admission_system_db');
 
 try {
 
-    $dsn = "mysql:host=" . DB_HOST . ";dbname=" . DB_NAME . ";charset=utf8mb4";
+    $dsn = "pgsql:host=" . DB_HOST . ";port=" . DB_PORT . ";dbname=" . DB_NAME . ";options='--client_encoding=UTF8'";
 
 
     $options = [

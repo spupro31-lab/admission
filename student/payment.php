@@ -101,10 +101,10 @@ include '../includes/header.php';
                 </div>
             </div>
 
-            <div class="row">
+            <div class="row g-4">
 
-                <div class="col-lg-7">
-                    <div class="card">
+                <div class="col-12 col-lg-7">
+                    <div class="card h-100">
                         <div class="card-header">
                             <i class="fa-solid fa-credit-card me-2"></i>Processing Fee Details
                         </div>
@@ -140,7 +140,7 @@ include '../includes/header.php';
 
 
                 <?php if ($student['payment_status'] !== 'Paid'): ?>
-                    <div class="col-lg-5">
+                    <div class="col-12 col-lg-5">
                         <div class="card">
                             <div class="card-header">
                                 <i class="fa-solid fa-file-invoice-dollar me-2"></i>Submit Transaction Reference

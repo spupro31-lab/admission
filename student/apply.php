@@ -236,25 +236,25 @@ include '../includes/header.php';
                         <h5 class="fw-bold text-primary border-bottom pb-2 mb-4"><i class="fa-solid fa-user me-2"></i>Personal Information</h5>
                         <div class="row g-3 mb-4">
 
-                            <div class="col-md-6">
+                            <div class="col-12 col-md-6">
                                 <label for="full_name" class="form-label">Student Full Name</label>
                                 <input type="text" class="form-control" id="full_name" name="full_name"
                                     value="<?php echo $has_record ? e($student['full_name']) : ''; ?>" required>
                             </div>
 
-                            <div class="col-md-3">
+                            <div class="col-12 col-sm-6 col-md-3">
                                 <label for="father_name" class="form-label">Father's Name</label>
                                 <input type="text" class="form-control" id="father_name" name="father_name"
                                     value="<?php echo $has_record ? e($student['father_name']) : ''; ?>" required>
                             </div>
 
-                            <div class="col-md-3">
+                            <div class="col-12 col-sm-6 col-md-3">
                                 <label for="mother_name" class="form-label">Mother's Name</label>
                                 <input type="text" class="form-control" id="mother_name" name="mother_name"
                                     value="<?php echo $has_record ? e($student['mother_name']) : ''; ?>" required>
                             </div>
 
-                            <div class="col-md-4">
+                            <div class="col-12 col-sm-6 col-md-4">
                                 <label for="gender" class="form-label">Gender</label>
                                 <select class="form-select form-control" id="gender" name="gender" required>
                                     <option value="">Choose...</option>
@@ -264,13 +264,13 @@ include '../includes/header.php';
                                 </select>
                             </div>
 
-                            <div class="col-md-4">
+                            <div class="col-12 col-sm-6 col-md-4">
                                 <label for="dob" class="form-label">Date of Birth</label>
                                 <input type="date" class="form-control" id="dob" name="dob"
                                     value="<?php echo $has_record ? e($student['dob']) : ''; ?>" required>
                             </div>
 
-                            <div class="col-md-4">
+                            <div class="col-12 col-sm-6 col-md-4">
                                 <label for="category" class="form-label">Category</label>
                                 <select class="form-select form-control" id="category" name="category" required>
                                     <option value="">Choose...</option>
@@ -282,37 +282,37 @@ include '../includes/header.php';
                                 </select>
                             </div>
 
-                            <div class="col-md-4">
+                            <div class="col-12 col-sm-6 col-md-4">
                                 <label for="mobile" class="form-label">Mobile Number</label>
                                 <input type="tel" class="form-control" id="mobile" name="mobile"
                                     value="<?php echo $has_record ? e($student['mobile']) : ''; ?>" required>
                             </div>
 
-                            <div class="col-md-6">
+                            <div class="col-12 col-md-4">
                                 <label for="email" class="form-label">Email (Registered)</label>
                                 <input type="email" class="form-control bg-light" id="email" name="email"
                                     value="<?php echo $_SESSION['email']; ?>" readonly>
                             </div>
 
-                            <div class="col-md-6">
+                            <div class="col-12 col-md-4">
                                 <label for="address" class="form-label">Correspondence Address</label>
                                 <input type="text" class="form-control" id="address" name="address"
                                     value="<?php echo $has_record ? e($student['address']) : ''; ?>" required>
                             </div>
 
-                            <div class="col-md-4">
+                            <div class="col-12 col-sm-4">
                                 <label for="city" class="form-label">City</label>
                                 <input type="text" class="form-control" id="city" name="city"
                                     value="<?php echo $has_record ? e($student['city']) : ''; ?>" required>
                             </div>
 
-                            <div class="col-md-4">
+                            <div class="col-12 col-sm-4">
                                 <label for="state" class="form-label">State</label>
                                 <input type="text" class="form-control" id="state" name="state"
                                     value="<?php echo $has_record ? e($student['state']) : ''; ?>" required>
                             </div>
 
-                            <div class="col-md-4">
+                            <div class="col-12 col-sm-4">
                                 <label for="pincode" class="form-label">Pincode</label>
                                 <input type="text" class="form-control" id="pincode" name="pincode"
                                     value="<?php echo $has_record ? e($student['pincode']) : ''; ?>" required>
@@ -323,26 +323,26 @@ include '../includes/header.php';
                         <h5 class="fw-bold text-primary border-bottom pb-2 mb-4"><i class="fa-solid fa-user-graduate me-2"></i>Academic Details</h5>
                         <div class="row g-3 mb-4">
 
-                            <div class="col-md-3">
+                            <div class="col-12 col-sm-6 col-md-3">
                                 <label for="tenth_percentage" class="form-label">10th Std Percentage (%)</label>
                                 <input type="number" step="0.01" min="0" max="100" class="form-control" id="tenth_percentage" name="tenth_percentage"
                                     value="<?php echo $has_record ? e($student['tenth_percentage']) : ''; ?>" required>
                             </div>
 
-                            <div class="col-md-3">
+                            <div class="col-12 col-sm-6 col-md-3">
                                 <label for="twelfth_percentage" class="form-label">12th Std Percentage (%)</label>
                                 <input type="number" step="0.01" min="0" max="100" class="form-control" id="twelfth_percentage" name="twelfth_percentage"
                                     value="<?php echo $has_record ? e($student['twelfth_percentage']) : ''; ?>" required>
-                                <small class="text-muted">Eligibility: Minimum 35% required</small>
+                                <small class="text-muted d-block">Eligibility: Min. 35% required</small>
                             </div>
 
-                            <div class="col-md-4">
+                            <div class="col-12 col-sm-8 col-md-4">
                                 <label for="school_name" class="form-label">Previous School / Board Name</label>
                                 <input type="text" class="form-control" id="school_name" name="school_name"
                                     value="<?php echo $has_record ? e($student['school_name']) : ''; ?>" required>
                             </div>
 
-                            <div class="col-md-2">
+                            <div class="col-12 col-sm-4 col-md-2">
                                 <label for="passing_year" class="form-label">Passing Year</label>
                                 <input type="number" min="2000" max="2026" class="form-control" id="passing_year" name="passing_year"
                                     value="<?php echo $has_record ? e($student['passing_year']) : date('Y'); ?>" required>
@@ -353,7 +353,7 @@ include '../includes/header.php';
                         <h5 class="fw-bold text-primary border-bottom pb-2 mb-4"><i class="fa-solid fa-book-bookmark me-2"></i>Course Selection</h5>
                         <div class="row g-3 mb-4">
 
-                            <div class="col-md-12">
+                            <div class="col-12">
                                 <label for="course_id" class="form-label">Select Preferred Program</label>
                                 <select class="form-select form-control" id="course_id" name="course_id" required>
                                     <option value="">Select a Course...</option>

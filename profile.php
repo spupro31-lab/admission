@@ -81,10 +81,10 @@ include 'includes/header.php';
             <?php render_alert($success_msg); ?>
             <?php render_alert($error_msg, 'danger'); ?>
 
-            <div class="row">
+            <div class="row g-4">
 
-                <div class="col-lg-7">
-                    <div class="card">
+                <div class="col-12 col-lg-7">
+                    <div class="card h-100">
                         <div class="card-header">
                             <i class="fa-solid fa-user-gear me-2"></i>Account Settings
                         </div>
@@ -112,18 +112,18 @@ include 'includes/header.php';
 
                                 <h6 class="fw-bold text-primary border-bottom pb-2 mb-3">Change Account Password (Optional)</h6>
                                 <div class="row g-3 mb-4">
-                                    <div class="col-md-6">
+                                    <div class="col-12 col-sm-6">
                                         <label for="new_password" class="form-label">New Password</label>
                                         <input type="password" class="form-control" id="new_password" name="new_password" placeholder="Min. 6 characters">
                                     </div>
-                                    <div class="col-md-6">
+                                    <div class="col-12 col-sm-6">
                                         <label for="confirm_password" class="form-label">Confirm New Password</label>
                                         <input type="password" class="form-control" id="confirm_password" name="confirm_password" placeholder="Re-enter new password">
                                     </div>
                                 </div>
 
                                 <div class="d-flex justify-content-end">
-                                    <button type="submit" class="btn btn-primary px-5 py-2 fw-bold"><i class="fa-solid fa-floppy-disk me-1"></i>Save Changes</button>
+                                    <button type="submit" class="btn btn-primary px-5 py-2 fw-bold w-100 w-sm-auto"><i class="fa-solid fa-floppy-disk me-1"></i>Save Changes</button>
                                 </div>
                             </form>
                         </div>
@@ -131,7 +131,7 @@ include 'includes/header.php';
                 </div>
 
 
-                <div class="col-lg-5">
+                <div class="col-12 col-lg-5">
                     <div class="card bg-white">
                         <div class="card-header bg-light">
                             <i class="fa-solid fa-shield-halved me-1 text-primary"></i>Security Center

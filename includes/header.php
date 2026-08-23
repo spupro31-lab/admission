@@ -59,10 +59,10 @@ $body_class = $body_class ?? '';
                             </li>
                         <?php else: ?>
                             <li class="nav-item ms-lg-3">
-                                <a href="<?php echo app_base_path(); ?>login.php?role=student" class="btn btn-premium-sky btn-sm py-2 px-4 fw-bold">Student Login</a>
+                                <a href="<?php echo app_base_path(); ?>login.php?role=student" class="btn btn-premium-sky rounded-4 btn-sm py-2 px-4 fw-bold">Student Login</a>
                             </li>
                             <li class="nav-item ms-lg-2">
-                                <a href="<?php echo app_base_path(); ?>student_register.php" class="btn btn-premium-secondary btn-sm py-2 px-4 fw-bold">Create Account</a>
+                                <a href="<?php echo app_base_path(); ?>student_register.php" class="btn btn-premium-secondary rounded-4 btn-sm py-2 px-4 fw-bold">Create Account</a>
                             </li>
                         <?php endif; ?>
                     </ul>

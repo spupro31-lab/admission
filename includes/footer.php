@@ -42,29 +42,56 @@
     </footer>
 <?php endif; ?>
 
+<div class="sidebar-overlay" id="sidebarOverlay"></div>
+
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 
 <script>
     document.addEventListener("DOMContentLoaded", function() {
         const sidebarCollapse = document.getElementById("sidebarCollapse");
         const sidebar = document.getElementById("sidebar");
+        const overlay = document.getElementById("sidebarOverlay");
 
-        if (sidebarCollapse && sidebar) {
-            sidebarCollapse.addEventListener("click", function(e) {
+        function closeSidebar() {
+            if (sidebar) sidebar.classList.remove("active");
+            if (overlay) overlay.classList.remove("active");
+        }
+
+        function toggleSidebar(e) {
+            if (e) e.stopPropagation();
+            if (sidebar) {
                 sidebar.classList.toggle("active");
-                e.stopPropagation();
-            });
-
-            // Close sidebar when clicking outside on mobile devices
-            document.addEventListener("click", function(e) {
-                if (window.innerWidth <= 768 && sidebar.classList.contains("active")) {
-                    // Check if click was outside sidebar and outside toggle button
-                    if (!sidebar.contains(e.target) && !sidebarCollapse.contains(e.target) && e.target !== sidebarCollapse) {
-                        sidebar.classList.remove("active");
+                if (window.innerWidth <= 768 && overlay) {
+                    if (sidebar.classList.contains("active")) {
+                        overlay.classList.add("active");
+                    } else {
+                        overlay.classList.remove("active");
                     }
                 }
-            });
+            }
         }
+
+        if (sidebarCollapse) {
+            sidebarCollapse.addEventListener("click", toggleSidebar);
+        }
+
+        if (overlay) {
+            overlay.addEventListener("click", closeSidebar);
+        }
+
+        document.addEventListener("click", function(e) {
+            if (window.innerWidth <= 768 && sidebar && sidebar.classList.contains("active")) {
+                if (!sidebar.contains(e.target) && sidebarCollapse && !sidebarCollapse.contains(e.target)) {
+                    closeSidebar();
+                }
+            }
+        });
+
+        window.addEventListener("resize", function() {
+            if (window.innerWidth > 768 && overlay) {
+                overlay.classList.remove("active");
+            }
+        });
     });
 </script>
 </body>

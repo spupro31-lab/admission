@@ -46,7 +46,7 @@ try {
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action'])) {
     $action = $_POST['action'];
-    $remarks = isset($_POST['remarks']) ? trim($_POST['remarks']) : '';
+    $remarks = isset($_POST['remarks']) ? mb_substr(trim($_POST['remarks']), 0, 175) : '';
 
     if ($action === 'approve') {
         try {
@@ -71,7 +71,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action'])) {
                 $hist_stmt = $pdo->prepare("INSERT INTO status_history (student_id, status, remarks) VALUES (:student_id, 'Approved', :remarks)");
                 $hist_stmt->execute([
                     'student_id' => $student_id,
-                    'remarks' => !empty($remarks) ? $remarks : "Verified and approved by staff member: " . $_SESSION['name']
+                    'remarks' => !empty($remarks) ? $remarks : mb_substr("Verified and approved by staff member: " . $_SESSION['name'], 0, 175)
                 ]);
 
                 $pdo->commit();
@@ -152,6 +152,19 @@ include '../includes/header.php';
                             <i class="fa-solid fa-address-card me-2"></i>Applicant Details Preview
                         </div>
                         <div class="card-body">
+                            <div class="text-center mb-4">
+                                <?php if ($documents && !empty($documents['photo'])): ?>
+                                    <img src="../uploads/photo/<?php echo e($documents['photo']); ?>" 
+                                         alt="<?php echo e($student['full_name']); ?>" 
+                                         class="border border-3 border-primary shadow-sm rounded" 
+                                         style="width: 120px; height: 120px; object-fit: cover;">
+                                <?php else: ?>
+                                    <div class="border border-3 border-secondary bg-light d-inline-flex align-items-center justify-content-center rounded" 
+                                         style="width: 120px; height: 120px;">
+                                        <i class="fa-solid fa-user-large fa-3x text-muted"></i>
+                                    </div>
+                                <?php endif; ?>
+                            </div>
 
                             <div class="row mb-4 p-3 bg-light rounded border border-light-subtle">
                                 <div class="col-md-6">
@@ -328,7 +341,7 @@ include '../includes/header.php';
                                                     </button>
                                                 </div>
                                             </div>
-                                            <textarea class="form-control" id="remarks" name="remarks" rows="6" placeholder="Enter feedback here... Required for rejections."></textarea>
+                                            <textarea class="form-control" id="remarks" name="remarks" rows="6" maxlength="175" placeholder="Enter feedback here... Required for rejections. (Max 175 characters)"></textarea>
                                         </div>
 
                                         <div class="row g-2">
@@ -375,17 +388,18 @@ include '../includes/header.php';
     document.getElementById('btnTemplateApprove').addEventListener('click', function() {
         const courseName = <?php echo json_encode($student['course_name']); ?>;
         const staffName = <?php echo json_encode($_SESSION['name']); ?>;
+        const staffEmail = <?php echo json_encode($_SESSION['email'] ?? ''); ?>;
         const textarea = document.getElementById('remarks');
-        textarea.value = `Your 📑Application Submitted Successfully.\nAdmission Confirm ✔.\n\nThank You,\nConfirm By Faculty of : ${courseName}\nFaculty Name - ${staffName}\nFaculty Email - ${staffEmail}`;
+        textarea.value = `Your Application Submitted Successfully.\nAdmission Confirm.\n\nThank You,\nConfirm By Faculty of : ${courseName}\nFaculty Name - ${staffName}\nFaculty Email - ${staffEmail}`;
     });
 
     document.getElementById('btnTemplateReject').addEventListener('click', function() {
         const textarea = document.getElementById('remarks');
-        textarea.value = `Admission Not Confirm ❌.\nYour Application has been Rejected due to discrepancy in\n 1. [rejected document name].\n 2. [rejected Fillup name/Email/Number].\n\nPlease correct the details or re-upload clear documents to submit again.\n\nThank You,\nAdmission Desk`;
+        textarea.value = `Admission Rejected due to:\n1. [document name]\n2. [detail]\n\nPlease correct and re-submit.\n\nThank You,\nAdmission Desk`;
 
         // Focus the textarea and highlight the placeholder to be replaced
         textarea.focus();
-        const placeholder = "[rejected document name]";
+        const placeholder = "[document name]";
         const text = textarea.value;
         const startIdx = text.indexOf(placeholder);
         if (startIdx !== -1) {

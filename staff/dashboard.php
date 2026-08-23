@@ -34,7 +34,7 @@ try {
     if (!empty($search)) {
         $query .= " AND (s.admission_no LIKE :search1 
                      OR s.full_name LIKE :search2 
-                     OR s.mobile LIKE :search3)";
+                     OR CAST(s.mobile AS TEXT) LIKE :search3)";
         $params['search1'] = "%$search%";
         $params['search2'] = "%$search%";
         $params['search3'] = "%$search%";
@@ -88,8 +88,8 @@ include '../includes/header.php';
 
             <div class="row g-4 mb-4">
 
-                <div class="col-md-3">
-                    <div class="card bg-white p-3 stat-card courses">
+                <div class="col-12 col-sm-6 col-md-3">
+                    <div class="card bg-white p-3 stat-card courses h-100">
                         <div class="d-flex justify-content-between align-items-center">
                             <div>
                                 <div class="text-muted small fw-bold">Submitted Apps</div>
@@ -100,8 +100,8 @@ include '../includes/header.php';
                     </div>
                 </div>
 
-                <div class="col-md-3">
-                    <div class="card bg-white p-3 stat-card pending">
+                <div class="col-12 col-sm-6 col-md-3">
+                    <div class="card bg-white p-3 stat-card pending h-100">
                         <div class="d-flex justify-content-between align-items-center">
                             <div>
                                 <div class="text-muted small fw-bold">Pending Review</div>
@@ -112,8 +112,8 @@ include '../includes/header.php';
                     </div>
                 </div>
 
-                <div class="col-md-3">
-                    <div class="card bg-white p-3 stat-card approved">
+                <div class="col-12 col-sm-6 col-md-3">
+                    <div class="card bg-white p-3 stat-card approved h-100">
                         <div class="d-flex justify-content-between align-items-center">
                             <div>
                                 <div class="text-muted small fw-bold">Approved Admissions</div>
@@ -124,8 +124,8 @@ include '../includes/header.php';
                     </div>
                 </div>
 
-                <div class="col-md-3">
-                    <div class="card bg-white p-3 stat-card rejected">
+                <div class="col-12 col-sm-6 col-md-3">
+                    <div class="card bg-white p-3 stat-card rejected h-100">
                         <div class="d-flex justify-content-between align-items-center">
                             <div>
                                 <div class="text-muted small fw-bold">Rejected Apps</div>
@@ -141,7 +141,7 @@ include '../includes/header.php';
             <div class="card mb-4 shadow-sm border-0">
                 <div class="card-body">
                     <form action="dashboard.php" method="GET" class="row g-3 align-items-end">
-                        <div class="col-md-3">
+                        <div class="col-12 col-sm-6 col-lg-3">
                             <label for="search" class="form-label">Search Applications</label>
                             <div class="input-group">
                                 <span class="input-group-text bg-white border-end-0"><i class="fa-solid fa-magnifying-glass text-muted"></i></span>
@@ -149,7 +149,7 @@ include '../includes/header.php';
                                     placeholder="ID, Name, Mobile..." value="<?php echo e($search); ?>">
                             </div>
                         </div>
-                        <div class="col-md-2">
+                        <div class="col-6 col-sm-3 col-lg-2">
                             <label for="status_filter" class="form-label">Filter by Status</label>
                             <select class="form-select" id="status_filter" name="status_filter">
                                 <option value="">All Statuses</option>
@@ -158,7 +158,7 @@ include '../includes/header.php';
                                 <option value="Rejected" <?php echo ($status_filter === 'Rejected') ? 'selected' : ''; ?>>Rejected</option>
                             </select>
                         </div>
-                        <div class="col-md-3">
+                        <div class="col-12 col-sm-6 col-lg-3">
                             <label for="course_filter" class="form-label">Filter by Course</label>
                             <select class="form-select" id="course_filter" name="course_filter">
                                 <option value="">All Courses</option>
@@ -169,7 +169,7 @@ include '../includes/header.php';
                                 <?php endforeach; ?>
                             </select>
                         </div>
-                        <div class="col-md-2">
+                        <div class="col-6 col-sm-3 col-lg-2">
                             <label for="sort_by" class="form-label">Sort By</label>
                             <select class="form-select" id="sort_by" name="sort_by">
                                 <option value="newest" <?php echo ($sort_by === 'newest') ? 'selected' : ''; ?>>Newest First</option>
@@ -179,7 +179,7 @@ include '../includes/header.php';
                                 <option value="name_asc" <?php echo ($sort_by === 'name_asc') ? 'selected' : ''; ?>>Name: A to Z</option>
                             </select>
                         </div>
-                        <div class="col-md-2">
+                        <div class="col-12 col-sm-6 col-lg-2">
                             <a href="dashboard.php" class="btn btn-outline-secondary w-100 py-2" title="Reset"><i class="fa-solid fa-rotate-left me-1"></i>Reset</a>
                         </div>
                     </form>
@@ -196,12 +196,13 @@ include '../includes/header.php';
                         <table class="table table align-middle">
                             <thead>
                                 <tr>
+                                    <th>Sr. No.</th>
                                     <th>Admission ID</th>
                                     <th>Student Name</th>
                                     <th>Course Applied</th>
                                     <th>Mobile</th>
                                     <th>Status</th>
-                                    <th class="text-center">Action</th>
+                                    <th class="text-center text-nowrap-action">Action</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -210,8 +211,10 @@ include '../includes/header.php';
                                         <td colspan="7" class="text-center text-muted py-4">No applications matching the criteria found.</td>
                                     </tr>
                                 <?php else: ?>
+                                    <?php $sr_no = 1; ?>
                                     <?php foreach ($applications as $app): ?>
                                         <tr>
+                                            <td><?php echo $sr_no++; ?></td>
                                             <td class="fw-bold text-primary"><?php echo e($app['admission_no']); ?></td>
                                             <td><?php echo e($app['full_name']); ?></td>
                                             <td><?php echo e($app['course_name']); ?></td>
@@ -225,7 +228,7 @@ include '../includes/header.php';
                                                     <span class="badge badge-rejected">Rejected</span>
                                                 <?php endif; ?>
                                             </td>
-                                            <td class="text-center">
+                                            <td class="text-center text-nowrap-action">
                                                 <a href="verify.php?id=<?php echo $app['student_id']; ?>" class="btn btn-sm btn-secondary">
                                                     <i class="fa-solid fa-user-check me-1"></i>Verify Details
                                                 </a>

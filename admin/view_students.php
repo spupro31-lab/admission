@@ -66,6 +66,19 @@ include '../includes/header.php';
                             <i class="fa-solid fa-user-shield me-2 text-primary"></i>Student Admission Profile Details
                         </div>
                         <div class="card-body">
+                            <div class="text-center mb-4">
+                                <?php if ($documents && !empty($documents['photo'])): ?>
+                                    <img src="../uploads/photo/<?php echo e($documents['photo']); ?>" 
+                                         alt="<?php echo e($student['full_name']); ?>" 
+                                         class="border border-3 border-primary shadow-sm rounded" 
+                                         style="width: 120px; height: 120px; object-fit: cover;">
+                                <?php else: ?>
+                                    <div class="border border-3 border-secondary bg-light d-inline-flex align-items-center justify-content-center rounded" 
+                                         style="width: 120px; height: 120px;">
+                                        <i class="fa-solid fa-user-large fa-3x text-muted"></i>
+                                    </div>
+                                <?php endif; ?>
+                            </div>
                             <div class="row mb-4 p-3 bg-light rounded border">
                                 <div class="col-6">
                                     <small class="text-muted block">Admission Number</small>

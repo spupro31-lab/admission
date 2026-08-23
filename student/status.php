@@ -44,10 +44,10 @@ include '../includes/header.php';
                     <i class="fa-solid fa-triangle-exclamation me-2"></i>You have not initiated an admission form yet. Please fill the admission details first.
                 </div>
             <?php else: ?>
-                <div class="row">
+                <div class="row g-4">
 
-                    <div class="col-md-4 mb-4">
-                        <div class="card bg-white p-4">
+                    <div class="col-12 col-lg-4">
+                        <div class="card bg-white p-4 h-100">
                             <h5 class="fw-bold text-primary mb-3">Application Status</h5>
                             <div class="mb-3">
                                 <strong>Admission Number:</strong>
@@ -74,7 +74,7 @@ include '../includes/header.php';
                     </div>
 
 
-                    <div class="col-md-8">
+                    <div class="col-12 col-lg-8">
                         <div class="card">
                             <div class="card-header">
                                 <i class="fa-solid fa-clock-rotate-left me-2"></i>Status History & Remarks Log

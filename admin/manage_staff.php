@@ -145,10 +145,10 @@ include '../includes/header.php';
                         <table class="table table align-middle">
                             <thead>
                                 <tr>
-                                    <th># ID</th>
+                                    <th>Sr. No.</th>
                                     <th>Staff Name</th>
                                     <th>Email Address</th>
-                                    <th class="text-center">Actions</th>
+                                    <th class="text-center text-nowrap-action">Actions</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -157,12 +157,13 @@ include '../includes/header.php';
                                         <td colspan="4" class="text-center text-muted py-4">No staff accounts registered yet. Click "Create Staff Account" to set one up.</td>
                                     </tr>
                                 <?php else: ?>
+                                    <?php $sr_no = 1; ?>
                                     <?php foreach ($staff_members as $s): ?>
                                         <tr>
-                                            <td><?php echo $s['staff_id']; ?></td>
+                                            <td><?php echo $sr_no++; ?></td>
                                             <td class="fw-bold text-primary"><?php echo e($s['name']); ?></td>
                                             <td><?php echo e($s['email']); ?></td>
-                                            <td class="text-center">
+                                            <td class="text-center text-nowrap-action">
 
                                                 <button class="btn btn-sm btn-outline-secondary me-2" onclick="editStaff(<?php echo e(json_encode($s)); ?>)">
                                                     <i class="fa-solid fa-user-pen"></i> Edit
@@ -188,7 +189,7 @@ include '../includes/header.php';
 
 
 <div class="modal fade" id="addStaffModal" tabindex="-1" aria-labelledby="addStaffModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
+    <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title fw-bold" id="addStaffModalLabel"><i class="fa-solid fa-user-plus me-2 text-primary"></i>Create Staff Account</h5>
@@ -221,7 +222,7 @@ include '../includes/header.php';
 
 
 <div class="modal fade" id="editStaffModal" tabindex="-1" aria-labelledby="editStaffModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
+    <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title fw-bold" id="editStaffModalLabel"><i class="fa-solid fa-user-gear me-1 text-primary"></i>Edit Staff Details</h5>

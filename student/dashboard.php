@@ -392,10 +392,10 @@ include '../includes/header.php';
 
 
             <?php if ($has_form): ?>
-                <div class="row">
+                <div class="row g-4">
 
-                    <div class="col-lg-8">
-                        <div class="card">
+                    <div class="col-12 col-lg-8">
+                        <div class="card h-100">
                             <div class="card-header">
                                 <i class="fa-solid fa-user me-2"></i>Application Details Preview
                                 <?php if ($student['is_submitted'] == 0): ?>
@@ -405,58 +405,71 @@ include '../includes/header.php';
                                 <?php endif; ?>
                             </div>
                             <div class="card-body">
+                                <div class="text-center mb-4">
+                                    <?php if ($documents && !empty($documents['photo'])): ?>
+                                        <img src="uploads/photo/<?php echo e($documents['photo']); ?>" 
+                                             alt="<?php echo e($student['full_name']); ?>" 
+                                             class="border border-3 border-primary shadow-sm rounded" 
+                                             style="width: 120px; height: 120px; object-fit: cover;">
+                                    <?php else: ?>
+                                        <div class="border border-3 border-secondary bg-light d-inline-flex align-items-center justify-content-center rounded" 
+                                             style="width: 120px; height: 120px;">
+                                            <i class="fa-solid fa-user-large fa-3x text-muted"></i>
+                                        </div>
+                                    <?php endif; ?>
+                                </div>
                                 <div class="row mb-4">
                                     <h5 class="fw-bold text-primary border-bottom pb-2">Personal Information</h5>
-                                    <div class="col-md-6 mb-2">
+                                    <div class="col-12 col-sm-6 mb-2">
                                         <strong>Admission No:</strong> <?php echo e($student['admission_no']); ?>
                                     </div>
-                                    <div class="col-md-6 mb-2">
+                                    <div class="col-12 col-sm-6 mb-2">
                                         <strong>Applied Course:</strong> <?php echo e($student['course_name']); ?>
                                     </div>
-                                    <div class="col-md-12 mb-2">
+                                    <div class="col-12 mb-2">
                                         <strong>Student Full Name:</strong> <?php echo e($student['full_name']); ?>
                                     </div>
-                                    <div class="col-md-6 mb-2">
+                                    <div class="col-12 col-sm-6 mb-2">
                                         <strong>Father's Name:</strong> <?php echo e($student['father_name']); ?>
                                     </div>
-                                    <div class="col-md-6 mb-2">
+                                    <div class="col-12 col-sm-6 mb-2">
                                         <strong>Mother's Name:</strong> <?php echo e($student['mother_name']); ?>
                                     </div>
-                                    <div class="col-md-6 mb-2">
+                                    <div class="col-12 col-sm-6 mb-2">
                                         <strong>Gender:</strong> <?php echo e($student['gender']); ?>
                                     </div>
-                                    <div class="col-md-6 mb-2">
+                                    <div class="col-12 col-sm-6 mb-2">
                                         <strong>DOB:</strong> <?php echo date('d-M-Y', strtotime($student['dob'])); ?>
                                     </div>
-                                    <div class="col-md-6 mb-2">
+                                    <div class="col-12 col-sm-6 mb-2">
                                         <strong>Category:</strong> <?php echo e($student['category']); ?>
                                     </div>
-                                    <div class="col-md-6 mb-2">
+                                    <div class="col-12 col-sm-6 mb-2">
                                         <strong>Mobile:</strong> <?php echo e($student['mobile']); ?>
                                     </div>
-                                    <div class="col-md-6 mb-2">
+                                    <div class="col-12 col-sm-6 mb-2">
                                         <strong>Email Address:</strong> <?php echo e($student['email']); ?>
                                     </div>
-                                    <div class="col-md-6 mb-2">
+                                    <div class="col-12 col-sm-6 mb-2">
                                         <strong>Pincode:</strong> <?php echo e($student['pincode']); ?>
                                     </div>
-                                    <div class="col-md-12 mb-2">
+                                    <div class="col-12 mb-2">
                                         <strong>Address:</strong> <?php echo e($student['address']) . ", " . e($student['city']) . ", " . e($student['state']); ?>
                                     </div>
                                 </div>
 
                                 <div class="row">
                                     <h5 class="fw-bold text-primary border-bottom pb-2">Academic Information</h5>
-                                    <div class="col-md-6 mb-2">
+                                    <div class="col-12 col-sm-6 mb-2">
                                         <strong>10th Percentage:</strong> <?php echo e($student['tenth_percentage']); ?>%
                                     </div>
-                                    <div class="col-md-6 mb-2">
+                                    <div class="col-12 col-sm-6 mb-2">
                                         <strong>12th Percentage:</strong> <?php echo e($student['twelfth_percentage']); ?>%
                                     </div>
-                                    <div class="col-md-6 mb-2">
+                                    <div class="col-12 col-sm-6 mb-2">
                                         <strong>Previous School:</strong> <?php echo e($student['school_name']); ?>
                                     </div>
-                                    <div class="col-md-6 mb-2">
+                                    <div class="col-12 col-sm-6 mb-2">
                                         <strong>Passing Year:</strong> <?php echo e($student['passing_year']); ?>
                                     </div>
                                 </div>
@@ -465,7 +478,7 @@ include '../includes/header.php';
                     </div>
 
 
-                    <div class="col-lg-4">
+                    <div class="col-12 col-lg-4">
                         <div class="card">
                             <div class="card-header">
                                 <i class="fa-solid fa-file-lines me-2"></i>Required Documents
