@@ -46,10 +46,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $dob = $_POST['dob'];
     $category = trim($_POST['category']);
     $mobile = trim($_POST['mobile']);
+    $mobile = preg_replace('/[^0-9]/', '', trim($_POST['mobile'] ?? ''));
     $address = trim($_POST['address']);
     $city = trim($_POST['city']);
     $state = trim($_POST['state']);
     $pincode = trim($_POST['pincode']);
+    $pincode = preg_replace('/[^0-9]/', '', trim($_POST['pincode'] ?? ''));
 
     $tenth_percentage = floatval($_POST['tenth_percentage']);
     $twelfth_percentage = floatval($_POST['twelfth_percentage']);
@@ -66,6 +68,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $error_msg = "Eligibility Alert: You must have at least 35% in 12th standard to apply.";
     } elseif (strlen($mobile) < 10 || strlen($mobile) > 12 || !is_numeric($mobile)) {
         $error_msg = "Please enter a valid mobile number.";
+    } elseif (strlen($mobile) < 10 || strlen($mobile) > 12) {
+        $error_msg = "Please enter a valid 10 to 12 digit mobile number.";
+    } elseif (strlen($pincode) < 4 || strlen($pincode) > 10) {
+        $error_msg = "Please enter a valid numeric pincode.";
     } else {
         try {
 
@@ -116,6 +122,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
                     $success_msg = "Admission details updated successfully.";
                 } else {
+                    $admission_no = generate_admission_no($pdo);
 
                     $year = date('Y');
                     $prefix = "ADM" . $year;

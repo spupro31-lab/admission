@@ -62,6 +62,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             mkdir($target_dir, 0755, true);
 
             file_put_to_file($target_dir . "index.html", "Access Denied");
+            file_put_contents($target_dir . "index.html", "Access Denied");
         }
     }
 
@@ -144,6 +145,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     $cols[] = $field;
                     $vals[] = ":" . $field;
                     $params[$field] = isset($uploaded_paths[$field]) ? $uploaded_paths[$field] : null;
+                    $params[$field] = $uploaded_paths[$field] ?? null;
                 }
 
                 $insert_sql = "INSERT INTO documents (" . implode(', ', $cols) . ") VALUES (" . implode(', ', $vals) . ")";

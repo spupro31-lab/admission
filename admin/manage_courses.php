@@ -14,8 +14,18 @@ if (isset($_GET['delete_id']) && !empty($_GET['delete_id'])) {
         $stmt = $pdo->prepare("DELETE FROM courses WHERE course_id = :id");
         $stmt->execute(['id' => $delete_id]);
         $success_msg = "Course deleted successfully.";
+        $chk = $pdo->prepare("SELECT COUNT(*) FROM students WHERE course_id = :id");
+        $chk->execute(['id' => $delete_id]);
+        if ($chk->fetchColumn() > 0) {
+            $error_msg = "Cannot delete course because it is referenced by existing student application records.";
+        } else {
+            $stmt = $pdo->prepare("DELETE FROM courses WHERE course_id = :id");
+            $stmt->execute(['id' => $delete_id]);
+            $success_msg = "Course deleted successfully.";
+        }
     } catch (PDOException $e) {
         $error_msg = "Cannot delete course because it is referenced by existing student application records.";
+        $error_msg = "Database Error: " . $e->getMessage();
     }
 }
 

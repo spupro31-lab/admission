@@ -81,6 +81,7 @@ include '../includes/header.php';
             <?php if (isset($_GET['msg']) && $_GET['msg'] === 'paid'): ?>
                 <div class="alert alert-success alert-dismissible fade show" role="alert">
                     <i class="fa-solid fa-circle-check me-2"></i>Your processing fee payment of â‚¹500.00 has been recorded successfully! You can now finalize and submit your application.
+                    <i class="fa-solid fa-circle-check me-2"></i>Your processing fee payment of ₹500.00 has been recorded successfully! You can now finalize and submit your application.
                     <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                 </div>
             <?php endif; ?>
@@ -207,6 +208,7 @@ include '../includes/header.php';
                             </div>
                             <div class="status-body-premium">
                                 <p>Your details and documents are successfully compiled. You must now complete the online fee payment of â‚¹500.00 to submit your application.</p>
+                                <p>Your details and documents are successfully compiled. You must now complete the online fee payment of ₹500.00 to submit your application.</p>
                             </div>
                             <div class="status-action-row-premium">
                                 <a href="payment.php" class="btn btn-primary"><i class="fa-solid fa-credit-card me-2"></i>Pay Fees Now</a>

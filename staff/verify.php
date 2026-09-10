@@ -47,6 +47,7 @@ try {
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action'])) {
     $action = $_POST['action'];
     $remarks = isset($_POST['remarks']) ? mb_substr(trim($_POST['remarks']), 0, 175) : '';
+    $remarks = isset($_POST['remarks']) ? mb_substr(trim($_POST['remarks']), 0, 1000) : '';
 
     if ($action === 'approve') {
         try {
@@ -54,30 +55,47 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action'])) {
             $stmt_seats = $pdo->prepare("SELECT total_seats FROM courses WHERE course_id = :course_id");
             $stmt_seats->execute(['course_id' => $student['course_id']]);
             $total_seats = $stmt_seats->fetchColumn();
+            $has_seats = true;
+            if (!empty($student['course_id'])) {
+                // Get total seats for this student's course
+                $stmt_seats = $pdo->prepare("SELECT total_seats FROM courses WHERE course_id = :course_id");
+                $stmt_seats->execute(['course_id' => $student['course_id']]);
+                $total_seats = (int) $stmt_seats->fetchColumn();
 
-            // Count already approved students for this course
-            $stmt_count = $pdo->prepare("SELECT COUNT(*) FROM students WHERE course_id = :course_id AND status = 'Approved'");
-            $stmt_count->execute(['course_id' => $student['course_id']]);
-            $approved_count = $stmt_count->fetchColumn();
+                // Count already approved students for this course
+                $stmt_count = $pdo->prepare("SELECT COUNT(*) FROM students WHERE course_id = :course_id AND status = 'Approved'");
+                $stmt_count->execute(['course_id' => $student['course_id']]);
+                $approved_count = $stmt_count->fetchColumn();
+                // Count already approved students for this course
+                $stmt_count = $pdo->prepare("SELECT COUNT(*) FROM students WHERE course_id = :course_id AND status = 'Approved'");
+                $stmt_count->execute(['course_id' => $student['course_id']]);
+                $approved_count = (int) $stmt_count->fetchColumn();
 
-            if ($approved_count >= $total_seats) {
-                $error_msg = "Cannot approve student: No vacant seats available in this course.";
-            } else {
-                $pdo->beginTransaction();
+                if ($approved_count >= $total_seats) {
+                    if ($total_seats > 0 && $approved_count >= $total_seats) {
+                        $has_seats = false;
+                    }
+                }
 
-                $update_stmt = $pdo->prepare("UPDATE students SET status = 'Approved' WHERE student_id = :student_id");
-                $update_stmt->execute(['student_id' => $student_id]);
+                if (!$has_seats) {
+                    $error_msg = "Cannot approve student: No vacant seats available in this course.";
+                } else {
+                    $pdo->beginTransaction();
 
-                $hist_stmt = $pdo->prepare("INSERT INTO status_history (student_id, status, remarks) VALUES (:student_id, 'Approved', :remarks)");
-                $hist_stmt->execute([
-                    'student_id' => $student_id,
-                    'remarks' => !empty($remarks) ? $remarks : mb_substr("Verified and approved by staff member: " . $_SESSION['name'], 0, 175)
-                ]);
+                    $update_stmt = $pdo->prepare("UPDATE students SET status = 'Approved' WHERE student_id = :student_id");
+                    $update_stmt->execute(['student_id' => $student_id]);
 
-                $pdo->commit();
+                    $hist_stmt = $pdo->prepare("INSERT INTO status_history (student_id, status, remarks) VALUES (:student_id, 'Approved', :remarks)");
+                    $hist_stmt->execute([
+                        'student_id' => $student_id,
+                        'remarks' => !empty($remarks) ? $remarks : mb_substr("Verified and approved by staff member: " . $_SESSION['name'], 0, 175)
+                    ]);
 
-                header("Location: dashboard.php?msg=approved");
-                exit;
+                    $pdo->commit();
+
+                    header("Location: dashboard.php?msg=approved");
+                    exit;
+                }
             }
         } catch (PDOException $e) {
             if ($pdo->inTransaction()) {
@@ -154,13 +172,13 @@ include '../includes/header.php';
                         <div class="card-body">
                             <div class="text-center mb-4">
                                 <?php if ($documents && !empty($documents['photo'])): ?>
-                                    <img src="../uploads/photo/<?php echo e($documents['photo']); ?>" 
-                                         alt="<?php echo e($student['full_name']); ?>" 
-                                         class="border border-3 border-primary shadow-sm rounded" 
-                                         style="width: 120px; height: 120px; object-fit: cover;">
+                                    <img src="../uploads/photo/<?php echo e($documents['photo']); ?>"
+                                        alt="<?php echo e($student['full_name']); ?>"
+                                        class="border border-3 border-primary shadow-sm rounded"
+                                        style="width: 120px; height: 120px; object-fit: cover;">
                                 <?php else: ?>
-                                    <div class="border border-3 border-secondary bg-light d-inline-flex align-items-center justify-content-center rounded" 
-                                         style="width: 120px; height: 120px;">
+                                    <div class="border border-3 border-secondary bg-light d-inline-flex align-items-center justify-content-center rounded"
+                                        style="width: 120px; height: 120px;">
                                         <i class="fa-solid fa-user-large fa-3x text-muted"></i>
                                     </div>
                                 <?php endif; ?>
@@ -342,6 +360,7 @@ include '../includes/header.php';
                                                 </div>
                                             </div>
                                             <textarea class="form-control" id="remarks" name="remarks" rows="6" maxlength="175" placeholder="Enter feedback here... Required for rejections. (Max 175 characters)"></textarea>
+                                            <textarea class="form-control" id="remarks" name="remarks" rows="6" maxlength="1000" placeholder="Enter feedback here... Required for rejections. (Max 1000 characters)"></textarea>
                                         </div>
 
                                         <div class="row g-2">

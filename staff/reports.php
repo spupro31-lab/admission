@@ -42,6 +42,9 @@ if (isset($_GET['export']) && $_GET['export'] === 'csv') {
 
 
         ob_end_clean();
+        if (ob_get_level()) {
+            ob_end_clean();
+        }
 
 
         header('Content-Type: text/csv; charset=utf-8');
@@ -181,6 +184,7 @@ include '../includes/header.php';
                             </button>
 
                             <a href="reports.php?course_filter=<?php echo $course_filter; ?>&status_filter=<?php echo $status_filter; ?>&export=csv" class="btn btn-success py-2 px-3" title="Export to CSV">
+                            <a href="reports.php?course_filter=<?php echo urlencode($course_filter); ?>&status_filter=<?php echo urlencode($status_filter); ?>&export=csv" class="btn btn-success py-2 px-3" title="Export to CSV">
                                 <i class="fa-solid fa-file-csv fs-5"></i> Export
                             </a>
                         </div>

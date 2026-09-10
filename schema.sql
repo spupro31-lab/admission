@@ -118,3 +118,76 @@ INSERT IGNORE INTO `users` (`name`, `email`, `password`, `role`) VALUES
 
 INSERT IGNORE INTO `admission_staff` (`name`, `email`, `password`) VALUES
 ('John Staff', 'staff@college.com', '$2y$10$vvNkcYnqOez7rzt3TzKEgeLkLZldxaxpnIS6PHSWzlfeiNN.QbZ1.');
+
+-- ==========================================================
+-- POSTGRESQL COMPATIBLE SCHEMA (collage_admission_system_db)
+-- ==========================================================
+-- CREATE TABLE users (
+--     user_id SERIAL PRIMARY KEY,
+--     name VARCHAR(100) NOT NULL,
+--     email VARCHAR(100) NOT NULL UNIQUE,
+--     password VARCHAR(255) NOT NULL,
+--     role VARCHAR(20) NOT NULL DEFAULT 'student' CHECK (role IN ('admin', 'student'))
+-- );
+--
+-- CREATE TABLE admission_staff (
+--     staff_id SERIAL PRIMARY KEY,
+--     name VARCHAR(100) NOT NULL,
+--     email VARCHAR(100) NOT NULL UNIQUE,
+--     password VARCHAR(255) NOT NULL
+-- );
+--
+-- CREATE TABLE courses (
+--     course_id SERIAL PRIMARY KEY,
+--     course_name VARCHAR(100) NOT NULL,
+--     department VARCHAR(100) NOT NULL,
+--     semester VARCHAR(20) NOT NULL,
+--     total_seats INT NOT NULL DEFAULT 60
+-- );
+--
+-- CREATE TABLE students (
+--     student_id SERIAL PRIMARY KEY,
+--     user_id INT NOT NULL REFERENCES users(user_id) ON DELETE CASCADE,
+--     admission_no VARCHAR(20) NOT NULL UNIQUE,
+--     full_name VARCHAR(100) NOT NULL,
+--     father_name VARCHAR(100) NOT NULL,
+--     mother_name VARCHAR(100) NOT NULL,
+--     gender VARCHAR(10) NOT NULL CHECK (gender IN ('Male', 'Female', 'Other')),
+--     dob DATE NOT NULL,
+--     category VARCHAR(50) NOT NULL,
+--     mobile BIGINT NOT NULL UNIQUE,
+--     email VARCHAR(100) NOT NULL UNIQUE,
+--     address TEXT NOT NULL,
+--     city VARCHAR(50) NOT NULL,
+--     state VARCHAR(50) NOT NULL,
+--     pincode INT NOT NULL,
+--     tenth_percentage NUMERIC(5,2) NOT NULL,
+--     twelfth_percentage NUMERIC(5,2) NOT NULL,
+--     school_name VARCHAR(150) NOT NULL,
+--     passing_year INT NOT NULL,
+--     course_id INT REFERENCES courses(course_id) ON DELETE SET NULL,
+--     status VARCHAR(20) NOT NULL DEFAULT 'Pending' CHECK (status IN ('Pending', 'Approved', 'Rejected')),
+--     is_submitted SMALLINT NOT NULL DEFAULT 0,
+--     payment_status VARCHAR(20) NOT NULL DEFAULT 'Unpaid' CHECK (payment_status IN ('Unpaid', 'Paid')),
+--     transaction_id VARCHAR(100) DEFAULT NULL,
+--     created_at VARCHAR(30) DEFAULT to_char(NOW(), 'YYYY-MM-DD HH24:MI:SS')
+-- );
+--
+-- CREATE TABLE documents (
+--     document_id SERIAL PRIMARY KEY,
+--     student_id INT NOT NULL REFERENCES students(student_id) ON DELETE CASCADE,
+--     photo VARCHAR(255) DEFAULT NULL,
+--     marksheet10 VARCHAR(255) DEFAULT NULL,
+--     marksheet12 VARCHAR(255) DEFAULT NULL,
+--     leaving_certificate VARCHAR(255) DEFAULT NULL,
+--     aadhaar VARCHAR(255) DEFAULT NULL
+-- );
+--
+-- CREATE TABLE status_history (
+--     history_id SERIAL PRIMARY KEY,
+--     student_id INT NOT NULL REFERENCES students(student_id) ON DELETE CASCADE,
+--     status VARCHAR(20) NOT NULL CHECK (status IN ('Pending', 'Approved', 'Rejected')),
+--     remarks TEXT DEFAULT NULL,
+--     updated_at VARCHAR(30) DEFAULT to_char(NOW(), 'YYYY-MM-DD HH24:MI:SS')
+-- );
+

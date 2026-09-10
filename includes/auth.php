@@ -197,3 +197,22 @@ function render_alert($message, $type = 'success', $allow_html = false, $dismiss
     </div>
 <?php
 }
+
+function generate_admission_no($pdo)
+{
+    $year = date('Y');
+    $prefix = "ADM" . $year;
+
+    $stmt = $pdo->prepare("SELECT admission_no FROM students WHERE admission_no LIKE :prefix ORDER BY LENGTH(admission_no) DESC, admission_no DESC LIMIT 1");
+    $stmt->execute(['prefix' => $prefix . '%']);
+    $row = $stmt->fetch();
+
+    $seq_num = 1;
+    if ($row && !empty($row['admission_no']) && strlen($row['admission_no']) > 7) {
+        $last_num = (int) substr($row['admission_no'], 7);
+        $seq_num = $last_num + 1;
+    }
+
+    return sprintf("ADM%s%03d", $year, $seq_num);
+}
+

@@ -46,10 +46,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
     $dob = $_POST['dob'];
     $category = trim($_POST['category']);
     $mobile = trim($_POST['mobile']);
+    $mobile = preg_replace('/[^0-9]/', '', trim($_POST['mobile'] ?? ''));
     $address = trim($_POST['address']);
     $city = trim($_POST['city']);
     $state = trim($_POST['state']);
     $pincode = trim($_POST['pincode']);
+    $pincode = preg_replace('/[^0-9]/', '', trim($_POST['pincode'] ?? ''));
 
     $tenth_percentage = floatval($_POST['tenth_percentage']);
     $twelfth_percentage = floatval($_POST['twelfth_percentage']);
@@ -61,6 +63,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
 
     if (empty($full_name) || empty($father_name) || empty($mother_name) || empty($gender) || empty($dob) || empty($category) || empty($mobile) || empty($address) || empty($city) || empty($state) || empty($pincode) || empty($school_name) || empty($passing_year) || empty($course_id)) {
         $error_msg = "All fields are compulsory.";
+    } elseif (strlen($mobile) < 10 || strlen($mobile) > 12) {
+        $error_msg = "Please enter a valid 10 to 12 digit mobile number.";
+    } elseif (strlen($pincode) < 4 || strlen($pincode) > 10) {
+        $error_msg = "Please enter a valid numeric pincode.";
     } else {
         try {
 
@@ -74,8 +80,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
 
 
                 $status_stmt = $pdo->prepare("SELECT status FROM students WHERE student_id = :id");
+                $status_stmt = $pdo->prepare("SELECT status, is_submitted FROM students WHERE student_id = :id");
                 $status_stmt->execute(['id' => $student_id]);
                 $old_status = $status_stmt->fetchColumn();
+                $current_row = $status_stmt->fetch();
+                $old_status = $current_row['status'] ?? '';
+                $is_sub_val = ($status === 'Rejected') ? 0 : (int)($current_row['is_submitted'] ?? 0);
 
                 $update_sql = "
                     UPDATE students SET 
@@ -84,6 +94,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
                         state = :state, pincode = :pincode, tenth_percentage = :tenth_percentage,
                         twelfth_percentage = :twelfth_percentage, school_name = :school_name,
                         passing_year = :passing_year, course_id = :course_id, status = :status
+                        passing_year = :passing_year, course_id = :course_id, status = :status,
+                        is_submitted = :is_submitted
                     WHERE student_id = :student_id
                 ";
                 $update_stmt = $pdo->prepare($update_sql);
@@ -105,6 +117,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
                     'passing_year' => $passing_year,
                     'course_id' => $course_id,
                     'status' => $status,
+                    'is_submitted' => $is_sub_val,
                     'student_id' => $student_id
                 ]);
 
