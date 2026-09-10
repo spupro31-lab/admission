@@ -13,7 +13,6 @@ $status_filter = isset($_GET['status_filter']) ? trim($_GET['status_filter']) : 
 $course_filter = isset($_GET['course_filter']) ? trim($_GET['course_filter']) : '';
 $payment_filter = isset($_GET['payment_filter']) ? trim($_GET['payment_filter']) : '';
 $sort_by = isset($_GET['sort_by']) ? trim($_GET['sort_by']) : 'newest';
-$edit_id = isset($_GET['edit_id']) ? intval($_GET['edit_id']) : 0;
 
 if (isset($_GET['delete_id']) && !empty($_GET['delete_id'])) {
     $delete_id = intval($_GET['delete_id']);
@@ -70,112 +69,7 @@ if (isset($_GET['delete_id']) && !empty($_GET['delete_id'])) {
 }
 
 
-if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['action'] === 'update_student') {
-    $student_id = intval($_POST['student_id']);
-    $full_name = trim($_POST['full_name']);
-    $father_name = trim($_POST['father_name']);
-    $mother_name = trim($_POST['mother_name']);
-    $gender = $_POST['gender'];
-    $dob = $_POST['dob'];
-    $category = trim($_POST['category']);
-    $mobile = trim($_POST['mobile']);
-    $address = trim($_POST['address']);
-    $city = trim($_POST['city']);
-    $state = trim($_POST['state']);
-    $pincode = trim($_POST['pincode']);
-
-    $tenth_percentage = floatval($_POST['tenth_percentage']);
-    $twelfth_percentage = floatval($_POST['twelfth_percentage']);
-    $school_name = trim($_POST['school_name']);
-    $passing_year = intval($_POST['passing_year']);
-
-    $course_id = intval($_POST['course_id']);
-    $status = $_POST['status'];
-
-    if (empty($full_name) || empty($father_name) || empty($mother_name) || empty($gender) || empty($dob) || empty($category) || empty($mobile) || empty($address) || empty($city) || empty($state) || empty($pincode) || empty($school_name) || empty($passing_year) || empty($course_id)) {
-        $error_msg = "All fields are required.";
-    } else {
-        try {
-
-            $chk = $pdo->prepare("SELECT student_id FROM students WHERE mobile = :mobile AND student_id != :id");
-            $chk->execute(['mobile' => $mobile, 'id' => $student_id]);
-
-            if ($chk->rowCount() > 0) {
-                $error_msg = "Mobile number is already registered by another student.";
-            } else {
-                $pdo->beginTransaction();
-
-
-                $status_stmt = $pdo->prepare("SELECT status FROM students WHERE student_id = :id");
-                $status_stmt->execute(['id' => $student_id]);
-                $old_status = $status_stmt->fetchColumn();
-
-                $update_sql = "
-                    UPDATE students SET 
-                        full_name = :full_name, father_name = :father_name, mother_name = :mother_name, gender = :gender, dob = :dob,
-                        category = :category, mobile = :mobile, address = :address, city = :city,
-                        state = :state, pincode = :pincode, tenth_percentage = :tenth_percentage,
-                        twelfth_percentage = :twelfth_percentage, school_name = :school_name,
-                        passing_year = :passing_year, course_id = :course_id, status = :status
-                    WHERE student_id = :student_id
-                ";
-                $update_stmt = $pdo->prepare($update_sql);
-                $update_stmt->execute([
-                    'full_name' => $full_name,
-                    'father_name' => $father_name,
-                    'mother_name' => $mother_name,
-                    'gender' => $gender,
-                    'dob' => $dob,
-                    'category' => $category,
-                    'mobile' => $mobile,
-                    'address' => $address,
-                    'city' => $city,
-                    'state' => $state,
-                    'pincode' => $pincode,
-                    'tenth_percentage' => $tenth_percentage,
-                    'twelfth_percentage' => $twelfth_percentage,
-                    'school_name' => $school_name,
-                    'passing_year' => $passing_year,
-                    'course_id' => $course_id,
-                    'status' => $status,
-                    'student_id' => $student_id
-                ]);
-
-
-                if ($old_status !== $status) {
-                    $hist_stmt = $pdo->prepare("INSERT INTO status_history (student_id, status, remarks) VALUES (:student_id, :status, :remarks)");
-                    $hist_stmt->execute([
-                        'student_id' => $student_id,
-                        'status' => $status,
-                        'remarks' => "Status updated to " . $status . " by administrator."
-                    ]);
-                }
-
-                $pdo->commit();
-                $success_msg = "Student details updated successfully.";
-                $edit_id = 0;
-            }
-        } catch (PDOException $e) {
-            $pdo->rollBack();
-            $error_msg = "Update Failed: " . $e->getMessage();
-        }
-    }
-}
-
-
-
-
-
-
 $courses = $pdo->query("SELECT * FROM courses ORDER BY course_name ASC")->fetchAll();
-
-
-$edit_student = null;
-if ($edit_id > 0) {
-    $edit_stmt = $pdo->prepare("SELECT * FROM students WHERE student_id = :id");
-    $edit_stmt->execute(['id' => $edit_id]);
-    $edit_student = $edit_stmt->fetch();
-}
 
 
 try {
