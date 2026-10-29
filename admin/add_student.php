@@ -12,8 +12,10 @@ $success_msg = "";
 $courses = $pdo->query("SELECT * FROM courses ORDER BY course_name ASC")->fetchAll();
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-
-    $name = trim($_POST['name']);
+    if (!validate_csrf()) {
+        $error_msg = "Security validation failed. Please refresh the page and try again.";
+    } else {
+        $name = trim($_POST['name']);
     $email = trim($_POST['email']);
     $password = $_POST['password'];
 
@@ -24,12 +26,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $gender = $_POST['gender'];
     $dob = $_POST['dob'];
     $category = trim($_POST['category']);
-    $mobile = trim($_POST['mobile']);
     $mobile = preg_replace('/[^0-9]/', '', trim($_POST['mobile'] ?? ''));
     $address = trim($_POST['address']);
     $city = trim($_POST['city']);
     $state = trim($_POST['state']);
-    $pincode = trim($_POST['pincode']);
     $pincode = preg_replace('/[^0-9]/', '', trim($_POST['pincode'] ?? ''));
 
     $tenth_percentage = floatval($_POST['tenth_percentage']);
@@ -76,21 +76,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 $new_user_id = $pdo->lastInsertId();
 
 
-                $year = date('Y');
-                $prefix = "ADM" . $year;
                 $admission_no = generate_admission_no($pdo);
-
-                $max_stmt = $pdo->prepare("SELECT admission_no FROM students WHERE admission_no LIKE :prefix ORDER BY admission_no DESC LIMIT 1");
-                $max_stmt->execute(['prefix' => $prefix . "%"]);
-                $row = $max_stmt->fetch();
-
-                if ($row) {
-                    $last_num = (int) substr($row['admission_no'], 7);
-                    $seq_num = $last_num + 1;
-                } else {
-                    $seq_num = 1;
-                }
-                $admission_no = sprintf("ADM%s%03d", $year, $seq_num);
 
 
                 $ins_student = $pdo->prepare("
@@ -149,6 +135,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         }
     }
 }
+}
 
 $page_title = "Add Student Profile";
 include '../includes/header.php';
@@ -177,10 +164,9 @@ include '../includes/header.php';
                 </div>
                 <div class="card-body">
                     <form action="add_student.php" method="POST">
+                        <?php echo csrf_field(); ?>
 
 
-                        <h5 class="fw-bold text-primary border-bottom pb-2 mb-3"><i class="fa-solid fa-key me-2"></i>1. Login Account Credentials</h5>
-                        <div class="row g-3 mb-4">
                         <h5 class="fw-bold text-primary border-bottom pb-2 mb-3"><i class="fa-solid fa-key me-2"></i>1. Login Account Credentials</h5>
                         <div class="row g-3 mb-4">
                             <div class="col-12 col-sm-6 col-md-4">

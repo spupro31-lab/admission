@@ -34,7 +34,8 @@ function app_redirect($path)
 
 function normalize_role($role, $default = 'student')
 {
-    return in_array($role, APP_ROLES, true) ? $role : $default;
+    $clean_role = strtolower(trim((string)$role));
+    return in_array($clean_role, APP_ROLES, true) ? $clean_role : $default;
 }
 
 function role_label($role)
@@ -69,12 +70,40 @@ function account_source_for_role($role)
     return ['table' => 'users', 'id' => 'user_id'];
 }
 
+function csrf_token()
+{
+    if (empty($_SESSION['csrf_token'])) {
+        $_SESSION['csrf_token'] = bin2hex(random_bytes(32));
+    }
+    return $_SESSION['csrf_token'];
+}
+
+function csrf_field()
+{
+    return '<input type="hidden" name="csrf_token" value="' . e(csrf_token()) . '">';
+}
+
+function validate_csrf($token = null)
+{
+    if ($token === null) {
+        $token = $_POST['csrf_token'] ?? $_GET['csrf_token'] ?? '';
+    }
+    if (empty($_SESSION['csrf_token']) || !hash_equals($_SESSION['csrf_token'], (string) $token)) {
+        return false;
+    }
+    return true;
+}
+
 function login_user($id, $role, $name, $email)
 {
+    if (session_status() === PHP_SESSION_ACTIVE) {
+        session_regenerate_id(true);
+    }
     $_SESSION['user_id'] = $id;
     $_SESSION['role'] = normalize_role($role);
     $_SESSION['name'] = $name;
     $_SESSION['email'] = $email;
+    csrf_token();
 }
 
 function logout_user()
@@ -100,7 +129,7 @@ function logout_user()
 function session_account_exists($pdo)
 {
     if (empty($_SESSION['user_id']) || empty($_SESSION['role']) || !$pdo) {
-        return true;
+        return false;
     }
 
     $source = account_source_for_role($_SESSION['role']);

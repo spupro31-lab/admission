@@ -48,7 +48,10 @@ try {
 
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $fields = ['photo', 'marksheet10', 'marksheet12', 'leaving_certificate', 'aadhaar'];
+    if (!validate_csrf()) {
+        $error_msg = "Security validation failed. Please refresh the page and try again.";
+    } else {
+        $fields = ['photo', 'marksheet10', 'marksheet12', 'leaving_certificate', 'aadhaar'];
     $uploaded_paths = [];
     $upload_errors = [];
 
@@ -60,16 +63,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $target_dir = $upload_base_dir . $field . "/";
         if (!file_exists($target_dir)) {
             mkdir($target_dir, 0755, true);
-
-            file_put_to_file($target_dir . "index.html", "Access Denied");
             file_put_contents($target_dir . "index.html", "Access Denied");
         }
-    }
-
-
-    function file_put_to_file($file, $data)
-    {
-        file_put_contents($file, $data);
     }
 
     foreach ($fields as $field) {
@@ -91,6 +86,27 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 continue;
             }
 
+            // MIME type check
+            $finfo = finfo_open(FILEINFO_MIME_TYPE);
+            $mime_type = finfo_file($finfo, $file_tmp);
+            finfo_close($finfo);
+
+            $allowed_mimes = ($field === 'photo')
+                ? ['image/jpeg', 'image/png']
+                : ['image/jpeg', 'image/png', 'application/pdf'];
+
+            if (!in_array($mime_type, $allowed_mimes, true)) {
+                $upload_errors[] = "Invalid file content detected for " . ucfirst($field) . ". File must be a valid image or PDF.";
+                continue;
+            }
+
+            if ($field === 'photo') {
+                $image_info = @getimagesize($file_tmp);
+                if ($image_info === false) {
+                    $upload_errors[] = "The uploaded file for Photo is not a valid image.";
+                    continue;
+                }
+            }
 
             if ($file_size > 2097152) {
                 $upload_errors[] = ucfirst($field) . " file size exceeds the 2MB limit.";
@@ -144,7 +160,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 foreach ($fields as $field) {
                     $cols[] = $field;
                     $vals[] = ":" . $field;
-                    $params[$field] = isset($uploaded_paths[$field]) ? $uploaded_paths[$field] : null;
                     $params[$field] = $uploaded_paths[$field] ?? null;
                 }
 
@@ -177,6 +192,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     } elseif (!empty($upload_errors)) {
         $error_msg = implode('<br>', $upload_errors);
     }
+}
 }
 
 $page_title = "Upload Required Documents";
@@ -245,6 +261,7 @@ include '../includes/header.php';
                                 </div>
                             <?php endif; ?>
                             <form action="upload.php" method="POST" enctype="multipart/form-data">
+                                <?php echo csrf_field(); ?>
 
 
                                 <div class="mb-4 pb-3 border-bottom">
@@ -252,9 +269,19 @@ include '../includes/header.php';
                                     <input type="file" name="photo" class="form-control" <?php echo ($documents && !empty($documents['photo'])) ? '' : 'required'; ?>>
                                     <div class="form-text small text-muted">Formats: JPG, JPEG, PNG only.</div>
                                     <?php if ($documents && !empty($documents['photo'])): ?>
-                                        <div class="mt-2 text-success small">
-                                            <i class="fa-solid fa-check-circle me-1"></i>Current File:
-                                            <a href="../uploads/photo/<?php echo e($documents['photo']); ?>" target="_blank" class="text-success fw-bold text-decoration-underline"><?php echo e($documents['photo']); ?></a>
+                                        <div class="mt-2 p-2 bg-light rounded border d-flex align-items-center gap-3">
+                                            <img src="../uploads/photo/<?php echo e($documents['photo']); ?>" 
+                                                 alt="Uploaded Photo" 
+                                                 class="rounded border shadow-sm" 
+                                                 style="width: 55px; height: 55px; object-fit: cover;">
+                                            <div>
+                                                <div class="text-success small fw-bold">
+                                                    <i class="fa-solid fa-check-circle me-1"></i>Photo Uploaded
+                                                </div>
+                                                <a href="../uploads/photo/<?php echo e($documents['photo']); ?>" target="_blank" class="small text-primary text-decoration-none">
+                                                    <i class="fa-solid fa-up-right-from-square me-1"></i>View Full Image
+                                                </a>
+                                            </div>
                                         </div>
                                     <?php endif; ?>
                                 </div>
@@ -320,7 +347,7 @@ include '../includes/header.php';
                                         </button>
                                         <?php if ($all_uploaded): ?>
                                             <a href="payment.php" class="btn btn-success px-4 py-2 fw-bold d-inline-flex align-items-center">
-                                                <i class="fa-solid fa-credit-card me-2"></i>Proceed to Payment
+                                                <i class="fa-solid fa-wallet me-2"></i>Proceed to Payment
                                             </a>
                                         <?php endif; ?>
                                     </div>

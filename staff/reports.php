@@ -41,8 +41,7 @@ if (isset($_GET['export']) && $_GET['export'] === 'csv') {
         $records = $stmt->fetchAll();
 
 
-        ob_end_clean();
-        if (ob_get_level()) {
+        while (ob_get_level()) {
             ob_end_clean();
         }
 
@@ -182,8 +181,6 @@ include '../includes/header.php';
                             <button type="submit" class="btn btn-primary flex-grow-1 py-2">
                                 <i class="fa-solid fa-arrows-rotate me-1"></i>Apply Filters
                             </button>
-
-                            <a href="reports.php?course_filter=<?php echo $course_filter; ?>&status_filter=<?php echo $status_filter; ?>&export=csv" class="btn btn-success py-2 px-3" title="Export to CSV">
                             <a href="reports.php?course_filter=<?php echo urlencode($course_filter); ?>&status_filter=<?php echo urlencode($status_filter); ?>&export=csv" class="btn btn-success py-2 px-3" title="Export to CSV">
                                 <i class="fa-solid fa-file-csv fs-5"></i> Export
                             </a>

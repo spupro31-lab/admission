@@ -15,56 +15,63 @@ $payment_filter = isset($_GET['payment_filter']) ? trim($_GET['payment_filter'])
 $sort_by = isset($_GET['sort_by']) ? trim($_GET['sort_by']) : 'newest';
 
 if (isset($_GET['delete_id']) && !empty($_GET['delete_id'])) {
-    $delete_id = intval($_GET['delete_id']);
-    try {
-        $pdo->beginTransaction();
+    if (!validate_csrf($_GET['csrf_token'] ?? '')) {
+        $error_msg = "Security validation failed for delete request. Please try again.";
+    } else {
+        $delete_id = intval($_GET['delete_id']);
+        try {
+            $pdo->beginTransaction();
 
 
-        $stmt = $pdo->prepare("
-            SELECT s.user_id, s.student_id, d.photo, d.marksheet10, d.marksheet12, d.leaving_certificate, d.aadhaar 
-            FROM students s 
-            LEFT JOIN documents d ON s.student_id = d.student_id 
-            WHERE s.student_id = :id
-        ");
-        $stmt->execute(['id' => $delete_id]);
-        $data = $stmt->fetch();
+            $stmt = $pdo->prepare("
+                SELECT s.user_id, s.student_id, d.photo, d.marksheet10, d.marksheet12, d.leaving_certificate, d.aadhaar 
+                FROM students s 
+                LEFT JOIN documents d ON s.student_id = d.student_id 
+                WHERE s.student_id = :id
+            ");
+            $stmt->execute(['id' => $delete_id]);
+            $data = $stmt->fetch();
 
-        if ($data) {
-            $user_id_to_del = $data['user_id'];
+            if ($data) {
+                $user_id_to_del = $data['user_id'];
 
 
-            $file_fields = ['photo', 'marksheet10', 'marksheet12', 'leaving_certificate', 'aadhaar'];
-            foreach ($file_fields as $field) {
-                if (!empty($data[$field])) {
-                    $file_path = "../uploads/" . $field . "/" . basename($data[$field]);
-                    if (file_exists($file_path)) {
-                        unlink($file_path);
+                $file_fields = ['photo', 'marksheet10', 'marksheet12', 'leaving_certificate', 'aadhaar'];
+                foreach ($file_fields as $field) {
+                    if (!empty($data[$field])) {
+                        $file_path = "../uploads/" . $field . "/" . basename($data[$field]);
+                        if (file_exists($file_path)) {
+                            unlink($file_path);
+                        }
                     }
                 }
+
+                // Explicitly delete child records to avoid relying on CASCADE
+                $del_pay = $pdo->prepare("DELETE FROM payments WHERE student_id = :sid");
+                $del_pay->execute(['sid' => $delete_id]);
+
+                $del_docs = $pdo->prepare("DELETE FROM documents WHERE student_id = :sid");
+                $del_docs->execute(['sid' => $delete_id]);
+
+                $del_hist = $pdo->prepare("DELETE FROM status_history WHERE student_id = :sid");
+                $del_hist->execute(['sid' => $delete_id]);
+
+                $del_student = $pdo->prepare("DELETE FROM students WHERE student_id = :sid");
+                $del_student->execute(['sid' => $delete_id]);
+
+                $del_user = $pdo->prepare("DELETE FROM users WHERE user_id = :uid");
+                $del_user->execute(['uid' => $user_id_to_del]);
+
+                $pdo->commit();
+                $success_msg = "Student and all linked account records/files deleted successfully.";
+            } else {
+                $pdo->rollBack();
+                $error_msg = "Student record not found.";
             }
-
-            // Explicitly delete child records to avoid relying on CASCADE
-            $del_docs = $pdo->prepare("DELETE FROM documents WHERE student_id = :sid");
-            $del_docs->execute(['sid' => $delete_id]);
-
-            $del_hist = $pdo->prepare("DELETE FROM status_history WHERE student_id = :sid");
-            $del_hist->execute(['sid' => $delete_id]);
-
-            $del_student = $pdo->prepare("DELETE FROM students WHERE student_id = :sid");
-            $del_student->execute(['sid' => $delete_id]);
-
-            $del_user = $pdo->prepare("DELETE FROM users WHERE user_id = :uid");
-            $del_user->execute(['uid' => $user_id_to_del]);
-
-            $pdo->commit();
-            $success_msg = "Student and all linked account records/files deleted successfully.";
-        } else {
+        } catch (PDOException $e) {
             $pdo->rollBack();
-            $error_msg = "Student record not found.";
+            $error_msg = "Failed to delete student: " . $e->getMessage();
         }
-    } catch (PDOException $e) {
-        $pdo->rollBack();
-        $error_msg = "Failed to delete student: " . $e->getMessage();
     }
 }
 
@@ -84,7 +91,7 @@ try {
     if (!empty($search)) {
         $list_sql .= " AND (s.admission_no LIKE :search1 
                       OR s.full_name LIKE :search2 
-                      OR CAST(s.mobile AS TEXT) LIKE :search3)";
+                      OR CAST(s.mobile AS VARCHAR) LIKE :search3)";
         $list_params['search1'] = "%$search%";
         $list_params['search2'] = "%$search%";
         $list_params['search3'] = "%$search%";
@@ -178,6 +185,7 @@ include '../includes/header.php';
                                 <option value="">All Payments</option>
                                 <option value="Paid" <?php echo ($payment_filter === 'Paid') ? 'selected' : ''; ?>>Paid</option>
                                 <option value="Unpaid" <?php echo ($payment_filter === 'Unpaid') ? 'selected' : ''; ?>>Unpaid</option>
+                                <option value="Refunded" <?php echo ($payment_filter === 'Refunded') ? 'selected' : ''; ?>>Refunded</option>
                             </select>
                         </div>
                         <div class="col-12 col-sm-6 col-lg-2">
@@ -268,7 +276,7 @@ include '../includes/header.php';
                                                     <i class="fa-solid fa-user-pen"></i>
                                                 </a>
 
-                                                <a href="manage_students.php?delete_id=<?php echo $s['student_id']; ?>&search=<?php echo urlencode($search); ?>" class="btn btn-sm btn-outline-danger" onclick="return confirm('DANGER: Deleting this student will wipe out their credentials, documents, and logs. Proceed?');">
+                                                <a href="manage_students.php?delete_id=<?php echo $s['student_id']; ?>&csrf_token=<?php echo csrf_token(); ?>&search=<?php echo urlencode($search); ?>" class="btn btn-sm btn-outline-danger" onclick="return confirm('DANGER: Deleting this student will wipe out their credentials, documents, and logs. Proceed?');">
                                                     <i class="fa-solid fa-user-minus"></i>
                                                 </a>
                                             </td>

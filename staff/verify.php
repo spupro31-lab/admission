@@ -45,18 +45,17 @@ try {
 
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action'])) {
-    $action = $_POST['action'];
-    $remarks = isset($_POST['remarks']) ? mb_substr(trim($_POST['remarks']), 0, 175) : '';
-    $remarks = isset($_POST['remarks']) ? mb_substr(trim($_POST['remarks']), 0, 1000) : '';
+    if (!validate_csrf()) {
+        $error_msg = "Security validation failed. Please refresh the page and try again.";
+    } else {
+        $action = $_POST['action'];
+        $remarks = isset($_POST['remarks']) ? mb_substr(trim($_POST['remarks']), 0, 1000) : '';
 
     if ($action === 'approve') {
         try {
-            // Get total seats for this student's course
-            $stmt_seats = $pdo->prepare("SELECT total_seats FROM courses WHERE course_id = :course_id");
-            $stmt_seats->execute(['course_id' => $student['course_id']]);
-            $total_seats = $stmt_seats->fetchColumn();
-            $has_seats = true;
-            if (!empty($student['course_id'])) {
+            if (empty($student['course_id'])) {
+                $error_msg = "Cannot approve student: No course assigned to this student.";
+            } else {
                 // Get total seats for this student's course
                 $stmt_seats = $pdo->prepare("SELECT total_seats FROM courses WHERE course_id = :course_id");
                 $stmt_seats->execute(['course_id' => $student['course_id']]);
@@ -65,19 +64,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action'])) {
                 // Count already approved students for this course
                 $stmt_count = $pdo->prepare("SELECT COUNT(*) FROM students WHERE course_id = :course_id AND status = 'Approved'");
                 $stmt_count->execute(['course_id' => $student['course_id']]);
-                $approved_count = $stmt_count->fetchColumn();
-                // Count already approved students for this course
-                $stmt_count = $pdo->prepare("SELECT COUNT(*) FROM students WHERE course_id = :course_id AND status = 'Approved'");
-                $stmt_count->execute(['course_id' => $student['course_id']]);
                 $approved_count = (int) $stmt_count->fetchColumn();
 
-                if ($approved_count >= $total_seats) {
-                    if ($total_seats > 0 && $approved_count >= $total_seats) {
-                        $has_seats = false;
-                    }
-                }
-
-                if (!$has_seats) {
+                if ($total_seats > 0 && $approved_count >= $total_seats) {
                     $error_msg = "Cannot approve student: No vacant seats available in this course.";
                 } else {
                     $pdo->beginTransaction();
@@ -112,14 +101,24 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action'])) {
                 $pdo->beginTransaction();
 
 
-                $update_stmt = $pdo->prepare("UPDATE students SET status = 'Rejected', is_submitted = 0 WHERE student_id = :student_id");
+                // When application is rejected, also set payment_status to 'Refunded' (Payment is back)
+                $update_stmt = $pdo->prepare("UPDATE students SET status = 'Rejected', payment_status = 'Refunded', is_submitted = 0 WHERE student_id = :student_id");
                 $update_stmt->execute(['student_id' => $student_id]);
 
+                // Update payments table to mark status as Refunded
+                $now_str = date('Y-m-d H:i:s');
+                $pay_stmt = $pdo->prepare("UPDATE payments SET status = 'Refunded', refund_reason = :reason, refunded_at = :ref_at WHERE student_id = :student_id AND status = 'Completed'");
+                $pay_stmt->execute([
+                    'reason' => 'Form Rejected by Staff: ' . $remarks,
+                    'ref_at' => $now_str,
+                    'student_id' => $student_id
+                ]);
 
+                $hist_remarks = $remarks . " [Payment Status: Fee refunded / Payment is back to source account]";
                 $hist_stmt = $pdo->prepare("INSERT INTO status_history (student_id, status, remarks) VALUES (:student_id, 'Rejected', :remarks)");
                 $hist_stmt->execute([
                     'student_id' => $student_id,
-                    'remarks' => $remarks
+                    'remarks' => $hist_remarks
                 ]);
 
                 $pdo->commit();
@@ -133,6 +132,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action'])) {
             }
         }
     }
+}
 }
 
 $page_title = "Verify Student Application";
@@ -175,7 +175,12 @@ include '../includes/header.php';
                                     <img src="../uploads/photo/<?php echo e($documents['photo']); ?>"
                                         alt="<?php echo e($student['full_name']); ?>"
                                         class="border border-3 border-primary shadow-sm rounded"
-                                        style="width: 120px; height: 120px; object-fit: cover;">
+                                        style="width: 120px; height: 120px; object-fit: cover;"
+                                        onerror="this.style.display='none'; document.getElementById('staffPhotoFallback').classList.remove('d-none'); document.getElementById('staffPhotoFallback').classList.add('d-inline-flex');">
+                                    <div id="staffPhotoFallback" class="border border-3 border-secondary bg-light d-none align-items-center justify-content-center rounded" 
+                                         style="width: 120px; height: 120px;">
+                                        <i class="fa-solid fa-user-large fa-3x text-muted"></i>
+                                    </div>
                                 <?php else: ?>
                                     <div class="border border-3 border-secondary bg-light d-inline-flex align-items-center justify-content-center rounded"
                                         style="width: 120px; height: 120px;">
@@ -342,48 +347,70 @@ include '../includes/header.php';
 
 
                             <?php if ($student['status'] === 'Pending'): ?>
-                                <div class="bg-light p-4 rounded border">
-                                    <h5 class="fw-bold mb-3"><i class="fa-solid fa-gavel me-2"></i>Verification Action</h5>
+                                <div class="card border-0 shadow-sm rounded-4 overflow-hidden mt-4">
+                                    <div class="card-header bg-white py-3 border-bottom d-flex align-items-center justify-content-between">
+                                        <h5 class="fw-bold mb-0 text-dark">
+                                            <i class="fa-solid fa-gavel me-2 text-primary"></i>Verification Action
+                                        </h5>
+                                        <span class="badge bg-warning text-dark px-2.5 py-1 rounded-pill small">
+                                            <i class="fa-solid fa-clock me-1"></i>Awaiting Decision
+                                        </span>
+                                    </div>
+                                    <div class="card-body p-4 bg-light bg-opacity-50">
+                                        <form action="verify.php?id=<?php echo $student_id; ?>" method="POST" id="verifyForm">
+                                            <?php echo csrf_field(); ?>
+                                            <div class="mb-3">
+                                                <div class="d-flex justify-content-between align-items-center mb-2 flex-wrap gap-2">
+                                                    <label for="remarks" class="form-label mb-0 fw-bold text-dark small">
+                                                        Review Remarks / Rejection Feedback
+                                                    </label>
+                                                    <div class="d-flex align-items-center gap-1 flex-wrap">
+                                                        <span class="small text-muted me-1">Insert template:</span>
+                                                        <button type="button" class="btn btn-sm btn-outline-success py-1 px-2.5 rounded-pill fw-semibold" id="btnTemplateApprove" title="Load approval template & mute reject button">
+                                                            <i class="fa-solid fa-circle-check me-1"></i>Approval
+                                                        </button>
+                                                        <button type="button" class="btn btn-sm btn-outline-danger py-1 px-2.5 rounded-pill fw-semibold" id="btnTemplateReject" title="Load rejection template & mute approve button">
+                                                            <i class="fa-solid fa-circle-xmark me-1"></i>Rejection
+                                                        </button>
+                                                        <button type="button" class="btn btn-sm btn-outline-secondary py-1 px-2 rounded-pill fw-semibold" id="btnTemplateReset" title="Reset remarks & restore both buttons">
+                                                            <i class="fa-solid fa-rotate-left"></i>
+                                                        </button>
+                                                    </div>
+                                                </div>
 
-                                    <form action="verify.php?id=<?php echo $student_id; ?>" method="POST" id="verifyForm">
+                                                <!-- Single Clean Textarea -->
+                                                <textarea class="form-control rounded-3" 
+                                                          id="remarks" 
+                                                          name="remarks" 
+                                                          rows="5" 
+                                                          maxlength="1000" 
+                                                          placeholder="Enter feedback or remarks here... Required when rejecting an application."></textarea>
+                                                
+                                                <div class="d-flex justify-content-between align-items-center mt-1.5 px-1 flex-wrap gap-2">
+                                                    <small class="text-muted font-monospace"><span id="charCount">0</span>/1000</small>
+                                                </div>
+                                            </div>
 
-                                        <div class="mb-3">
-                                            <div class="d-flex justify-content-between align-items-center mb-2">
-                                                <label for="remarks" class="form-label mb-0 fw-semibold">Review Remarks / Reason for Rejection</label>
-                                                <div class="btn-group" role="group" aria-label="Template shortcuts">
-                                                    <button type="button" class="btn btn-outline-success btn-sm px-2 py-0.5" style="font-size: 0.75rem;" id="btnTemplateApprove">
-                                                        <i class="fa-solid fa-circle-check me-1"></i>Approve
+                                            <div class="row g-2 pt-2">
+                                                <div class="col-md-6">
+                                                    <button type="submit" name="action" value="reject" id="btnSubmitReject" class="btn btn-danger w-100 py-2.5 fw-bold rounded-3 shadow-sm transition-all" onclick="return confirmReject();">
+                                                        <i class="fa-solid fa-circle-xmark me-1"></i>Reject Application
                                                     </button>
-                                                    <button type="button" class="btn btn-outline-danger btn-sm px-2 py-0.5" style="font-size: 0.75rem;" id="btnTemplateReject">
-                                                        <i class="fa-solid fa-circle-xmark me-1"></i>Reject
+                                                </div>
+                                                <div class="col-md-6">
+                                                    <button type="submit" name="action" value="approve" id="btnSubmitApprove" class="btn btn-success w-100 py-2.5 fw-bold rounded-3 shadow-sm transition-all" onclick="return confirm('Are you sure you want to approve this application?');">
+                                                        <i class="fa-solid fa-circle-check me-1"></i>Approve Admission
                                                     </button>
                                                 </div>
                                             </div>
-                                            <textarea class="form-control" id="remarks" name="remarks" rows="6" maxlength="175" placeholder="Enter feedback here... Required for rejections. (Max 175 characters)"></textarea>
-                                            <textarea class="form-control" id="remarks" name="remarks" rows="6" maxlength="1000" placeholder="Enter feedback here... Required for rejections. (Max 1000 characters)"></textarea>
-                                        </div>
-
-                                        <div class="row g-2">
-
-                                            <div class="col-md-6">
-                                                <button type="submit" name="action" value="reject" class="btn btn-danger w-100 py-2 fw-bold" onclick="return confirmReject();">
-                                                    <i class="fa-solid fa-circle-xmark me-1"></i>Reject Application
-                                                </button>
-                                            </div>
-
-                                            <div class="col-md-6">
-                                                <button type="submit" name="action" value="approve" class="btn btn-success w-100 py-2 fw-bold" onclick="return confirm('Are you sure you want to approve this application?');">
-                                                    <i class="fa-solid fa-circle-check me-1"></i>Approve Admission
-                                                </button>
-                                            </div>
-                                        </div>
-                                    </form>
+                                        </form>
+                                    </div>
                                 </div>
                             <?php else: ?>
-                                <div class="alert alert-secondary text-center" role="alert">
+                                <div class="alert alert-secondary text-center rounded-3 mt-4" role="alert">
                                     <i class="fa-solid fa-lock me-2"></i>This application has already been processed (Decision: <strong><?php echo $student['status']; ?></strong>).
                                 </div>
-                            <?php endif; ?>
+                            <?php endif; ?>     
                         </div>
                     </div>
                 </div>
@@ -393,38 +420,161 @@ include '../includes/header.php';
 </div>
 
 <script>
+    const textarea = document.getElementById('remarks');
+    const charCount = document.getElementById('charCount');
+    const btnSubmitApprove = document.getElementById('btnSubmitApprove');
+    const btnSubmitReject = document.getElementById('btnSubmitReject');
+    const btnApprove = document.getElementById('btnTemplateApprove');
+    const btnReject = document.getElementById('btnTemplateReject');
+    const btnReset = document.getElementById('btnTemplateReset');
+    const actionNotice = document.getElementById('activeActionNotice');
+
+    function updateCounter() {
+        if (textarea && charCount) {
+            charCount.textContent = textarea.value.length;
+        }
+    }
+
+    // Set interactive mode: 'approve', 'reject', or 'both'
+    function setActionMode(mode) {
+        if (mode === 'approve') {
+            // Mute Reject button at bottom
+            if (btnSubmitReject) {
+                btnSubmitReject.disabled = true;
+                btnSubmitReject.classList.add('opacity-25', 'pe-none');
+                btnSubmitReject.style.filter = 'grayscale(1)';
+            }
+            // Enable and highlight Approve button at bottom
+            if (btnSubmitApprove) {
+                btnSubmitApprove.disabled = false;
+                btnSubmitApprove.classList.remove('opacity-25', 'pe-none');
+                btnSubmitApprove.style.filter = 'none';
+            }
+
+            // Top template pills
+            if (btnApprove) {
+                btnApprove.classList.remove('btn-outline-success');
+                btnApprove.classList.add('btn-success', 'text-white');
+            }
+            if (btnReject) {
+                btnReject.classList.remove('btn-danger', 'text-white');
+                btnReject.classList.add('btn-outline-danger');
+            }
+
+            if (actionNotice) {
+                actionNotice.innerHTML = '<span class="text-success fw-bold"><i class="fa-solid fa-circle-check me-1"></i>Approval Mode Active</span> &bull; <span class="text-muted">Reject Application button is muted</span>';
+            }
+        } else if (mode === 'reject') {
+            // Mute Approve button at bottom
+            if (btnSubmitApprove) {
+                btnSubmitApprove.disabled = true;
+                btnSubmitApprove.classList.add('opacity-25', 'pe-none');
+                btnSubmitApprove.style.filter = 'grayscale(1)';
+            }
+            // Enable and highlight Reject button at bottom
+            if (btnSubmitReject) {
+                btnSubmitReject.disabled = false;
+                btnSubmitReject.classList.remove('opacity-25', 'pe-none');
+                btnSubmitReject.style.filter = 'none';
+            }
+
+            // Top template pills
+            if (btnReject) {
+                btnReject.classList.remove('btn-outline-danger');
+                btnReject.classList.add('btn-danger', 'text-white');
+            }
+            if (btnApprove) {
+                btnApprove.classList.remove('btn-success', 'text-white');
+                btnApprove.classList.add('btn-outline-success');
+            }
+
+            if (actionNotice) {
+                actionNotice.innerHTML = '<span class="text-danger fw-bold"><i class="fa-solid fa-circle-xmark me-1"></i>Rejection Mode Active</span> &bull; <span class="text-muted">Approve Admission button is muted</span>';
+            }
+        } else {
+            // Reset both buttons to active
+            if (btnSubmitApprove) {
+                btnSubmitApprove.disabled = false;
+                btnSubmitApprove.classList.remove('opacity-25', 'pe-none');
+                btnSubmitApprove.style.filter = 'none';
+            }
+            if (btnSubmitReject) {
+                btnSubmitReject.disabled = false;
+                btnSubmitReject.classList.remove('opacity-25', 'pe-none');
+                btnSubmitReject.style.filter = 'none';
+            }
+
+            if (btnApprove) {
+                btnApprove.classList.remove('btn-success', 'text-white');
+                btnApprove.classList.add('btn-outline-success');
+            }
+            if (btnReject) {
+                btnReject.classList.remove('btn-danger', 'text-white');
+                btnReject.classList.add('btn-outline-danger');
+            }
+
+            if (actionNotice) {
+                actionNotice.innerHTML = '<i class="fa-solid fa-circle-info me-1"></i>Select a template to auto-fill remarks and lock the matching action.';
+            }
+        }
+    }
+
+    if (textarea) {
+        textarea.addEventListener('input', function() {
+            updateCounter();
+            if (textarea.value.trim() === '') {
+                setActionMode('both');
+            }
+        });
+    }
+
     // Prevent rejection without remarks
     function confirmReject() {
-        const remarks = document.getElementById('remarks').value.trim();
-        if (remarks === "") {
+        if (!textarea || textarea.value.trim() === "") {
             alert("You must provide remarks stating the reason for rejection.");
+            if (textarea) textarea.focus();
             return false;
         }
         return confirm("Are you sure you want to reject this application?");
     }
 
-    // Auto-populate template buttons
-    document.getElementById('btnTemplateApprove').addEventListener('click', function() {
-        const courseName = <?php echo json_encode($student['course_name']); ?>;
-        const staffName = <?php echo json_encode($_SESSION['name']); ?>;
-        const staffEmail = <?php echo json_encode($_SESSION['email'] ?? ''); ?>;
-        const textarea = document.getElementById('remarks');
-        textarea.value = `Your Application Submitted Successfully.\nAdmission Confirm.\n\nThank You,\nConfirm By Faculty of : ${courseName}\nFaculty Name - ${staffName}\nFaculty Email - ${staffEmail}`;
-    });
+    // Auto-populate template buttons with muting logic
+    if (btnApprove) {
+        btnApprove.addEventListener('click', function() {
+            const courseName = <?php echo json_encode($student['course_name']); ?>;
+            const staffName = <?php echo json_encode($_SESSION['name']); ?>;
+            const staffEmail = <?php echo json_encode($_SESSION['email'] ?? ''); ?>;
+            textarea.value = `Your Application Submitted Successfully.\nAdmission Confirm.\n\nThank You,\nConfirm By Faculty of : ${courseName}\nFaculty Name - ${staffName}\nFaculty Email - ${staffEmail}`;
+            updateCounter();
+            setActionMode('approve');
+            textarea.focus();
+        });
+    }
 
-    document.getElementById('btnTemplateReject').addEventListener('click', function() {
-        const textarea = document.getElementById('remarks');
-        textarea.value = `Admission Rejected due to:\n1. [document name]\n2. [detail]\n\nPlease correct and re-submit.\n\nThank You,\nAdmission Desk`;
+    if (btnReject) {
+        btnReject.addEventListener('click', function() {
+            textarea.value = `Admission Rejected due to:\n1. [document name / criteria discrepancy]\n2. [clarification required]\n\nPlease correct and re-submit.\n\nThank You,\nAdmission Desk`;
+            updateCounter();
+            setActionMode('reject');
 
-        // Focus the textarea and highlight the placeholder to be replaced
-        textarea.focus();
-        const placeholder = "[document name]";
-        const text = textarea.value;
-        const startIdx = text.indexOf(placeholder);
-        if (startIdx !== -1) {
-            textarea.setSelectionRange(startIdx, startIdx + placeholder.length);
-        }
-    });
+            textarea.focus();
+            const placeholder = "[document name / criteria discrepancy]";
+            const text = textarea.value;
+            const startIdx = text.indexOf(placeholder);
+            if (startIdx !== -1) {
+                textarea.setSelectionRange(startIdx, startIdx + placeholder.length);
+            }
+        });
+    }
+
+    if (btnReset) {
+        btnReset.addEventListener('click', function() {
+            textarea.value = '';
+            updateCounter();
+            setActionMode('both');
+            textarea.focus();
+        });
+    }
 </script>
 
 <?php include '../includes/footer.php'; ?>

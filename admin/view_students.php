@@ -71,7 +71,12 @@ include '../includes/header.php';
                                     <img src="../uploads/photo/<?php echo e($documents['photo']); ?>" 
                                          alt="<?php echo e($student['full_name']); ?>" 
                                          class="border border-3 border-primary shadow-sm rounded" 
-                                         style="width: 120px; height: 120px; object-fit: cover;">
+                                         style="width: 120px; height: 120px; object-fit: cover;"
+                                         onerror="this.style.display='none'; document.getElementById('adminPhotoFallback').classList.remove('d-none'); document.getElementById('adminPhotoFallback').classList.add('d-inline-flex');">
+                                    <div id="adminPhotoFallback" class="border border-3 border-secondary bg-light d-none align-items-center justify-content-center rounded" 
+                                         style="width: 120px; height: 120px;">
+                                        <i class="fa-solid fa-user-large fa-3x text-muted"></i>
+                                    </div>
                                 <?php else: ?>
                                     <div class="border border-3 border-secondary bg-light d-inline-flex align-items-center justify-content-center rounded" 
                                          style="width: 120px; height: 120px;">
@@ -137,12 +142,14 @@ include '../includes/header.php';
                                     <strong>Payment Status:</strong>
                                     <?php if ($student['payment_status'] === 'Paid'): ?>
                                         <span class="badge bg-success-subtle text-success font-weight-bold px-2 py-1"><i class="fa-solid fa-circle-check me-1"></i>Paid</span>
+                                    <?php elseif ($student['payment_status'] === 'Refunded'): ?>
+                                        <span class="badge bg-danger-subtle text-danger font-weight-bold px-2 py-1"><i class="fa-solid fa-arrow-rotate-left me-1"></i>Refunded (Payment is Back)</span>
                                     <?php else: ?>
-                                        <span class="badge bg-danger-subtle text-danger font-weight-bold px-2 py-1"><i class="fa-solid fa-circle-xmark me-1"></i>Unpaid</span>
+                                        <span class="badge bg-warning-subtle text-warning font-weight-bold px-2 py-1"><i class="fa-solid fa-circle-xmark me-1"></i>Unpaid</span>
                                     <?php endif; ?>
                                 </div>
                                 <div class="col-md-6">
-                                    <strong>UPI UTR/Ref ID:</strong>
+                                    <strong>Transaction Ref ID:</strong>
                                     <span class="font-monospace text-dark fw-bold"><?php echo e($student['transaction_id'] ? $student['transaction_id'] : 'N/A'); ?></span>
                                 </div>
                             </div>
@@ -187,23 +194,22 @@ include '../includes/header.php';
 
                     <div class="card">
                         <div class="card-header">
-                            <i class="fa-solid fa-timeline me-2 text-primary"></i>Application Review Timeline
+                            <i class="fa-solid fa-clock-rotate-left me-2 text-primary"></i>Application Review History
                         </div>
                         <div class="card-body">
                             <?php if (empty($history)): ?>
                                 <p class="text-muted text-center mb-0">No application reviews logged yet.</p>
                             <?php else: ?>
-                                <div class="timeline">
+                                <div class="d-flex flex-column gap-3">
                                     <?php foreach ($history as $log): ?>
-                                        <div class="border-start border-2 border-primary ps-3 pb-3 position-relative">
-                                            <div class="position-absolute bg-primary rounded-circle" style="width: 10px; height: 10px; left: -6px; top: 6px;"></div>
-                                            <div class="d-flex justify-content-between align-items-center mb-1">
+                                        <div class="p-3 rounded-3 border bg-light shadow-sm">
+                                            <div class="d-flex justify-content-between align-items-center mb-2">
                                                 <span class="badge <?php echo ($log['status'] === 'Approved') ? 'badge-approved' : (($log['status'] === 'Rejected') ? 'badge-rejected' : 'badge-pending'); ?>">
                                                     <?php echo $log['status']; ?>
                                                 </span>
-                                                <small class="text-muted"><?php echo date('d-M-Y H:i', strtotime($log['updated_at'])); ?></small>
+                                                <small class="text-muted"><i class="fa-regular fa-clock me-1"></i><?php echo date('d-M-Y H:i', strtotime($log['updated_at'])); ?></small>
                                             </div>
-                                            <p class="text-muted small mb-0 bg-light p-2 rounded mt-1 border" style="white-space: pre-wrap;"><?php echo e($log['remarks']); ?></p>
+                                            <p class="text-muted small mb-0 bg-white p-2 rounded border" style="white-space: pre-wrap;"><?php echo e($log['remarks']); ?></p>
                                         </div>
                                     <?php endforeach; ?>
                                 </div>

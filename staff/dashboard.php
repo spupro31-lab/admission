@@ -34,7 +34,7 @@ try {
     if (!empty($search)) {
         $query .= " AND (s.admission_no LIKE :search1 
                      OR s.full_name LIKE :search2 
-                     OR CAST(s.mobile AS TEXT) LIKE :search3)";
+                     OR CAST(s.mobile AS VARCHAR) LIKE :search3)";
         $params['search1'] = "%$search%";
         $params['search2'] = "%$search%";
         $params['search3'] = "%$search%";

@@ -41,10 +41,10 @@ $body_class = $body_class ?? '';
                             <a class="nav-link" href="<?php echo app_base_path(); ?>index.php"><i class="fa-solid fa-house me-1"></i>Home</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="<?php echo app_base_path(); ?>portal.php"><i class="fa-solid fa-door-open me-1"></i>Portal Selection</a>
+                            <a class="nav-link" href="<?php echo app_base_path(); ?>courses.php"><i class="fa-solid fa-book-open me-1"></i>Courses</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="<?php echo app_base_path(); ?>courses.php"><i class="fa-solid fa-book-open me-1"></i>Academic Courses</a>
+                            <a class="nav-link" href="<?php echo app_base_path(); ?>portal.php"><i class="fa-solid fa-door-open me-1"></i>Portals</a>
                         </li>
                         <?php if (isset($_SESSION['role'])): ?>
                             <li class="nav-item ms-lg-3">
@@ -59,10 +59,14 @@ $body_class = $body_class ?? '';
                             </li>
                         <?php else: ?>
                             <li class="nav-item ms-lg-3">
-                                <a href="<?php echo app_base_path(); ?>login.php?role=student" class="btn btn-premium-sky rounded-4 btn-sm py-2 px-4 fw-bold">Student Login</a>
+                                <a href="<?php echo app_base_path(); ?>inquiry.php" class="btn btn-premium-primary rounded-4 btn-sm py-2 px-3 fw-bold">
+                                    <i class="fa-solid fa-file-circle-plus me-1"></i>Inquiry for Admission
+                                </a>
                             </li>
                             <li class="nav-item ms-lg-2">
-                                <a href="<?php echo app_base_path(); ?>student_register.php" class="btn btn-premium-secondary rounded-4 btn-sm py-2 px-4 fw-bold">Create Account</a>
+                                <a href="<?php echo app_base_path(); ?>login.php?role=student" class="btn btn-premium-sky rounded-4 btn-sm py-2 px-3 fw-bold">
+                                    <i class="fa-solid fa-user me-1"></i> Student Login
+                                </a>
                             </li>
                         <?php endif; ?>
                     </ul>

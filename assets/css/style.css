@@ -870,7 +870,6 @@ a:hover {
 }
 
 .premium-card,
-.timeline-section,
 .status-card-premium {
   background: var(--white);
   border: 1px solid var(--slate-200);
@@ -989,9 +988,7 @@ a:hover {
   transform: translateY(-1px);
 }
 
-.timeline-section {
-  padding: 56px 28px;
-}
+
 
 .section-title {
   color: var(--slate-950);
@@ -1006,53 +1003,6 @@ a:hover {
   margin: 0 auto 42px;
   max-width: 640px;
   text-align: center;
-}
-
-.timeline-stepper {
-  align-items: flex-start;
-  display: flex;
-  gap: 18px;
-  justify-content: space-between;
-  position: relative;
-}
-
-.timeline-stepper::before {
-  background: var(--slate-200);
-  content: "";
-  height: 2px;
-  left: 12%;
-  position: absolute;
-  right: 12%;
-  top: 30px;
-}
-
-.step-card {
-  flex: 1;
-  min-width: 0;
-  position: relative;
-  text-align: center;
-  z-index: 1;
-}
-
-.step-number-bubble {
-  align-items: center;
-  background: var(--white);
-  border: 2px solid var(--primary);
-  border-radius: 50%;
-  color: var(--primary);
-  display: flex;
-  font-size: 18px;
-  font-weight: 800;
-  height: 60px;
-  justify-content: center;
-  margin: 0 auto 18px;
-  width: 60px;
-}
-
-.step-card h5 {
-  color: var(--slate-950);
-  font-size: 17px;
-  font-weight: 800;
 }
 
 .premium-footer {
@@ -1341,19 +1291,7 @@ a:hover {
     justify-content: center;
   }
 
-  .timeline-stepper {
-    flex-wrap: wrap;
-    gap: 20px;
-  }
 
-  .timeline-stepper::before {
-    display: none;
-  }
-
-  .step-card {
-    flex: 0 0 calc(50% - 10px);
-    margin-bottom: 16px;
-  }
 }
 
 @media (max-width: 768px) {
@@ -2181,3 +2119,641 @@ a:hover {
   box-shadow: none;
 }
 
+
+
+/* Clean Course Catalog Cards & Modals */
+.course-clean-card {
+  transition: transform 0.25s ease, box-shadow 0.25s ease;
+  background: #ffffff;
+  border: 1px solid #e2e8f0 !important;
+}
+
+.course-clean-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 16px 36px rgba(15, 23, 42, 0.08) !important;
+  border-color: #cbd5e1 !important;
+}
+
+.course-card-img-box {
+  height: 210px;
+  background: #f1f5f9;
+}
+
+.course-card-img {
+  height: 210px;
+  object-fit: cover;
+  transition: transform 0.35s ease;
+}
+
+.course-clean-card:hover .course-card-img {
+  transform: scale(1.04);
+}
+
+.view-details-btn {
+  transition: all 0.2s ease;
+}
+
+.view-details-btn:hover {
+  transform: translateY(-1px);
+}
+
+
+
+.inquiry-card {
+  box-shadow: 0 20px 45px rgba(15, 23, 42, 0.08) !important;
+  border: 1px solid rgba(226, 232, 240, 0.8) !important;
+}
+
+
+/* ==========================================================================
+   SCT Hero Section – split layout with campus image
+   ========================================================================== */
+.sct-hero {
+  position: relative;
+  background: linear-gradient(160deg, #f0f6ff 0%, #ffffff 50%, #f0fdf8 100%);
+  border-bottom: 1px solid var(--slate-200);
+  padding: 68px 0 60px;
+  overflow: hidden;
+}
+
+/* subtle top-right blob */
+.sct-hero::before {
+  content: "";
+  position: absolute;
+  width: 480px;
+  height: 480px;
+  background: radial-gradient(circle, rgba(29, 78, 216, 0.07) 0%, transparent 70%);
+  top: -160px;
+  right: -120px;
+  pointer-events: none;
+}
+
+/* subtle bottom-left blob */
+.sct-hero::after {
+  content: "";
+  position: absolute;
+  width: 320px;
+  height: 320px;
+  background: radial-gradient(circle, rgba(5, 150, 105, 0.06) 0%, transparent 70%);
+  bottom: -100px;
+  left: -80px;
+  pointer-events: none;
+}
+
+/* --- Eyebrow row --- */
+.sct-hero__eyebrow {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.sct-hero__badge {
+  display: inline-flex;
+  align-items: center;
+  background: #fff;
+  border: 1px solid var(--slate-200);
+  border-radius: 999px;
+  padding: 5px 13px;
+  font-size: 11.5px;
+  font-weight: 700;
+  color: var(--slate-700);
+  letter-spacing: 0.02em;
+  box-shadow: 0 1px 4px rgba(15,23,42,0.06);
+}
+
+.sct-hero__estd {
+  font-size: 11.5px;
+  font-weight: 600;
+  color: var(--slate-400);
+  letter-spacing: 0.03em;
+}
+
+/* --- Title --- */
+.sct-hero__title {
+  font-size: 46px;
+  font-weight: 800;
+  line-height: 1.16;
+  color: var(--slate-950);
+}
+
+.sct-hero__title--accent {
+  color: var(--primary);
+  position: relative;
+  display: inline-block;
+}
+
+
+/* --- Tagline (affiliation row) --- */
+.sct-hero__tagline {
+  font-size: 12.5px;
+  font-weight: 600;
+  color: var(--slate-500);
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+}
+
+/* --- Subtitle --- */
+.sct-hero__subtitle {
+  font-size: 15.5px;
+  line-height: 1.72;
+  color: var(--slate-600);
+  max-width: 510px;
+}
+
+/* --- Buttons --- */
+.sct-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  border-radius: 8px;
+  font-size: 13.5px;
+  font-weight: 700;
+  padding: 10px 20px;
+  border: 2px solid transparent;
+  cursor: pointer;
+  text-decoration: none;
+  transition: all 150ms ease;
+  white-space: nowrap;
+  line-height: 1;
+}
+
+.sct-btn--primary {
+  background: var(--primary);
+  color: #fff;
+  border-color: var(--primary);
+  box-shadow: 0 3px 10px rgba(29,78,216,0.22);
+}
+.sct-btn--primary:hover {
+  background: var(--primary-dark);
+  border-color: var(--primary-dark);
+  color: #fff;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px rgba(29,78,216,0.30);
+}
+
+.sct-btn--outline {
+  background: #fff;
+  color: var(--primary);
+  border-color: var(--primary);
+}
+.sct-btn--outline:hover {
+  background: #eff6ff;
+  color: var(--primary-dark);
+  transform: translateY(-2px);
+}
+
+.sct-btn--ghost {
+  background: transparent;
+  color: var(--slate-700);
+  border-color: var(--slate-300);
+}
+.sct-btn--ghost:hover {
+  background: #fff;
+  color: var(--slate-900);
+  border-color: var(--slate-400);
+  transform: translateY(-2px);
+}
+
+/* --- Stat strip --- */
+.sct-hero__stats {
+  align-items: center;
+  padding-top: 4px;
+}
+
+.sct-stat {
+  display: flex;
+  flex-direction: column;
+  line-height: 1.2;
+}
+
+.sct-stat__num {
+  font-size: 20px;
+  font-weight: 800;
+  color: var(--primary);
+}
+
+.sct-stat__label {
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--slate-500);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  margin-top: 2px;
+}
+
+.sct-stat-divider {
+  width: 1px;
+  height: 34px;
+  background: var(--slate-200);
+  flex-shrink: 0;
+}
+
+/* --- Campus image wrapper --- */
+.sct-hero__img-wrap {
+  position: relative;
+  border-radius: 16px;
+  overflow: hidden;
+  box-shadow: 0 20px 60px rgba(15, 23, 42, 0.15), 0 4px 16px rgba(15,23,42,0.08);
+  border: 3px solid #fff;
+}
+
+.sct-hero__campus-img {
+  width: 100%;
+  height: 400px;
+  object-fit: cover;
+  object-position: center;
+  display: block;
+  transition: transform 400ms ease;
+}
+
+.sct-hero__img-wrap:hover .sct-hero__campus-img {
+  transform: scale(1.03);
+}
+
+/* Floating location badge on the image */
+.sct-hero__img-badge {
+  position: absolute;
+  bottom: 16px;
+  left: 16px;
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  border: 1px solid rgba(255,255,255,0.8);
+  border-radius: 8px;
+  padding: 8px 14px;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--slate-700);
+  box-shadow: 0 4px 12px rgba(15,23,42,0.12);
+}
+
+/* --- Responsive --- */
+@media (max-width: 991px) {
+  .sct-hero {
+    padding: 48px 0 40px;
+  }
+  .sct-hero__title {
+    font-size: 34px;
+  }
+  .sct-hero__subtitle {
+    max-width: 100%;
+  }
+  .sct-hero__campus-img {
+    height: 280px;
+  }
+}
+
+@media (max-width: 576px) {
+  .sct-hero__title {
+    font-size: 28px;
+  }
+  .sct-btn {
+    font-size: 13px;
+    padding: 9px 15px;
+  }
+  .sct-hero__campus-img {
+    height: 220px;
+  }
+}
+
+
+/* ==========================================================================
+   SCT Auth Pages – Login & Inquiry (redesigned)
+   ========================================================================== */
+
+/* Full-page wrapper */
+.sct-auth-page {
+  min-height: calc(100vh - 80px);
+  padding: 60px 0 60px;
+  background: linear-gradient(160deg, #f0f6ff 0%, #ffffff 45%, #f0fdf8 100%);
+  display: flex;
+  align-items: flex-start;
+}
+
+/* Left column wrapper */
+.sct-auth-left {
+  position: relative;
+}
+
+/* Campus image frame */
+.sct-auth-img-wrap {
+  position: relative;
+  border-radius: 16px;
+  overflow: hidden;
+  box-shadow: 0 20px 55px rgba(15, 23, 42, 0.16), 0 4px 14px rgba(15, 23, 42, 0.08);
+  border: 3px solid #fff;
+}
+
+.sct-auth-img {
+  width: 100%;
+  height: 340px;
+  object-fit: cover;
+  object-position: center;
+  display: block;
+  transition: transform 400ms ease;
+}
+
+.sct-auth-img-wrap:hover .sct-auth-img {
+  transform: scale(1.03);
+}
+
+/* Dark gradient overlay at bottom of image */
+.sct-auth-img-overlay {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: linear-gradient(to top, rgba(15, 23, 42, 0.88) 0%, rgba(15, 23, 42, 0.0) 100%);
+  padding: 28px 22px 20px;
+}
+
+.sct-overlay-tag {
+  display: inline-block;
+  background: rgba(255, 255, 255, 0.15);
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  color: #fff;
+  font-size: 10.5px;
+  font-weight: 700;
+  padding: 3px 10px;
+  border-radius: 999px;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+/* Bullet list below image */
+.sct-auth-bullets {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.sct-auth-bullet {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  background: #fff;
+  border: 1px solid var(--slate-200);
+  border-radius: 10px;
+  padding: 11px 14px;
+  font-size: 13.5px;
+  color: var(--slate-700);
+  font-weight: 500;
+  box-shadow: 0 1px 4px rgba(15, 23, 42, 0.05);
+}
+
+.sct-auth-bullet i {
+  margin-top: 2px;
+  flex-shrink: 0;
+  font-size: 13px;
+}
+
+/* Helpdesk bar */
+.sct-auth-helpdesk {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background: #fff;
+  border: 1px dashed var(--slate-300);
+  border-radius: 10px;
+  padding: 12px 16px;
+  font-size: 12.5px;
+  color: var(--slate-600);
+}
+
+.sct-auth-helpdesk i {
+  color: var(--primary);
+  font-size: 16px;
+  flex-shrink: 0;
+}
+
+.sct-auth-helpdesk a {
+  color: var(--primary);
+  text-decoration: none;
+  font-weight: 600;
+}
+
+/* ── Auth card (right column form) ───────────────── */
+.sct-auth-card {
+  background: #fff;
+  border: 1px solid rgba(226, 232, 240, 0.9);
+  border-radius: 18px;
+  box-shadow: 0 20px 50px rgba(15, 23, 42, 0.09);
+  padding: 34px 32px;
+}
+
+/* Card header row (logo + title) */
+.sct-auth-card-head {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  margin-bottom: 26px;
+  padding-bottom: 20px;
+  border-bottom: 1px solid var(--slate-200);
+}
+
+.sct-auth-card-logo {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 50px;
+  height: 50px;
+  min-width: 50px;
+  border-radius: 13px;
+  background: #eaf1ff;
+  color: var(--primary);
+  font-size: 22px;
+  box-shadow: 0 4px 12px rgba(29, 78, 216, 0.12);
+}
+
+.sct-auth-card-logo.logo-teal {
+  background: #ecfdf5;
+  color: var(--teal);
+  box-shadow: 0 4px 12px rgba(15, 118, 110, 0.12);
+}
+
+.sct-auth-card-logo.logo-amber {
+  background: #fff7ed;
+  color: var(--amber);
+  box-shadow: 0 4px 12px rgba(180, 83, 9, 0.12);
+}
+
+.sct-auth-card-title {
+  font-size: 20px;
+  font-weight: 800;
+  color: var(--slate-950);
+  margin: 0 0 2px;
+}
+
+.sct-auth-card-sub {
+  font-size: 12px;
+  color: var(--slate-500);
+  margin: 0;
+}
+
+/* Form label */
+.sct-form-label {
+  display: block;
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--slate-700);
+  margin-bottom: 6px;
+}
+
+/* Textarea */
+.sct-textarea {
+  border-radius: 8px;
+  border-color: var(--slate-300);
+  font-size: 14px;
+  padding: 10px 14px;
+  resize: vertical;
+  transition: border-color 150ms ease, box-shadow 150ms ease;
+}
+
+.sct-textarea:focus {
+  border-color: var(--primary);
+  box-shadow: 0 0 0 3px rgba(29, 78, 216, 0.12);
+  outline: none;
+}
+
+/* Submit button (full width) */
+.sct-submit-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  width: 100%;
+  padding: 13px 24px;
+  border-radius: 10px;
+  font-size: 14.5px;
+  font-weight: 700;
+  border: 2px solid transparent;
+  cursor: pointer;
+  text-decoration: none;
+  transition: all 150ms ease;
+  line-height: 1;
+}
+
+.sct-btn-primary {
+  background: var(--primary);
+  color: #fff;
+  border-color: var(--primary);
+  box-shadow: 0 4px 14px rgba(29, 78, 216, 0.24);
+}
+
+.sct-btn-primary:hover {
+  background: var(--primary-dark);
+  border-color: var(--primary-dark);
+  color: #fff;
+  transform: translateY(-1px);
+  box-shadow: 0 6px 18px rgba(29, 78, 216, 0.32);
+}
+
+.sct-btn-teal {
+  background: var(--teal);
+  color: #fff;
+  border-color: var(--teal);
+  box-shadow: 0 4px 14px rgba(15, 118, 110, 0.22);
+}
+
+.sct-btn-teal:hover {
+  background: #0f5c57;
+  border-color: #0f5c57;
+  color: #fff;
+  transform: translateY(-1px);
+}
+
+.sct-btn-amber {
+  background: var(--amber);
+  color: #fff;
+  border-color: var(--amber);
+  box-shadow: 0 4px 14px rgba(180, 83, 9, 0.22);
+}
+
+.sct-btn-amber:hover {
+  background: #92400e;
+  border-color: #92400e;
+  color: #fff;
+  transform: translateY(-1px);
+}
+
+/* Card footer links row */
+.sct-auth-card-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 20px;
+  padding-top: 18px;
+  border-top: 1px solid var(--slate-200);
+}
+
+/* Success icon */
+.sct-success-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 76px;
+  height: 76px;
+  background: #dcfce7;
+  border-radius: 50%;
+  color: var(--success);
+  font-size: 34px;
+  margin: 0 auto;
+}
+
+/* Summary box (success state) */
+.sct-summary-box {
+  background: #f8fafc;
+  border: 1px solid var(--slate-200);
+  border-radius: 12px;
+  overflow: hidden;
+}
+
+.sct-summary-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 16px;
+  border-bottom: 1px solid var(--slate-100);
+  gap: 12px;
+}
+
+.sct-summary-label {
+  font-size: 12.5px;
+  font-weight: 600;
+  color: var(--slate-500);
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+.sct-summary-val {
+  font-size: 13.5px;
+  font-weight: 700;
+  color: var(--slate-800);
+  text-align: right;
+  word-break: break-all;
+}
+
+/* Responsive */
+@media (max-width: 991px) {
+  .sct-auth-page {
+    padding: 40px 0 48px;
+  }
+  .sct-auth-card {
+    padding: 24px 20px;
+  }
+}
+
+@media (max-width: 576px) {
+  .sct-auth-card-head {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 10px;
+  }
+  .sct-submit-btn {
+    font-size: 13.5px;
+    padding: 12px 16px;
+  }
+}

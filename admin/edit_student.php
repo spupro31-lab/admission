@@ -39,18 +39,19 @@ try {
 
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['action'] === 'update_student') {
-    $full_name = trim($_POST['full_name']);
+    if (!validate_csrf()) {
+        $error_msg = "Security validation failed. Please refresh the page and try again.";
+    } else {
+        $full_name = trim($_POST['full_name']);
     $father_name = trim($_POST['father_name']);
     $mother_name = trim($_POST['mother_name']);
     $gender = $_POST['gender'];
     $dob = $_POST['dob'];
     $category = trim($_POST['category']);
-    $mobile = trim($_POST['mobile']);
     $mobile = preg_replace('/[^0-9]/', '', trim($_POST['mobile'] ?? ''));
     $address = trim($_POST['address']);
     $city = trim($_POST['city']);
     $state = trim($_POST['state']);
-    $pincode = trim($_POST['pincode']);
     $pincode = preg_replace('/[^0-9]/', '', trim($_POST['pincode'] ?? ''));
 
     $tenth_percentage = floatval($_POST['tenth_percentage']);
@@ -79,10 +80,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
                 $pdo->beginTransaction();
 
 
-                $status_stmt = $pdo->prepare("SELECT status FROM students WHERE student_id = :id");
                 $status_stmt = $pdo->prepare("SELECT status, is_submitted FROM students WHERE student_id = :id");
                 $status_stmt->execute(['id' => $student_id]);
-                $old_status = $status_stmt->fetchColumn();
                 $current_row = $status_stmt->fetch();
                 $old_status = $current_row['status'] ?? '';
                 $is_sub_val = ($status === 'Rejected') ? 0 : (int)($current_row['is_submitted'] ?? 0);
@@ -93,7 +92,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
                         category = :category, mobile = :mobile, address = :address, city = :city,
                         state = :state, pincode = :pincode, tenth_percentage = :tenth_percentage,
                         twelfth_percentage = :twelfth_percentage, school_name = :school_name,
-                        passing_year = :passing_year, course_id = :course_id, status = :status
                         passing_year = :passing_year, course_id = :course_id, status = :status,
                         is_submitted = :is_submitted
                     WHERE student_id = :student_id
@@ -121,6 +119,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
                     'student_id' => $student_id
                 ]);
 
+                if (!empty($student['user_id'])) {
+                    $upd_user = $pdo->prepare("UPDATE users SET name = :name WHERE user_id = :uid");
+                    $upd_user->execute(['name' => $full_name, 'uid' => $student['user_id']]);
+                }
+
 
                 if ($old_status !== $status) {
                     $hist_stmt = $pdo->prepare("INSERT INTO status_history (student_id, status, remarks) VALUES (:student_id, :status, :remarks)");
@@ -142,6 +145,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
             $error_msg = "Update Failed: " . $e->getMessage();
         }
     }
+}
 }
 
 $page_title = "Edit Student Profile";
@@ -184,6 +188,7 @@ include '../includes/header.php';
                         <?php endif; ?>
                     </div>
                     <form action="edit_student.php?id=<?php echo $student_id; ?>" method="POST">
+                        <?php echo csrf_field(); ?>
                         <input type="hidden" name="action" value="update_student">
 
                         <h6 class="fw-bold text-primary border-bottom pb-2 mb-3">1. Personal Information</h6>

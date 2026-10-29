@@ -34,26 +34,37 @@ try {
 }
 
 
-if (isset($_POST['action']) && $_POST['action'] === 'final_submit' && $has_form && $has_docs && $student['is_submitted'] == 0) {
-    try {
-        $pdo->beginTransaction();
+$error_msg = "";
 
+if (isset($_POST['action']) && $_POST['action'] === 'final_submit') {
+    if (!validate_csrf()) {
+        $error_msg = "Security validation failed. Please refresh the page and try again.";
+    } elseif (!$has_form) {
+        $error_msg = "Please fill in your admission form details first.";
+    } elseif (!$has_docs) {
+        $error_msg = "Please upload all required certificates and marksheets first.";
+    } elseif (($student['payment_status'] ?? '') !== 'Paid') {
+        $error_msg = "Please complete the application fee payment before final submission.";
+    } elseif ((int)($student['is_submitted'] ?? 0) === 1) {
+        $error_msg = "Your application has already been submitted.";
+    } else {
+        try {
+            $pdo->beginTransaction();
 
-        $update_stmt = $pdo->prepare("UPDATE students SET is_submitted = 1, status = 'Pending' WHERE student_id = :student_id");
-        $update_stmt->execute(['student_id' => $student['student_id']]);
+            $update_stmt = $pdo->prepare("UPDATE students SET is_submitted = 1, status = 'Pending' WHERE student_id = :student_id");
+            $update_stmt->execute(['student_id' => $student['student_id']]);
 
+            $history_stmt = $pdo->prepare("INSERT INTO status_history (student_id, status, remarks) VALUES (:student_id, 'Pending', 'Application submitted by student.')");
+            $history_stmt->execute(['student_id' => $student['student_id']]);
 
-        $history_stmt = $pdo->prepare("INSERT INTO status_history (student_id, status, remarks) VALUES (:student_id, 'Pending', 'Application submitted by student.')");
-        $history_stmt->execute(['student_id' => $student['student_id']]);
+            $pdo->commit();
 
-        $pdo->commit();
-
-
-        header("Location: dashboard.php?msg=submitted");
-        exit;
-    } catch (PDOException $e) {
-        $pdo->rollBack();
-        $error_msg = "Failed to submit application: " . $e->getMessage();
+            header("Location: dashboard.php?msg=submitted");
+            exit;
+        } catch (PDOException $e) {
+            $pdo->rollBack();
+            $error_msg = "Failed to submit application: " . $e->getMessage();
+        }
     }
 }
 
@@ -80,11 +91,12 @@ include '../includes/header.php';
             <?php endif; ?>
             <?php if (isset($_GET['msg']) && $_GET['msg'] === 'paid'): ?>
                 <div class="alert alert-success alert-dismissible fade show" role="alert">
-                    <i class="fa-solid fa-circle-check me-2"></i>Your processing fee payment of â‚¹500.00 has been recorded successfully! You can now finalize and submit your application.
                     <i class="fa-solid fa-circle-check me-2"></i>Your processing fee payment of ₹500.00 has been recorded successfully! You can now finalize and submit your application.
                     <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                 </div>
             <?php endif; ?>
+
+            <?php render_alert($error_msg, 'danger', false, true); ?>
 
             <div class="row mb-4">
                 <div class="col-md-12">
@@ -95,6 +107,8 @@ include '../includes/header.php';
                 </div>
             </div>
 
+
+            <?php render_alert($error_msg, 'danger', false, true); ?>
 
             <div class="row mb-4">
                 <div class="col-md-12">
@@ -199,7 +213,7 @@ include '../includes/header.php';
 
                             <div class="status-header-premium">
                                 <div class="status-icon-wrapper-premium">
-                                    <i class="fa-solid fa-credit-card"></i>
+                                    <i class="fa-solid fa-wallet"></i>
                                 </div>
                                 <div>
                                     <div class="status-title-premium">Step 3: Pay Processing Fee</div>
@@ -207,11 +221,10 @@ include '../includes/header.php';
                                 </div>
                             </div>
                             <div class="status-body-premium">
-                                <p>Your details and documents are successfully compiled. You must now complete the online fee payment of â‚¹500.00 to submit your application.</p>
                                 <p>Your details and documents are successfully compiled. You must now complete the online fee payment of ₹500.00 to submit your application.</p>
                             </div>
                             <div class="status-action-row-premium">
-                                <a href="payment.php" class="btn btn-primary"><i class="fa-solid fa-credit-card me-2"></i>Pay Fees Now</a>
+                                <a href="payment.php" class="btn btn-primary"><i class="fa-solid fa-wallet me-2"></i>Pay Fees Now</a>
                                 <a href="apply.php" class="btn btn-secondary"><i class="fa-solid fa-pen me-2"></i>Edit Form</a>
                                 <a href="upload.php" class="btn btn-secondary"><i class="fa-solid fa-file-image me-2"></i>Manage Uploads</a>
                             </div>
@@ -252,6 +265,7 @@ include '../includes/header.php';
                             </div>
                             <div class="status-action-row-premium">
                                 <form action="dashboard.php" method="POST" class="d-inline">
+                                    <?php echo csrf_field(); ?>
                                     <input type="hidden" name="action" value="final_submit">
                                     <button type="submit" class="btn btn-primary fw-bold" onclick="return confirm('Are you sure you want to finalize and submit? You will not be able to edit this form.');">
                                         <i class="fa-solid fa-paper-plane me-2"></i>Final Submit Application
@@ -380,6 +394,15 @@ include '../includes/header.php';
                                     <div class="status-remarks-box">
                                         <strong>Staff Remarks:</strong> <?php echo e($history ? $history['remarks'] : 'No remarks provided.'); ?>
                                     </div>
+                                    <?php if ($student['payment_status'] === 'Refunded'): ?>
+                                        <div class="alert alert-danger d-flex align-items-center mt-3 mb-2">
+                                            <i class="fa-solid fa-arrow-rotate-left fa-2x me-3 text-danger"></i>
+                                            <div>
+                                                <strong class="text-danger">Payment Status: Payment is Back (Fee Refunded)</strong>
+                                                <p class="mb-0 small text-dark">Your application processing fee of <strong>₹500.00</strong> has been processed for refund back to your source account. Ref: <code><?php echo e($student['transaction_id']); ?></code></p>
+                                            </div>
+                                        </div>
+                                    <?php endif; ?>
                                     <p class="small text-muted">You can edit your details and re-upload documents to correct the error and re-submit.</p>
                                 </div>
                                 <div class="status-action-row-premium">
@@ -409,10 +432,15 @@ include '../includes/header.php';
                             <div class="card-body">
                                 <div class="text-center mb-4">
                                     <?php if ($documents && !empty($documents['photo'])): ?>
-                                        <img src="uploads/photo/<?php echo e($documents['photo']); ?>" 
+                                        <img src="../uploads/photo/<?php echo e($documents['photo']); ?>" 
                                              alt="<?php echo e($student['full_name']); ?>" 
                                              class="border border-3 border-primary shadow-sm rounded" 
-                                             style="width: 120px; height: 120px; object-fit: cover;">
+                                             style="width: 120px; height: 120px; object-fit: cover;"
+                                             onerror="this.style.display='none'; document.getElementById('photoFallbackAvatar').classList.remove('d-none'); document.getElementById('photoFallbackAvatar').classList.add('d-inline-flex');">
+                                        <div id="photoFallbackAvatar" class="border border-3 border-secondary bg-light d-none align-items-center justify-content-center rounded" 
+                                             style="width: 120px; height: 120px;">
+                                            <i class="fa-solid fa-user-large fa-3x text-muted"></i>
+                                        </div>
                                     <?php else: ?>
                                         <div class="border border-3 border-secondary bg-light d-inline-flex align-items-center justify-content-center rounded" 
                                              style="width: 120px; height: 120px;">
@@ -420,7 +448,9 @@ include '../includes/header.php';
                                         </div>
                                     <?php endif; ?>
                                 </div>
-                                <div class="row mb-4">
+                                <?php render_alert($error_msg, 'danger', false, true); ?>
+
+            <div class="row mb-4">
                                     <h5 class="fw-bold text-primary border-bottom pb-2">Personal Information</h5>
                                     <div class="col-12 col-sm-6 mb-2">
                                         <strong>Admission No:</strong> <?php echo e($student['admission_no']); ?>

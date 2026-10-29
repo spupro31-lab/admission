@@ -13,14 +13,17 @@ $user_email = $_SESSION['email'];
 $user_name = $_SESSION['name'];
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $name = trim($_POST['name'] ?? '');
-    $current_password = $_POST['current_password'] ?? '';
-    $new_password = $_POST['new_password'] ?? '';
-    $confirm_password = $_POST['confirm_password'] ?? '';
-
-    if (empty($name) || empty($current_password)) {
-        $error_msg = "Name and current password are required to apply updates.";
+    if (!validate_csrf()) {
+        $error_msg = "Security validation failed. Please refresh the page and try again.";
     } else {
+        $name = trim($_POST['name'] ?? '');
+        $current_password = $_POST['current_password'] ?? '';
+        $new_password = $_POST['new_password'] ?? '';
+        $confirm_password = $_POST['confirm_password'] ?? '';
+
+        if (empty($name) || empty($current_password)) {
+            $error_msg = "Name and current password are required to apply updates.";
+        } else {
         try {
             $source = account_source_for_role($role);
             $stmt = $pdo->prepare("SELECT password FROM {$source['table']} WHERE {$source['id']} = :id");
@@ -50,6 +53,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     $up_stmt = $pdo->prepare("UPDATE {$source['table']} SET {$fields} WHERE {$source['id']} = :id");
                     $up_stmt->execute($params);
 
+                    if ($role === 'student') {
+                        $up_stud = $pdo->prepare("UPDATE students SET full_name = :fname WHERE user_id = :uid AND is_submitted = 0");
+                        $up_stud->execute(['fname' => $name, 'uid' => $user_id]);
+                    }
+
                     $_SESSION['name'] = $name;
                     $user_name = $name;
                     $success_msg = !empty($new_password)
@@ -61,6 +69,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $error_msg = "Database Error: " . $e->getMessage();
         }
     }
+}
 }
 
 $page_title = "My Profile";
@@ -90,6 +99,7 @@ include 'includes/header.php';
                         </div>
                         <div class="card-body">
                             <form action="profile.php" method="POST">
+                                <?php echo csrf_field(); ?>
 
                                 <div class="mb-3">
                                     <label class="form-label">Email Address (Registered Login)</label>

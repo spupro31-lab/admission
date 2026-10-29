@@ -1,0 +1,9 @@
+/vendor/
+.env
+uploads/aadhaar/*
+uploads/leaving_certificate/*
+uploads/marksheet10/*
+uploads/marksheet12/*
+uploads/photo/*
+uploads/mail_logs/*
+!uploads/**/.gitkeep

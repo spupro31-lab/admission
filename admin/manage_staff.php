@@ -9,22 +9,29 @@ $error_msg = "";
 $success_msg = "";
 
 if (isset($_GET['delete_id']) && !empty($_GET['delete_id'])) {
-    $delete_id = intval($_GET['delete_id']);
-    try {
-        $stmt = $pdo->prepare("DELETE FROM admission_staff WHERE staff_id = :id");
-        $stmt->execute(['id' => $delete_id]);
-        $success_msg = "Staff account deleted successfully.";
-    } catch (PDOException $e) {
-        $error_msg = "Database Error: " . $e->getMessage();
+    if (!validate_csrf($_GET['csrf_token'] ?? '')) {
+        $error_msg = "Security validation failed for delete request. Please try again.";
+    } else {
+        $delete_id = intval($_GET['delete_id']);
+        try {
+            $stmt = $pdo->prepare("DELETE FROM admission_staff WHERE staff_id = :id");
+            $stmt->execute(['id' => $delete_id]);
+            $success_msg = "Staff account deleted successfully.";
+        } catch (PDOException $e) {
+            $error_msg = "Database Error: " . $e->getMessage();
+        }
     }
 }
 
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action'])) {
-    $action = $_POST['action'];
-    $name = trim($_POST['name']);
-    $email = trim($_POST['email']);
-    $password = $_POST['password'];
+    if (!validate_csrf()) {
+        $error_msg = "Security validation failed. Please refresh the page and try again.";
+    } else {
+        $action = $_POST['action'];
+        $name = trim($_POST['name']);
+        $email = trim($_POST['email']);
+        $password = $_POST['password'];
 
     if (empty($name) || empty($email)) {
         $error_msg = "Name and Email fields are required.";
@@ -100,6 +107,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action'])) {
         }
     }
 }
+}
 
 
 try {
@@ -169,7 +177,7 @@ include '../includes/header.php';
                                                     <i class="fa-solid fa-user-pen"></i> Edit
                                                 </button>
 
-                                                <a href="manage_staff.php?delete_id=<?php echo $s['staff_id']; ?>" class="btn btn-sm btn-outline-danger" onclick="return confirm('Are you sure you want to delete this staff account?');">
+                                                <a href="manage_staff.php?delete_id=<?php echo $s['staff_id']; ?>&csrf_token=<?php echo csrf_token(); ?>" class="btn btn-sm btn-outline-danger" onclick="return confirm('Are you sure you want to delete this staff account?');">
                                                     <i class="fa-solid fa-user-minus"></i> Delete
                                                 </a>
                                             </td>
@@ -196,6 +204,7 @@ include '../includes/header.php';
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <form action="manage_staff.php" method="POST">
+                <?php echo csrf_field(); ?>
                 <input type="hidden" name="action" value="add">
                 <div class="modal-body">
                     <div class="mb-3">
@@ -229,6 +238,7 @@ include '../includes/header.php';
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <form action="manage_staff.php" method="POST">
+                <?php echo csrf_field(); ?>
                 <input type="hidden" name="action" value="edit">
                 <input type="hidden" id="edit_staff_id" name="staff_id">
                 <div class="modal-body">

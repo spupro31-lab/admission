@@ -25,9 +25,11 @@ if ($role === 'student' && isset($_SESSION['user_id'])) {
 $nav_items = [
     'admin' => [
         ['href' => 'admin/dashboard.php', 'icon' => 'fa-gauge', 'label' => 'Dashboard', 'pages' => ['dashboard.php']],
+        ['href' => 'admin/inquiries.php', 'icon' => 'fa-clipboard-question', 'label' => 'Inquiries', 'pages' => ['inquiries.php']],
         ['href' => 'admin/manage_courses.php', 'icon' => 'fa-book', 'label' => 'Courses', 'pages' => ['manage_courses.php']],
         ['href' => 'admin/manage_staff.php', 'icon' => 'fa-user-tie', 'label' => 'Staff', 'pages' => ['manage_staff.php']],
         ['href' => 'admin/manage_students.php', 'icon' => 'fa-users', 'label' => 'Students', 'pages' => ['manage_students.php', 'add_student.php', 'edit_student.php', 'view_students.php']],
+        ['href' => 'admin/payments.php', 'icon' => 'fa-wallet', 'label' => 'Payments', 'pages' => ['payments.php']],
     ],
     'staff' => [
         ['href' => 'staff/dashboard.php', 'icon' => 'fa-gauge', 'label' => 'Dashboard', 'pages' => ['dashboard.php']],
@@ -37,7 +39,7 @@ $nav_items = [
         ['href' => 'student/dashboard.php', 'icon' => 'fa-gauge', 'label' => 'Dashboard', 'pages' => ['dashboard.php']],
         ['href' => 'student/apply.php', 'icon' => 'fa-file-signature', 'label' => 'Admission Form', 'pages' => ['apply.php']],
         ['href' => 'student/upload.php', 'icon' => 'fa-file-arrow-up', 'label' => 'Documents', 'pages' => ['upload.php']],
-        ['href' => 'student/payment.php', 'icon' => 'fa-credit-card', 'label' => 'Payment', 'pages' => ['payment.php']],
+        ['href' => 'student/payment.php', 'icon' => 'fa-wallet', 'label' => 'Payment', 'pages' => ['payment.php']],
         ['href' => 'student/status.php', 'icon' => 'fa-clock-rotate-left', 'label' => 'Status', 'pages' => ['status.php']],
     ],
 ];

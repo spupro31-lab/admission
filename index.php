@@ -8,31 +8,84 @@ include 'includes/header.php';
 ?>
 
 
-<div class="home-hero-section">
-    <div class="home-hero-decor home-hero-decor--top"></div>
-    <div class="home-hero-decor home-hero-decor--bottom"></div>
+<section class="sct-hero">
+    <div class="container">
+        <div class="row align-items-center g-4 g-lg-5">
 
-    <div class="container position-relative py-3">
-        <div class="row justify-content-center">
-            <div class="col-lg-10 text-center">
-                <h1 class="home-hero-title mb-3">
-                    State College of <span class="text-primary">Technology</span>
+            <!-- LEFT: college text + actions -->
+            <div class="col-lg-6">
+
+                <div class="sct-hero__eyebrow mb-3">
+                    <span class="sct-hero__badge">
+                        <i class="fa-solid fa-circle-dot me-1" style="font-size:8px;color:#22c55e;vertical-align:middle;"></i>
+                        Admissions Open &mdash; 2026&ndash;27
+                    </span>
+                    <span class="sct-hero__estd ms-2">Est. 1998</span>
+                </div>
+
+                <h1 class="sct-hero__title mb-2">
+                    State College of<br>
+                    <span class="sct-hero__title--accent">Technology</span>
                 </h1>
-                <p class="home-hero-subtitle mx-auto mb-4" style="max-width: 720px;">
-                    Welcome to the State College of Technology. Experience a fully digital, streamlined admission process. Apply for courses, upload your credentials, and track your application status in real time.
+                <p class="sct-hero__tagline mb-3">Affiliated to State University &bull; NAAC Accredited &bull; Approved by UGC</p>
+
+                <p class="sct-hero__subtitle mb-4">
+                    Shaping engineers, scientists and innovators since 1998. Join SCT's fully digital admission process &mdash; apply online, track your status in real time, and receive your offer letter without visiting the campus.
                 </p>
-                <div class="d-flex gap-3 justify-content-center flex-wrap">
-                    <a href="portal.php" class="btn btn-premium-primary rounded-4 btn-lg px-4 py-3 fw-bold d-inline-flex align-items-center gap-2 shadow-sm">
-                        <i class="fa-solid fa-right-to-bracket"></i> Admission Portal Access
+
+                <div class="d-flex flex-wrap gap-2 mb-4">
+                    <a href="inquiry.php" class="sct-btn sct-btn--primary">
+                        <i class="fa-solid fa-file-circle-plus"></i> Apply for Admission
                     </a>
-                    <a href="courses.php" class="btn btn-premium-secondary rounded-4 btn-lg px-4 py-3 fw-bold d-inline-flex align-items-center gap-2">
-                        <i class="fa-solid fa-book-open"></i> Explore Courses
+                    <a href="login.php?role=student" class="sct-btn sct-btn--outline">
+                        <i class="fa-solid fa-right-to-bracket"></i> Student Login
+                    </a>
+                    <a href="courses.php" class="sct-btn sct-btn--ghost">
+                        <i class="fa-solid fa-book-open"></i> View Courses
                     </a>
                 </div>
+
+                <!-- Stat strip -->
+                <div class="sct-hero__stats d-flex flex-wrap gap-3">
+                    <div class="sct-stat">
+                        <span class="sct-stat__num">5000+</span>
+                        <span class="sct-stat__label">Alumni</span>
+                    </div>
+                    <div class="sct-stat-divider"></div>
+                    <div class="sct-stat">
+                        <span class="sct-stat__num">94%</span>
+                        <span class="sct-stat__label">Placement</span>
+                    </div>
+                    <div class="sct-stat-divider"></div>
+                    <div class="sct-stat">
+                        <span class="sct-stat__num">12+</span>
+                        <span class="sct-stat__label">Courses</span>
+                    </div>
+                    <div class="sct-stat-divider"></div>
+                    <div class="sct-stat">
+                        <span class="sct-stat__num">28</span>
+                        <span class="sct-stat__label">Years of Excellence</span>
+                    </div>
+                </div>
             </div>
+
+            <!-- RIGHT: campus image -->
+            <div class="col-lg-6">
+                <div class="sct-hero__img-wrap">
+                    <img src="assets/images/university_campus.png"
+                         alt="State College of Technology Campus"
+                         class="sct-hero__campus-img">
+                    <!-- Floating info badge on image -->
+                    <div class="sct-hero__img-badge">
+                        <i class="fa-solid fa-location-dot text-danger me-1"></i>
+                        SCT Main Campus &bull; Block A &amp; B
+                    </div>
+                </div>
+            </div>
+
         </div>
     </div>
-</div>
+</section>
 
 
 <div class="container my-5">
@@ -136,35 +189,60 @@ include 'includes/header.php';
 </div>
 
 
-<div class="container my-5" id="steps">
-    <div class="timeline-section">
-        <h2 class="section-title">Application Journey</h2>
-        <p class="section-subtitle">Follow these 4 simple steps to complete your admission process at State College of Technology.</p>
+<div class="container my-5 py-3" id="steps">
+    <div class="text-center mb-5">
+        <span class="badge bg-primary bg-opacity-10 text-primary px-3 py-1.5 rounded-pill fw-bold small mb-2">
+            <i class="fa-solid fa-list-check me-1"></i> Simple Admission Workflow
+        </span>
+        <h2 class="section-title mb-2">How It Works</h2>
+        <p class="section-subtitle mb-0">Follow four straightforward steps from initial inquiry to final admission confirmation.</p>
+    </div>
 
-        <div class="timeline-stepper px-2 px-md-4">
-            <div class="step-card">
-                <div class="step-number-bubble">1</div>
-                <h5>Quick Registration</h5>
-                <p>Create your credentials using an active email address and mobile number.</p>
+    <div class="row g-4">
+        <div class="col-12 col-sm-6 col-lg-3">
+            <div class="card border-0 shadow-sm rounded-4 p-4 h-100 text-center bg-white">
+                <div class="rounded-circle bg-primary bg-opacity-10 text-primary d-flex align-items-center justify-content-center mx-auto mb-3" style="width: 54px; height: 54px; font-size: 20px;">
+                    <i class="fa-solid fa-file-signature"></i>
+                </div>
+                <span class="badge bg-light text-muted border rounded-pill px-2.5 py-1 small mb-2 align-self-center">Step 01</span>
+                <h5 class="fw-bold text-dark mb-2">Submit Inquiry</h5>
+                <p class="text-muted small mb-0">Fill in basic contact details and select your preferred degree program to register.</p>
             </div>
-            <div class="step-card">
-                <div class="step-number-bubble">2</div>
-                <h5>Academic Details</h5>
-                <p>Provide 10th and 12th details and choose your preferred engineering course stream.</p>
+        </div>
+        <div class="col-12 col-sm-6 col-lg-3">
+            <div class="card border-0 shadow-sm rounded-4 p-4 h-100 text-center bg-white">
+                <div class="rounded-circle bg-info bg-opacity-10 text-info d-flex align-items-center justify-content-center mx-auto mb-3" style="width: 54px; height: 54px; font-size: 20px;">
+                    <i class="fa-solid fa-right-to-bracket"></i>
+                </div>
+                <span class="badge bg-light text-muted border rounded-pill px-2.5 py-1 small mb-2 align-self-center">Step 02</span>
+                <h5 class="fw-bold text-dark mb-2">Portal Access</h5>
+                <p class="text-muted small mb-0">Log in securely to your student portal using your registered email credentials.</p>
             </div>
-            <div class="step-card">
-                <div class="step-number-bubble">3</div>
-                <h5>Document Upload</h5>
-                <p>Securely upload photo, signature, board marksheet, leaving certificate, and Aadhaar card.</p>
+        </div>
+        <div class="col-12 col-sm-6 col-lg-3">
+            <div class="card border-0 shadow-sm rounded-4 p-4 h-100 text-center bg-white">
+                <div class="rounded-circle bg-warning bg-opacity-10 text-warning d-flex align-items-center justify-content-center mx-auto mb-3" style="width: 54px; height: 54px; font-size: 20px;">
+                    <i class="fa-solid fa-clipboard-check"></i>
+                </div>
+                <span class="badge bg-light text-muted border rounded-pill px-2.5 py-1 small mb-2 align-self-center">Step 03</span>
+                <h5 class="fw-bold text-dark mb-2">Complete Profile</h5>
+                <p class="text-muted small mb-0">Provide academic scores, address details, and pay the nominal processing fee.</p>
             </div>
-            <div class="step-card">
-                <div class="step-number-bubble">4</div>
-                <h5>Track & Receipt</h5>
-                <p>Monitor real-time verification and download your official PDF admission letter.</p>
+        </div>
+        <div class="col-12 col-sm-6 col-lg-3">
+            <div class="card border-0 shadow-sm rounded-4 p-4 h-100 text-center bg-white">
+                <div class="rounded-circle bg-success bg-opacity-10 text-success d-flex align-items-center justify-content-center mx-auto mb-3" style="width: 54px; height: 54px; font-size: 20px;">
+                    <i class="fa-solid fa-circle-check"></i>
+                </div>
+                <span class="badge bg-light text-muted border rounded-pill px-2.5 py-1 small mb-2 align-self-center">Step 04</span>
+                <h5 class="fw-bold text-dark mb-2">Verification & Letter</h5>
+                <p class="text-muted small mb-0">Upload documents, track staff verification in real time, and download your admission receipt.</p>
             </div>
         </div>
     </div>
 </div>
+
+
 
 
 <div class="campus-facilities-section" id="facilities">
@@ -217,14 +295,14 @@ include 'includes/header.php';
     <div class="container text-center">
         <h3 class="home-cta-title">Build Your Technical Career Path Today</h3>
         <p class="home-cta-subtitle">
-            Registration is quick and online. Log in, specify your board marks, upload your PDF and picture credentials, and track your admission status instantly.
+            Begin your admission with a simple online inquiry. Complete your application, upload required documents, and track your admission status instantly.
         </p>
         <div class="d-flex gap-3 justify-content-center flex-wrap">
-            <a href="portal.php" class="btn btn-premium-primary btn-lg px-4 py-2 fw-bold">
-                <i class="fa-solid fa-user-plus me-1"></i> Register & Apply Online
+            <a href="inquiry.php" class="btn btn-premium-primary btn-lg px-4 py-2 fw-bold">
+                <i class="fa-solid fa-file-circle-plus me-1"></i> Inquiry for Admission
             </a>
             <a href="login.php?role=student" class="btn btn-premium-secondary btn-lg px-4 py-2 fw-bold">
-                Student Portal Login
+                <i class="fa-solid fa-right-to-bracket me-1"></i> Student Portal Login
             </a>
         </div>
     </div>

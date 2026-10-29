@@ -32,11 +32,15 @@ include 'includes/header.php';
                         <i class="fa-solid fa-user-graduate"></i>
                     </div>
                     <h3 class="text-center">Student Portal</h3>
-                    <p class="text-center text-muted">Register a new profile, submit academic marks, select course preferences, upload mandatory documents, and track approval status.</p>
+                    <p class="text-center text-muted">Submit an admission inquiry, access your student portal, complete your application details, and track verification status in real time.</p>
                 </div>
                 <div class="mt-4 pt-3 border-top border-secondary border-opacity-25">
-                    <a href="login.php?role=student" class="btn btn-premium-primary rounded-4 w-100 mb-2 fw-bold text-center">Student Login</a>
-                    <a href="student_register.php" class="btn btn-premium-secondary rounded-4 w-100 text-center">Create New Account</a>
+                    <a href="inquiry.php" class="btn btn-premium-primary rounded-4 w-100 mb-2 fw-bold text-center">
+                        <i class="fa-solid fa-file-circle-plus me-1"></i> Apply for Admission (Inquiry)
+                    </a>
+                    <a href="login.php?role=student" class="btn btn-premium-secondary rounded-4 w-100 text-center">
+                        <i class="fa-solid fa-right-to-bracket me-1"></i> Student Login
+                    </a>
                 </div>
             </div>
         </div>

@@ -29,7 +29,11 @@ try {
 
 
 
-require_once '../libs/fpdf.php';
+if (file_exists(__DIR__ . '/../vendor/autoload.php')) {
+    require_once __DIR__ . '/../vendor/autoload.php';
+} else {
+    require_once __DIR__ . '/../libs/fpdf.php';
+}
 
 class PaymentReceiptPDF extends FPDF
 {

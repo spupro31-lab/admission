@@ -9,11 +9,9 @@
                         <span>State College of Technology</span>
                     </h5>
                     <p class="mt-3 text-muted">A premier institution offering state-of-the-art technical education. Empowering students since 2002 to build the systems and innovations of tomorrow.</p>
-                    <div class="mt-4 d-flex gap-3">
-                        <a href="#" class="text-muted fs-5"><i class="fa-brands fa-facebook"></i></a>
-                        <a href="#" class="text-muted fs-5"><i class="fa-brands fa-twitter"></i></a>
-                        <a href="#" class="text-muted fs-5"><i class="fa-brands fa-linkedin"></i></a>
-                        <a href="#" class="text-muted fs-5"><i class="fa-brands fa-instagram"></i></a>
+                    <div class="mt-3 text-muted small">
+                        <span class="badge bg-light text-dark border me-2"><i class="fa-solid fa-certificate text-primary me-1"></i>AICTE Approved</span>
+                        <span class="badge bg-light text-dark border"><i class="fa-solid fa-award text-success me-1"></i>State University Affiliated</span>
                     </div>
                 </div>
 
@@ -23,15 +21,23 @@
                         <li><a href="<?php echo app_base_path(); ?>portal.php">Portal Selection</a></li>
                         <li><a href="<?php echo app_base_path(); ?>index.php#steps">Admission Steps</a></li>
                         <li><a href="<?php echo app_base_path(); ?>courses.php">Academic Courses</a></li>
-                        <li><a href="<?php echo app_base_path(); ?>student_register.php">Create Account</a></li>
+                        <li><a href="<?php echo app_base_path(); ?>inquiry.php">Inquiry for Admission</a></li>
                     </ul>
                 </div>
 
                 <div class="col-lg-4 col-md-6">
                     <h5 class="text-dark">Help & Support</h5>
-                    <p class="small text-muted mb-2"><i class="fa-solid fa-envelope me-2 text-info"></i>admissions@statecollege.edu</p>
-                    <p class="small text-muted mb-2"><i class="fa-solid fa-phone me-2 text-info"></i>+1 (555) 019-2834</p>
-                    <p class="small text-muted"><i class="fa-solid fa-location-dot me-2 text-info"></i>100 Tech University Circle, Suite 400</p>
+                    <p class="small text-muted mb-2">
+                        <i class="fa-solid fa-envelope me-2 text-info"></i>
+                        <a href="mailto:admissions@statecollege.edu.in" class="text-muted text-decoration-none">admissions@statecollege.edu.in</a>
+                    </p>
+                    <p class="small text-muted mb-2">
+                        <i class="fa-solid fa-phone me-2 text-info"></i>
+                        <a href="tel:+917923245678" class="text-muted text-decoration-none">+91 (079) 2324-5678</a>
+                    </p>
+                    <p class="small text-muted">
+                        <i class="fa-solid fa-location-dot me-2 text-info"></i>State College Campus, University Road, SCT Knowledge Corridor
+                    </p>
                 </div>
             </div>
 
